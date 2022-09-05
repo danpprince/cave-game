@@ -37,6 +37,9 @@ public class Movement : MonoBehaviour
     public float UpwardsForce = 5.5f, ForwardsForce = 8f;
     private float DefaultForwardsForce;
     public float TorchForceMultiplier = 2f;
+    public GameObject HeldTorch;
+    private bool Holding = false;
+    private Vector3 DefaultTorchPosition;
    
 
 
@@ -44,6 +47,7 @@ public class Movement : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         DefaultForwardsForce = ForwardsForce;
+        DefaultTorchPosition = HeldTorch.transform.localPosition;
     }
 
     // Update is called once per frame
@@ -65,9 +69,8 @@ public class Movement : MonoBehaviour
 
         // Allow the camera to look up and down \\
         camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
+        WhileCharging();
 
-        //Toss a torch
-      
     }
 
     private void FixedUpdate()
@@ -88,7 +91,22 @@ public class Movement : MonoBehaviour
 
     private void ChargingTorch(InputAction.CallbackContext obj)
     {
+        
         print("Holding");
+        Holding = true;
+       
+    }
+
+    private void WhileCharging()
+    {
+        if (Holding)
+        {
+            Vector3 CurrentTorchPosition = HeldTorch.transform.localPosition;
+            HeldTorch.transform.localPosition = new Vector3(CurrentTorchPosition.x, CurrentTorchPosition.y - 0.1f, CurrentTorchPosition.z);
+        } else
+        {
+            HeldTorch.transform.localPosition = DefaultTorchPosition;
+        }
     }
 
     private void TossTorch(InputAction.CallbackContext obj)
@@ -103,7 +121,7 @@ public class Movement : MonoBehaviour
             torch_rb.AddTorque(transform.up * Random.Range(0, 20));
             print("Rock and Stone brother: " + ForwardsForce);
             ForwardsForce = DefaultForwardsForce;
-            
+            Holding = false;
     }
 
 
