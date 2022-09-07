@@ -112,11 +112,21 @@ public class Movement : MonoBehaviour
     private void TossTorch(InputAction.CallbackContext obj)
     {
             print(obj.duration);
+
+            //Direction Correction
+            Vector3 forceDirection = camera.transform.forward;
+            RaycastHit hit;
+
+            if(Physics.Raycast(camera.transform.position, forceDirection, out hit, 500f))
+            {
+            forceDirection = (hit.point - TorchSpawnPoint.transform.position).normalized;
+            }
+
             ForwardsForce += ForwardsForce * (float)obj.duration * TorchForceMultiplier;
             GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
             Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
             torch_rb.velocity = this.Velocity;
-            Vector3 ForceToAdd = camera.transform.forward * ForwardsForce + TorchSpawnPoint.transform.up * UpwardsForce;
+            Vector3 ForceToAdd = forceDirection * ForwardsForce + TorchSpawnPoint.transform.up * UpwardsForce;
             torch_rb.AddForce(ForceToAdd, ForceMode.Impulse);
             torch_rb.AddTorque(transform.up * Random.Range(0, 20));
             print("Rock and Stone brother: " + ForwardsForce);
@@ -132,7 +142,7 @@ public class Movement : MonoBehaviour
         MoveController = playerControls.actions["Move"];
         Look = playerControls.actions["Look"];
         TossInput = playerControls.actions["Toss"];
-
+        
         MoveController.Enable();   
         Look.Enable();
 
