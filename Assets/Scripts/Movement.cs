@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 public class Movement : MonoBehaviour
 {
     //General Input Getting \\
@@ -21,7 +20,7 @@ public class Movement : MonoBehaviour
 
     // For Looking \\
     private InputAction Look;
-    public GameObject camera;  ///Make this happy.
+    public GameObject camera;  ///Make this happy??
 
     public float X_AimSensitivity;
     public float Y_AimSensitivity;
