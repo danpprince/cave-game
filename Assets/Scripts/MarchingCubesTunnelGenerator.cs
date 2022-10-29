@@ -11,7 +11,7 @@ namespace MarchingCubesProject
 {
     public enum MARCHING_MODE { CUBES, TETRAHEDRON };
 
-    public class ExampleTunnel : MonoBehaviour
+    public class MarchingCubesTunnelGenerator : MonoBehaviour
     {
 
         public Material material;
@@ -33,7 +33,9 @@ namespace MarchingCubesProject
         public int axisResolution;
         public float worldLimits;
         public float surfaceThreshold;
+        public float floorDistance;  // Distance from point on curve to "floor" intensity calculation point
         public float noiseAmount;
+        public int offsetRadiusSteps;
 
         public PathCreator pathCreator;
 
@@ -65,11 +67,9 @@ namespace MarchingCubesProject
             }
 
             // Mark voxels with increasing intensity the closer they are to the path
-            float stepSize = 0.5f;  // Step size in world units
-            float floorDistance = 5f;  // Distance from point on curve to "floor" intensity calculation point
+            float stepSize = 0.5f;  // Step size in world units  
             int numSteps = (int)Mathf.Ceil(pathCreator.path.length / stepSize);
             print("numSteps: " + numSteps);
-            int offsetRadius = 5;
             for (int stepIndex = 0; stepIndex < numSteps; stepIndex++)
             {
                 // "Time" is the point on the curve in the range (0, 1)
@@ -78,11 +78,11 @@ namespace MarchingCubesProject
                 Vector3 pointOnFloor = pointOnCurve + new Vector3(0, -floorDistance, 0);
                 List<int> curvePointVoxelIndices = WorldPointToVoxelIndices(pointOnCurve);
 
-                for (int xOffset = -offsetRadius; xOffset <= offsetRadius; xOffset++)
+                for (int xOffset = -offsetRadiusSteps; xOffset <= offsetRadiusSteps; xOffset++)
                 {
-                    for (int yOffset = -offsetRadius; yOffset <= offsetRadius; yOffset++)
+                    for (int yOffset = -offsetRadiusSteps; yOffset <= offsetRadiusSteps; yOffset++)
                     {
-                        for (int zOffset = -offsetRadius; zOffset <= offsetRadius; zOffset++)
+                        for (int zOffset = -offsetRadiusSteps; zOffset <= offsetRadiusSteps; zOffset++)
                         {
                             List<int> offsetVoxelIndices = new List<int>
                             {
@@ -189,6 +189,9 @@ namespace MarchingCubesProject
             go.GetComponent<Renderer>().material = material;
             go.GetComponent<MeshFilter>().mesh = mesh;
             go.transform.localPosition = position;
+
+            MeshCollider collider = go.AddComponent<MeshCollider>();
+            collider.sharedMesh = mesh;
 
             meshes.Add(go);
         }
