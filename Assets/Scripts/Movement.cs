@@ -90,10 +90,8 @@ public class Movement : MonoBehaviour
 
     private void ChargingTorch(InputAction.CallbackContext obj)
     {
-        
         print("Holding");
         Holding = true;
-       
     }
 
     private void WhileCharging()
