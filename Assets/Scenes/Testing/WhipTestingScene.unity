@@ -123,6 +123,60 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &456624104 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7982974627545900981, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &456624111
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456624104}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &563619059 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7677171401560596469, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &563619065
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563619059}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &641865653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1896557865893748144, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &641865660
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641865653}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1001 &974210147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -134,25 +188,57 @@ PrefabInstance:
       propertyPath: m_Name
       value: WhipTesting
       objectReference: {fileID: 0}
+    - target: {fileID: 480052797580337445, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 811731011803486341, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 811731011803486341, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 928561979442109770, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1089334010513208737, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_RootOrder
@@ -198,61 +284,157 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1294807429883058362, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1605398746586220724, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 1605398746586220724, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1844806567255219644, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2049920272181200374, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236270133580918819, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2656969154450593420, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 2656969154450593420, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2742863996102542913, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.contactDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2750503252662809890, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2966408625120615987, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3240001502690877321, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -262,169 +444,429 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 124
       objectReference: {fileID: 0}
+    - target: {fileID: 3294590563919955547, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300885834253196465, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744885571925363540, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768446872901714437, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.contactDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3789132585307058490, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4476286488112354787, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 4476286488112354787, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626378971906363448, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5064078098455534143, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 5064078098455534143, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5270290613436048313, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 5270290613436048313, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477407987682277836, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.contactDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5548546028322444129, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6191545262764562594, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.contactDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6387967548483161425, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6584522917431010048, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.contactDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6808906049215670253, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6983598478206286504, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 6983598478206286504, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7205173878839680329, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7205173878839680329, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7295760008807057392, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7295760008807057392, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743559047229299402, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7802119217393192240, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7989361111189275145, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8182823967356960963, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 8182823967356960963, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268607615063118296, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621912134184496560, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_UseSpring
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.max
-      value: 45
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Limits.min
-      value: -45
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.damper
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.spring
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_EnableCollision
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
-      propertyPath: m_Limits.contactDistance
+      propertyPath: m_Limits.bounciness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Spring.targetPosition
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898052567613141179, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_Limits.contactDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 9129090171086961014, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
       propertyPath: m_Mass
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129090171086961014, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8187471717691056172, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
@@ -447,6 +889,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forcestrength: 10
+--- !u!135 &999008472
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999008463}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1184701481 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8991322839658526622, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1184701488
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184701481}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &1199819536
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,6 +1004,150 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1295602676 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5870281516099153185, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1295602683
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295602676}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1299059913 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6070398735213952871, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1299059920
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299059913}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1307493917 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4159541994361035629, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1307493924
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307493917}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1331902309 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 34296120427514777, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1331902316
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331902309}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1428303449 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2003692256750601159, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1428303456
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428303449}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1676374574 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5766205644555062951, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1676374581
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676374574}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1913519058 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 673260387613883114, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1913519065
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913519058}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!1 &1965863060 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7713786891596598877, guid: eda136e4dcba56544a7f0756be45bbc9, type: 3}
+  m_PrefabInstance: {fileID: 974210147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &1965863067
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965863060}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &2058794777
 GameObject:
   m_ObjectHideFlags: 0
