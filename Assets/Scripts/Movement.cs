@@ -11,6 +11,31 @@ public class Movement : MonoBehaviour
     //For Movement and Moving Acessories
     public float MoveSpeed = 5f;
     private InputAction MoveController;
+<<<<<<< HEAD
+    private Vector2 moveDirection = Vector2.zero;
+    private Vector3 velocity;
+    public float Speed = 2f;
+    public float jump = 10f;
+    public float Gravity = -9.8f;
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        moveDirection = MoveController.ReadValue<Vector2>();
+            // for jump
+            if (Input.GetKeyUp(KeyCode.Space) && transform.position.y < -0.51f)
+            // (-0.5) change this value according to your character y position + 1
+            {
+                velocity.y = jump;
+            }
+            else
+            {
+                velocity.y += Gravity * Time.deltaTime;
+            }
+            cc.Move(velocity * Time.deltaTime);
+        
+=======
     private Vector2 MoveDirection = Vector2.zero;
     private Vector3 Velocity;
     public float Gravity = -9.8f;
@@ -64,13 +89,20 @@ public class Movement : MonoBehaviour
         camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
 
 
+>>>>>>> 68ca32432772de06cacc6b211a80ae56ced9a7b7
     }
 
     private void FixedUpdate()
     {
+<<<<<<< HEAD
+        Vector3 Move = transform.right * moveDirection.x + transform.forward * moveDirection.y;
+        cc.Move(Move * MoveSpeed * Time.deltaTime);
+        
+=======
         //Moves the Player around
         Vector3 Move = transform.right * MoveDirection.x + transform.forward * MoveDirection.y;
         cc.Move(Move * MoveSpeed);
+>>>>>>> 68ca32432772de06cacc6b211a80ae56ced9a7b7
 
         //Gives the Player Gravity
         Velocity.y += Gravity;
@@ -84,6 +116,10 @@ public class Movement : MonoBehaviour
      
     }
 
-  
+    private void OnEnable()
+    {
+        MoveController = playerControls.actions["Move"];
+    }
+
 
 }
