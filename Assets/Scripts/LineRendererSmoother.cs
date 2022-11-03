@@ -4,12 +4,10 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(LineRenderer))]
-public class LineRenderer : MonoBehaviour
+public class LineRendererSmoother : MonoBehaviour
 {
-    public LineRenderer line;
-    public Vector3[] initialState;
-    public float smoothingLength = 2f;
-    public int smoothingSections = 10;
-
-
+    public LineRenderer Line;
+    public Vector3[] InitialState;
+    public float SmoothingLength = 2f;
+    public int SmoothingSections = 10;
 }

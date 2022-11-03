@@ -51,7 +51,12 @@ public class Movement : MonoBehaviour
     private Vector3 whipHitPosition;
     public bool didWhipHit = false;
     private RaycastHit hit;
+    private float hitDistance;
     public float whipAnimationSpeed = 1f;
+    public GameObject whipBase;
+    LineRenderer lineRenderer;
+    private bool shouldAnimateWhip = false;
+    public float whipArchHeight = 0.5f;
 
 
     void Start()
@@ -100,6 +105,10 @@ public class Movement : MonoBehaviour
         }
 
         findWhipPoint();
+        if (shouldAnimateWhip)
+        {
+            animateWhip();
+        }
     }
 
     private void ChargingTorch(InputAction.CallbackContext obj)
@@ -153,6 +162,13 @@ public class Movement : MonoBehaviour
         canFireWhip = true;
     }
 
+    IEnumerator WhipAnimationTimer()
+    {
+        yield return new WaitForSeconds(1 / whipAnimationSpeed);
+        shouldAnimateWhip = false;
+        Destroy(lineRenderer);
+    }
+
     private void findWhipPoint() 
     {
 
@@ -160,7 +176,8 @@ public class Movement : MonoBehaviour
             if(Physics.Raycast(camera.transform.position, camForward, out hit, whipRange))
             {
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
-                //Debug.Log("Hit " + hit.collider.name);
+            //Debug.Log("Hit " + hit.collider.name);
+                hitDistance = hit.distance;
                 whipHitPosition = hit.point;
                 didWhipHit = true;  
             } else
@@ -179,7 +196,10 @@ public class Movement : MonoBehaviour
             string message = didWhipHit ? "Hit " + hit.collider.name : "Missed";
             Debug.Log(message);
             canFireWhip = false;
+            //animateWhip();
+            shouldAnimateWhip = true;
             StartCoroutine(WhipCoolDownTimer());
+            StartCoroutine(WhipAnimationTimer());
         }
     }
 
@@ -216,6 +236,26 @@ public class Movement : MonoBehaviour
         MoveController.Disable();
         Look.Disable();
         TossInput.Disable();
+    }
+
+    private void animateWhip()
+    {
+        if (lineRenderer == null) {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+        }
+        Vector3[] whipPoints = new Vector3[3];
+        Vector3 basePosition = whipBase.transform.position;
+        Vector3 peak = (basePosition + whipHitPosition) / 2f;
+        peak = new Vector3(peak.x, peak.y + (whipArchHeight*hitDistance/2), peak.z);
+        whipPoints[0] = basePosition;
+        whipPoints[1] = peak;
+        whipPoints[2] = whipHitPosition;
+        BezierCurve curve = new BezierCurve(whipPoints);
+        Vector3[] curveSegments = curve.GetSegments(10);
+        lineRenderer.positionCount = curveSegments.Length;
+        lineRenderer.SetPositions(curveSegments);
     }
 
 

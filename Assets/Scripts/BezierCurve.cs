@@ -8,7 +8,7 @@ public class BezierCurve
 
     public BezierCurve()
     {
-        Points = new Vector3[4];
+        Points = new Vector3[3];
     }
     
     public BezierCurve(Vector3[] Points)
@@ -17,15 +17,12 @@ public class BezierCurve
     }
 
     public Vector3 StartPosition {get { return Points[0]; }}
-    public Vector3 EndPosition {get { return Points[3];}}
+    public Vector3 EndPosition {get { return Points[2];}}
     public Vector3 GetSegment(float Time)
     {
         Time = Mathf.Clamp01(Time);
-        float time = 1 - Time;
-        return (time * time * time * Points[0]) 
-             + (3 * time * time * time * Points[1])
-             + (3 * time * time * time * Points[2]) 
-             + (Time * Time * Time * Points[3]);
+        float recipricalTime = 1 - Time;
+        return (recipricalTime * recipricalTime * Points[0]) + (2 * recipricalTime * Time * Points[1] + (Time * Time * Points[2]));
     }
 
     public Vector3[] GetSegments(int subDivisions)
