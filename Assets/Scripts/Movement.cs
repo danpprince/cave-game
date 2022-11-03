@@ -248,7 +248,7 @@ public class Movement : MonoBehaviour
         Vector3[] whipPoints = new Vector3[3];
         Vector3 basePosition = whipBase.transform.position;
         Vector3 peak = (basePosition + whipHitPosition) / 2f;
-        peak = new Vector3(peak.x, peak.y + (whipArchHeight*hitDistance/2), peak.z);
+        peak = new Vector3(peak.x, peak.y + (whipArchHeight*(Mathf.Abs(whipHitPosition.y-basePosition.y))), peak.z);
         whipPoints[0] = basePosition;
         whipPoints[1] = peak;
         whipPoints[2] = whipHitPosition;
