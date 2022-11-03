@@ -48,9 +48,10 @@ public class Movement : MonoBehaviour
     public float whipCoolDownTime = 1f;
     private InputAction WhipInput;
     public float whipRange = 5f;
-    private Vector3 hitPosition;
-    public bool didHit = false;
+    private Vector3 whipHitPosition;
+    public bool didWhipHit = false;
     private RaycastHit hit;
+    public float whipAnimationSpeed = 1f;
 
 
     void Start()
@@ -160,14 +161,14 @@ public class Movement : MonoBehaviour
             {
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
                 //Debug.Log("Hit " + hit.collider.name);
-                hitPosition = hit.point;
-                didHit = true;  
+                whipHitPosition = hit.point;
+                didWhipHit = true;  
             } else
             {
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
                 //Debug.Log("Missed");
-                hitPosition = camera.transform.position + camera.transform.TransformDirection(Vector3.forward) * whipRange;
-                didHit = false;
+                whipHitPosition = camera.transform.position + camera.transform.TransformDirection(Vector3.forward) * whipRange;
+                didWhipHit = false;
             }
     }
 
@@ -175,7 +176,7 @@ public class Movement : MonoBehaviour
     {
         if (canFireWhip)
         {
-            string message = didHit ? "Hit " + hit.collider.name : "Missed";
+            string message = didWhipHit ? "Hit " + hit.collider.name : "Missed";
             Debug.Log(message);
             canFireWhip = false;
             StartCoroutine(WhipCoolDownTimer());
@@ -184,8 +185,8 @@ public class Movement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = didHit ? Color.red : Color.green;
-        Gizmos.DrawSphere(hitPosition, 0.1f);
+        Gizmos.color = didWhipHit ? Color.red : Color.green;
+        Gizmos.DrawSphere(whipHitPosition, 0.1f);
     }
 
     private void OnEnable()
