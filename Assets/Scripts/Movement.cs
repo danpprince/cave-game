@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour
     private InputAction TossInput;
     public GameObject Torch;
     public GameObject TorchSpawnPoint;
-    public float UpwardsForce = 5.5f, ForwardsForce = 8f;
+    public float torchUpwardsForce = 5.5f, torchForwardsForce = 8f;
     private float DefaultForwardsForce;
     public float TorchForceMultiplier = 2f;
     public GameObject HeldTorch;
@@ -56,7 +56,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        DefaultForwardsForce = ForwardsForce;
+        DefaultForwardsForce = torchForwardsForce;
         DefaultTorchPosition = HeldTorch.transform.localPosition;
     }
 
@@ -103,10 +103,7 @@ public class Movement : MonoBehaviour
 
     private void ChargingTorch(InputAction.CallbackContext obj)
     {
-        
-        print("Holding");
         isTorchButtonHeldDown = true;
-       
     }
 
     private void WhileChargingTorchThrow()
@@ -123,8 +120,6 @@ public class Movement : MonoBehaviour
 
     private void TossTorch(InputAction.CallbackContext obj)
     {
-            print(obj.duration);
-
             //Direction Correction
             Vector3 forceDirection = camera.transform.forward;
             RaycastHit hit;
@@ -134,15 +129,15 @@ public class Movement : MonoBehaviour
             forceDirection = (hit.point - TorchSpawnPoint.transform.position).normalized;
             }
 
-            ForwardsForce += ForwardsForce * (float)obj.duration * TorchForceMultiplier;
+            torchForwardsForce += torchForwardsForce * (float)obj.duration * TorchForceMultiplier;
             GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
             Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
             torch_rb.velocity = this.Velocity;
-            Vector3 ForceToAdd = forceDirection * ForwardsForce + TorchSpawnPoint.transform.up * UpwardsForce;
+            Vector3 ForceToAdd = forceDirection * torchForwardsForce + TorchSpawnPoint.transform.up * torchUpwardsForce;
             torch_rb.AddForce(ForceToAdd, ForceMode.Impulse);
-            torch_rb.AddTorque(transform.up * Random.Range(0, 20));
-            print("Rock and Stone brother: " + ForwardsForce);
-            ForwardsForce = DefaultForwardsForce;
+            torch_rb.AddTorque(transform.right * Random.Range(5, 20));
+            torch_rb.AddTorque(transform.up * Random.Range(-5, 5));
+            torchForwardsForce = DefaultForwardsForce;
             isTorchButtonHeldDown = false;
     }
 
@@ -154,29 +149,24 @@ public class Movement : MonoBehaviour
 
     private void findWhipPoint() 
     {
-
-            Vector3 camForward = camera.transform.forward;
-            if(Physics.Raycast(camera.transform.position, camForward, out hit, whipRange))
-            {
-                Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
-                //Debug.Log("Hit " + hit.collider.name);
-                hitPosition = hit.point;
-                didHit = true;  
-            } else
-            {
-                Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
-                //Debug.Log("Missed");
-                hitPosition = camera.transform.position + camera.transform.TransformDirection(Vector3.forward) * whipRange;
-                didHit = false;
-            }
+        Vector3 camForward = camera.transform.forward;
+        if (Physics.Raycast(camera.transform.position, camForward, out hit, whipRange))
+        {
+            Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
+            hitPosition = hit.point;
+            didHit = true;  
+        } else
+        {
+            Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
+            hitPosition = camera.transform.position + camera.transform.TransformDirection(Vector3.forward) * whipRange;
+            didHit = false;
+        }
     }
 
     private void useWhip(InputAction.CallbackContext obj)
     {
         if (canFireWhip)
         {
-            string message = didHit ? "Hit " + hit.collider.name : "Missed";
-            Debug.Log(message);
             canFireWhip = false;
             StartCoroutine(WhipCoolDownTimer());
         }
