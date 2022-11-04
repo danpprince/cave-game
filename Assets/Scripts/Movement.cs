@@ -69,8 +69,8 @@ public class Movement : MonoBehaviour
         isGrounded = Physics.CheckSphere(GroundCheck.position, GroundDistance, GroundMask);
 
         // Looking stuff \\
-        float Look_X = MousePosition.x * X_AimSensitivity *Time.deltaTime * 100;
-        float Look_Y = MousePosition.y * Y_AimSensitivity *Time.deltaTime * 100;
+        float Look_X = MousePosition.x * X_AimSensitivity *Time.deltaTime;
+        float Look_Y = MousePosition.y * Y_AimSensitivity *Time.deltaTime;
         X_Rotation -= Look_Y;
         X_Rotation = Mathf.Clamp(X_Rotation, -90f, 90f);
 
