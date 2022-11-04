@@ -174,15 +174,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2147483647
   camera: {fileID: 8897005193119557354}
-  X_AimSensitivity: 2.2
-  Y_AimSensitivity: 1.8
+  X_AimSensitivity: 100
+  Y_AimSensitivity: 100
   playerBody: {fileID: 1350576064378477091}
   Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
   TorchSpawnPoint: {fileID: 9209023117751489498}
-  UpwardsForce: 7
-  ForwardsForce: 1
+  torchUpwardsForce: 5.5
+  torchForwardsForce: 1
   TorchForceMultiplier: 4.5
   HeldTorch: {fileID: 8105151284831279878}
+  whipCoolDownTime: 1
+  whipRange: 5
+  didHit: 0
 --- !u!114 &8897005194122684530
 MonoBehaviour:
   m_ObjectHideFlags: 0
