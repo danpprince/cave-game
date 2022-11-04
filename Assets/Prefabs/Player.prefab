@@ -250,16 +250,17 @@ MonoBehaviour:
   cc: {fileID: 8897005194122684529}
   playerControls: {fileID: 8897005194122684530}
   MoveSpeed: 0.1
-  Gravity: -9.8
+  Gravity: -2
   GroundCheck: {fileID: 472514917536187377}
-  GroundDistance: 0.4
+  GroundDistance: 0.2
   GroundMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 64
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 2
   Y_AimSensitivity: 2
   playerBody: {fileID: 1350576064378477091}
+  jump: 20
   Torch: {fileID: 0}
 --- !u!114 &8897005194122684530
 MonoBehaviour:

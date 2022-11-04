@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 1244060638}
   - component: {fileID: 1244060637}
   - component: {fileID: 1244060641}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Level container inv normals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,11 +388,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: jump
-      value: 5
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: Gravity
-      value: -9.8
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: GroundDistance
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: GroundMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_Name
