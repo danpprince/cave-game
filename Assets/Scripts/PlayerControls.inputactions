@@ -34,11 +34,11 @@
                 },
                 {
                     "name": "Toss",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "082b9c60-e3c7-47fb-9573-cf10fe2857cc",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.1)",
                     "initialStateCheck": true
                 }
             ],
