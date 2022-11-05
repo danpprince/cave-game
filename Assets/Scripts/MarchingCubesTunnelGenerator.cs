@@ -31,13 +31,17 @@ namespace MarchingCubesProject
         private VoxelArray voxels;
 
         public int axisResolution;
+        private int width, height, depth;
+
         public float worldLimits;
         public float surfaceThreshold;
+        public float insideColliderIntensity;
         public float floorDistance;  // Distance from point on curve to "floor" intensity calculation point
         public float noiseAmount;
         public int offsetRadiusSteps;
 
-        public PathCreator pathCreator;
+        private PathCreator[] pathCreators;
+        private Collider[] colliders;
 
 
         void Start()
@@ -48,9 +52,9 @@ namespace MarchingCubesProject
 
         void PopulateVoxels()
         {
-            int width = axisResolution;
-            int height = axisResolution;
-            int depth = axisResolution;
+            width = axisResolution;
+            height = axisResolution;
+            depth = axisResolution;
 
             voxels = new VoxelArray(width, height, depth);
 
@@ -66,6 +70,21 @@ namespace MarchingCubesProject
                 }
             }
 
+            pathCreators = GetComponentsInChildren<PathCreator>();
+            foreach (PathCreator pathCreator in pathCreators)
+            {
+                PopulateVoxelsForPath(pathCreator);
+            }
+
+            colliders = GetComponentsInChildren<Collider>();
+            foreach (Collider collider in colliders)
+            {
+                PopulateVoxelsForCollider(collider);
+            }
+        }
+
+        void PopulateVoxelsForPath(PathCreator pathCreator)
+        { 
             // Mark voxels with increasing intensity the closer they are to the path
             float stepSize = 0.5f;  // Step size in world units  
             int numSteps = (int)Mathf.Ceil(pathCreator.path.length / stepSize);
@@ -109,6 +128,26 @@ namespace MarchingCubesProject
             }
         }
 
+        void PopulateVoxelsForCollider(Collider collider)
+        {
+            // TODO: Not every voxel needs to be visited here, optimize this
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int z = 0; z < depth; z++)
+                    {
+                        Vector3 worldPoint = VoxelIndicesToWorldPoint(x, y, z);
+                        float sphereRadius = 0.1f;
+                        if (Physics.CheckSphere(worldPoint, sphereRadius))
+                        {
+                            voxels[x, y, z] = insideColliderIntensity;
+                        }
+                    }
+                }
+            }
+        }
+
         void GenerateMesh()
         {
             //Set the mode used to create the mesh.
@@ -144,10 +183,6 @@ namespace MarchingCubesProject
                     //Presumes the vertex is in local space where
                     //the min value is 0 and max is width/height/depth.
                     Vector3 p = verts[i];
-
-                    int width = axisResolution;
-                    int height = axisResolution;
-                    int depth = axisResolution;
 
                     float u = p.x / (width - 1.0f);
                     float v = p.y / (height - 1.0f);
@@ -269,10 +304,6 @@ namespace MarchingCubesProject
             {
                 return;
             }
-
-            int width = axisResolution;
-            int height = axisResolution;
-            int depth = axisResolution;
 
             int step = 2;
             float sphereRadius = 0.1f;
