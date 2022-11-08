@@ -1608,22 +1608,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Minotaur
       objectReference: {fileID: 0}
-    - target: {fileID: 8309643058347068469, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
-      propertyPath: movementSpeed
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8309643058347068469, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
-      propertyPath: rotationSpeed
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8309643058347068469, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
-      propertyPath: forwardTestDistance
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8309643058347068469, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
-      propertyPath: collisionRotationSpeed
-      value: 300
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
 --- !u!1001 &8897005192467925915

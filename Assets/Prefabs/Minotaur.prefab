@@ -395,11 +395,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4b24b36d076e8741b8eeec23bdd6aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardTestDistance: 1
+  forwardTestDistance: 4
   testRadius: 0
-  movementSpeed: 1
-  rotationSpeed: 1
-  collisionRotationSpeed: 1
+  movementSpeed: 1.1
+  rotationSpeed: 12
+  collisionRotationSpeed: 300
   rotationRandomAmount: 0
 --- !u!1 &4433669338933626464
 GameObject:
