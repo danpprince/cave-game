@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &150580713 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3595303810283265348, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-  m_PrefabInstance: {fileID: 8897005192467925915}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1244060636
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,57 +329,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1505195843214093539, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4413303769167790600, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4963657200163721910, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7935004732423392560, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8105151284831279878, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005193119557354, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: whipBase
-      value: 
-      objectReference: {fileID: 150580713}
-    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: whipArchHeight
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: X_AimSensitivity
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: Y_AimSensitivity
-      value: 1.5
+    - target: {fileID: 2748747824147388358, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.0114325
       objectReference: {fileID: 0}
     - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9209023117751489498, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Layer
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}

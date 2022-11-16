@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PathCreation;
 
 
 public class Movement : MonoBehaviour
@@ -58,6 +59,8 @@ public class Movement : MonoBehaviour
     private bool shouldAnimateWhip = false;
     public float whipArchHeight = 0.5f;
     private Vector3 currentWhipTipPosition;
+    public PathCreator whipArcPath;
+    private BezierPath bezPath;
 
 
     void Start()
@@ -65,6 +68,8 @@ public class Movement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         DefaultForwardsForce = torchForwardForce;
         DefaultTorchPosition = HeldTorch.transform.localPosition;
+        
+        
     }
 
     // Update is called once per frame
@@ -167,7 +172,7 @@ public class Movement : MonoBehaviour
     {
         yield return new WaitForSeconds(1 / whipAnimationSpeed);
         shouldAnimateWhip = false;
-        Destroy(lineRenderer);
+        //Destroy(lineRenderer);
     }
 
     private void findWhipPoint() 
@@ -177,7 +182,6 @@ public class Movement : MonoBehaviour
             if(Physics.Raycast(camera.transform.position, camForward, out hit, whipRange))
             {
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
-            //Debug.Log("Hit " + hit.collider.name);
                 hitDistance = hit.distance;
                 whipHitPosition = hit.point;
                 didWhipHit = true;  
@@ -197,7 +201,6 @@ public class Movement : MonoBehaviour
             string message = didWhipHit ? "Hit " + hit.collider.name : "Missed";
             Debug.Log(message);
             canFireWhip = false;
-            //animateWhip();
             shouldAnimateWhip = true;
             StartCoroutine(WhipCoolDownTimer());
             StartCoroutine(WhipAnimationTimer());
@@ -208,7 +211,7 @@ public class Movement : MonoBehaviour
     {
         Gizmos.color = didWhipHit ? Color.red : Color.green;
         Gizmos.DrawSphere(whipHitPosition, 0.1f);
-        Gizmos.DrawSphere(currentWhipTipPosition, 0.1f);
+        //Gizmos.DrawSphere(currentWhipTipPosition, 0.1f);
     }
 
     private void OnEnable()
@@ -249,19 +252,27 @@ public class Movement : MonoBehaviour
         }
         Vector3[] whipPoints = new Vector3[3];
         Vector3 basePosition = whipBase.transform.position;
-        Vector3 peak = (basePosition + whipHitPosition) / 2f;
+        Vector3 peak = (Vector3.zero + whipHitPosition) / 2f;
         peak = new Vector3(peak.x, peak.y + whipArchHeight, peak.z);
-        whipPoints[0] = basePosition;
+        whipPoints[0] = Vector3.zero;
         whipPoints[1] = peak;
         whipPoints[2] = whipHitPosition;
-        BezierCurve curve = new BezierCurve(whipPoints);
-        Vector3[] curveSegments = curve.GetSegments(10);
-        lineRenderer.positionCount = curveSegments.Length;
-        lineRenderer.SetPositions(curveSegments);
-        for(int i = 0; i < curveSegments.Length; i++)
+
+        BezierPath curve = new BezierPath(whipPoints, false, PathSpace.xyz);
+        VertexPath vec = new VertexPath(curve, transform);
+        
+
+        bezPath = curve;
+
+        Vector3[] points = new Vector3[vec.NumPoints];
+        print(vec.NumPoints);
+        for (int i = 0; i < vec.NumPoints; i++) 
         {
-            currentWhipTipPosition = curveSegments[i];
+            points[i] = vec.GetPoint(i);
         }
+
+        lineRenderer.SetPositions(points);
+
     }
 
 
