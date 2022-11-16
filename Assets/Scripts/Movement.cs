@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour
     private InputAction TossInput;
     public GameObject Torch;
     public GameObject TorchSpawnPoint;
-    public float UpwardsForce = 5.5f, ForwardsForce = 8f;
+    public float torchUpwardsForce = 5.5f, torchForwardForce = 8f;
     private float DefaultForwardsForce;
     public float TorchForceMultiplier = 2f;
     public GameObject HeldTorch;
@@ -57,12 +57,13 @@ public class Movement : MonoBehaviour
     LineRenderer lineRenderer;
     private bool shouldAnimateWhip = false;
     public float whipArchHeight = 0.5f;
+    private Vector3 currentWhipTipPosition;
 
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        DefaultForwardsForce = ForwardsForce;
+        DefaultForwardsForce = torchForwardForce;
         DefaultTorchPosition = HeldTorch.transform.localPosition;
     }
 
@@ -144,15 +145,15 @@ public class Movement : MonoBehaviour
             forceDirection = (hit.point - TorchSpawnPoint.transform.position).normalized;
             }
 
-            ForwardsForce += ForwardsForce * (float)obj.duration * TorchForceMultiplier;
+            torchForwardForce += torchForwardForce * (float)obj.duration * TorchForceMultiplier;
             GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
             Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
             torch_rb.velocity = this.Velocity;
-            Vector3 ForceToAdd = forceDirection * ForwardsForce + TorchSpawnPoint.transform.up * UpwardsForce;
+            Vector3 ForceToAdd = forceDirection * torchForwardForce + TorchSpawnPoint.transform.up * torchUpwardsForce;
             torch_rb.AddForce(ForceToAdd, ForceMode.Impulse);
             torch_rb.AddTorque(transform.up * Random.Range(0, 20));
-            print("Rock and Stone brother: " + ForwardsForce);
-            ForwardsForce = DefaultForwardsForce;
+            print("Rock and Stone brother: " + torchForwardForce);
+            torchForwardForce = DefaultForwardsForce;
             isTorchButtonHeldDown = false;
     }
 
@@ -207,6 +208,7 @@ public class Movement : MonoBehaviour
     {
         Gizmos.color = didWhipHit ? Color.red : Color.green;
         Gizmos.DrawSphere(whipHitPosition, 0.1f);
+        Gizmos.DrawSphere(currentWhipTipPosition, 0.1f);
     }
 
     private void OnEnable()
@@ -256,6 +258,10 @@ public class Movement : MonoBehaviour
         Vector3[] curveSegments = curve.GetSegments(10);
         lineRenderer.positionCount = curveSegments.Length;
         lineRenderer.SetPositions(curveSegments);
+        for(int i = 0; i < curveSegments.Length; i++)
+        {
+            currentWhipTipPosition = curveSegments[i];
+        }
     }
 
 
