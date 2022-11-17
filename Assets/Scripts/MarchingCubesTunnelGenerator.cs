@@ -139,9 +139,14 @@ namespace MarchingCubesProject
                     {
                         Vector3 worldPoint = VoxelIndicesToWorldPoint(x, y, z);
                         float sphereRadius = 0.1f;
-                        if (Physics.CheckSphere(worldPoint, sphereRadius))
+
+                        Collider[] overlappingColliders = Physics.OverlapSphere(worldPoint, sphereRadius);
+                        foreach (Collider overlapCollider in overlappingColliders)
                         {
-                            voxels[x, y, z] = insideColliderIntensity;
+                            if (overlapCollider == collider)
+                            {
+                                voxels[x, y, z] = insideColliderIntensity;
+                            }
                         }
                     }
                 }
