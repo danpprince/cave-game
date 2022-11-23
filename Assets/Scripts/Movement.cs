@@ -189,8 +189,9 @@ public class Movement : MonoBehaviour
             {
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
                 //Debug.Log("Missed");
-                whipHitPosition = camera.transform.position + camera.transform.TransformDirection(Vector3.forward) * whipRange;
-                didWhipHit = false;
+                whipHitPosition = camera.transform.position + camera.transform.forward * whipRange;
+                
+            didWhipHit = false;
             }
     }
 
@@ -252,27 +253,20 @@ public class Movement : MonoBehaviour
         }
         Vector3[] whipPoints = new Vector3[3];
         Vector3 basePosition = whipBase.transform.position;
-        Vector3 peak = (Vector3.zero + whipHitPosition) / 2f;
+        Vector3 whipHitPositionLocal = transform.InverseTransformPoint(whipHitPosition);
+
+        Vector3 peak = (Vector3.zero + whipHitPositionLocal) / 2f;
         peak = new Vector3(peak.x, peak.y + whipArchHeight, peak.z);
+
         whipPoints[0] = Vector3.zero;
         whipPoints[1] = peak;
         whipPoints[2] = whipHitPosition;
 
-        BezierPath curve = new BezierPath(whipPoints, false, PathSpace.xyz);
-        VertexPath vec = new VertexPath(curve, transform);
-        
-
-        bezPath = curve;
-
-        Vector3[] points = new Vector3[vec.NumPoints];
-        print(vec.NumPoints);
-        for (int i = 0; i < vec.NumPoints; i++) 
+        //BezierPath curve = new BezierPath(whipPoints, false, PathSpace.xyz);
+        for(int i = 0; i < whipPoints.Length; i++)
         {
-            points[i] = vec.GetPoint(i);
+            whipArcPath.bezierPath.SetPoint(whipPoints[i].x false);
         }
-
-        lineRenderer.SetPositions(points);
-
     }
 
 
