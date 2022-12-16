@@ -43,9 +43,6 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
 
     private GameObject terrainObject;
 
-
-    // void Start() { }
-
     // Clear terrain before repopulating voxels to prevent previous colliders from being used in
     // voxel intensity calculation
     public void ClearTerrainObject()
@@ -148,9 +145,14 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
                 {
                     Vector3 worldPoint = VoxelIndicesToWorldPoint(x, y, z);
                     float sphereRadius = 0.1f;
-                    if (Physics.CheckSphere(worldPoint, sphereRadius))
+
+                    Collider[] overlappingColliders = Physics.OverlapSphere(worldPoint, sphereRadius);
+                    foreach (Collider overlapCollider in overlappingColliders)
                     {
-                        voxels[x, y, z] = insideColliderIntensity;
+                        if (overlapCollider == collider)
+                        {
+                            voxels[x, y, z] = insideColliderIntensity;
+                        }
                     }
                 }
             }
@@ -326,6 +328,4 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             }
         }
     }
-
-    public bool HasTerrainObject() { return terrainObject == null;  }
 }
