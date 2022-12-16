@@ -14,9 +14,7 @@ public class BatMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 forwardTestPoint = transform.position + transform.forward * forwardTestDistance;
         float rotationToApply = rotationSpeed + Random.Range(-rotationRandomAmount, rotationRandomAmount);
-        //if (!Physics.CheckSphere(forwardTestPoint, testRadius))
         if (!Physics.Raycast(transform.position, transform.forward, forwardTestDistance))
         {
             transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
