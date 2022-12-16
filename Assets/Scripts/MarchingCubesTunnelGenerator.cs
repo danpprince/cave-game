@@ -46,6 +46,20 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
 
     // void Start() { }
 
+    // Clear terrain before repopulating voxels to prevent previous colliders from being used in
+    // voxel intensity calculation
+    public void ClearTerrainObject()
+    {
+        if (Application.isEditor)
+        {
+            DestroyImmediate(terrainObject);
+        }
+        else
+        {
+            Destroy(terrainObject);
+        }
+    }
+
     public void PopulateVoxels()
     {
         width = axisResolution;
@@ -84,7 +98,6 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         // Mark voxels with increasing intensity the closer they are to the path
         float stepSize = 0.5f;  // Step size in world units  
         int numSteps = (int)Mathf.Ceil(pathCreator.path.length / stepSize);
-        print("numSteps: " + numSteps);
         for (int stepIndex = 0; stepIndex < numSteps; stepIndex++)
         {
             // "Time" is the point on the curve in the range (0, 1)

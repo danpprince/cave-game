@@ -13,6 +13,7 @@ public class MarchingCubesTunnelGeneratorEditor : Editor
 
         if (GUILayout.Button("Generate Terrain"))
         {
+            generator.ClearTerrainObject();
             generator.PopulateVoxels();
             generator.GenerateMesh();
         }
