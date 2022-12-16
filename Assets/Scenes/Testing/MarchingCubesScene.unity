@@ -232,7 +232,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -360,6 +360,22 @@ PrefabInstance:
     - target: {fileID: 1350576064378477091, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2748747824147388358, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.0178494
+      objectReference: {fileID: 0}
+    - target: {fileID: 2748747824147388358, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.0000019
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: X_AimSensitivity
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: Y_AimSensitivity
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_Name

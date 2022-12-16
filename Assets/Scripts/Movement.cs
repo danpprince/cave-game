@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using PathCreation;
 
 
 public class Movement : MonoBehaviour
@@ -59,8 +58,8 @@ public class Movement : MonoBehaviour
     private bool shouldAnimateWhip = false;
     public float whipArchHeight = 0.5f;
     private Vector3 currentWhipTipPosition;
-    public PathCreator whipArcPath;
-    private BezierPath bezPath;
+    public float whipHitColliderRadius = 0.5f;
+    public GameObject whipHitCollider;
 
 
     void Start()
@@ -68,8 +67,8 @@ public class Movement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         DefaultForwardsForce = torchForwardForce;
         DefaultTorchPosition = HeldTorch.transform.localPosition;
-        
-        
+   
+
     }
 
     // Update is called once per frame
@@ -81,8 +80,8 @@ public class Movement : MonoBehaviour
         isGrounded = Physics.CheckSphere(GroundCheck.position, GroundDistance, GroundMask);
 
         // Looking stuff \\
-        float Look_X = MousePosition.x * X_AimSensitivity *Time.deltaTime * 100;
-        float Look_Y = MousePosition.y * Y_AimSensitivity *Time.deltaTime * 100;
+        float Look_X = MousePosition.x * X_AimSensitivity *Time.deltaTime;
+        float Look_Y = MousePosition.y * Y_AimSensitivity *Time.deltaTime;
         X_Rotation -= Look_Y;
         X_Rotation = Mathf.Clamp(X_Rotation, -90f, 90f);
 
@@ -172,7 +171,6 @@ public class Movement : MonoBehaviour
     {
         yield return new WaitForSeconds(1 / whipAnimationSpeed);
         shouldAnimateWhip = false;
-        //Destroy(lineRenderer);
     }
 
     private void findWhipPoint() 
@@ -184,14 +182,13 @@ public class Movement : MonoBehaviour
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
                 hitDistance = hit.distance;
                 whipHitPosition = hit.point;
-                didWhipHit = true;  
+                didWhipHit = true;
             } else
             {
                 Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
                 //Debug.Log("Missed");
                 whipHitPosition = camera.transform.position + camera.transform.forward * whipRange;
-                
-            didWhipHit = false;
+                didWhipHit = false;
             }
     }
 
@@ -205,6 +202,10 @@ public class Movement : MonoBehaviour
             shouldAnimateWhip = true;
             StartCoroutine(WhipCoolDownTimer());
             StartCoroutine(WhipAnimationTimer());
+            if (didWhipHit)
+            {
+                GameObject hitCollider = Instantiate(whipHitCollider, whipHitPosition, Quaternion.identity);
+            }
         }
     }
 
@@ -212,7 +213,7 @@ public class Movement : MonoBehaviour
     {
         Gizmos.color = didWhipHit ? Color.red : Color.green;
         Gizmos.DrawSphere(whipHitPosition, 0.1f);
-        //Gizmos.DrawSphere(currentWhipTipPosition, 0.1f);
+        Gizmos.DrawSphere(currentWhipTipPosition, 0.1f);
     }
 
     private void OnEnable()
@@ -255,19 +256,26 @@ public class Movement : MonoBehaviour
         Vector3 basePosition = whipBase.transform.position;
         Vector3 whipHitPositionLocal = transform.InverseTransformPoint(whipHitPosition);
 
-        Vector3 peak = (Vector3.zero + whipHitPositionLocal) / 2f;
+        Vector3 peak = (whipBase.transform.position); /// 2f;
         peak = new Vector3(peak.x, peak.y + whipArchHeight, peak.z);
 
-        whipPoints[0] = Vector3.zero;
+        whipPoints[0] = whipBase.transform.position;
         whipPoints[1] = peak;
         whipPoints[2] = whipHitPosition;
 
-        //BezierPath curve = new BezierPath(whipPoints, false, PathSpace.xyz);
-        for(int i = 0; i < whipPoints.Length; i++)
-        {
-            whipArcPath.bezierPath.SetPoint(whipPoints[i].x false);
-        }
-    }
+        BezierCurve curve = new BezierCurve(whipPoints);
+        Vector3[] curveSegments = curve.GetSegments(10);
 
+        //----------------------------For Eventural use with PathCreator-----------------------
+        //BezierPath curve = new BezierPath(whipPoints, false, PathSpace.xyz);
+        //int numOfSegments = curve.NumPoints;
+        //for (int i = 0; i < numOfSegments; i++)
+        //{
+        //   curveSegments[i] = curve.GetPoint(i); 
+        //}
+
+        lineRenderer.positionCount = curveSegments.Length;
+        lineRenderer.SetPositions(curveSegments);
+    }
 
 }
