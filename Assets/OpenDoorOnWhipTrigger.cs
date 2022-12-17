@@ -5,16 +5,7 @@ using UnityEngine;
 public class OpenDoorOnWhipTrigger : MonoBehaviour
 {
     private bool isLeverDown = true;
-    public Animator doorAnimator;
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    public Animator doorAnimator, leverAnimator;
 
     private void OnTriggerEnter(Collider collider)
     {
@@ -26,12 +17,13 @@ public class OpenDoorOnWhipTrigger : MonoBehaviour
             {
                 print("Starting close door animation");
                 doorAnimator.Play("Close");
+                leverAnimator.Play("MoveDown");
             } else
             {
                 print("Starting open door animation");
                 doorAnimator.Play("Open");
+                leverAnimator.Play("MoveUp");
             }
-            // TODO: Animate the lever
         }
     }
 }
