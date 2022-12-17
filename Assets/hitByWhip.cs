@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class hitByWhip : MonoBehaviour
 {
-
-
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "whip")
