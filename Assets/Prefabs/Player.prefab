@@ -375,8 +375,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2147483647
   camera: {fileID: 8897005193119557354}
-  X_AimSensitivity: 10
-  Y_AimSensitivity: 10
+  X_AimSensitivity: 0.5
+  Y_AimSensitivity: 0.5
   playerBody: {fileID: 1350576064378477091}
   Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
   TorchSpawnPoint: {fileID: 9209023117751489498}
