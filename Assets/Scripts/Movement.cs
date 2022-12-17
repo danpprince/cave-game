@@ -67,8 +67,6 @@ public class Movement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         DefaultForwardsForce = torchForwardForce;
         DefaultTorchPosition = HeldTorch.transform.localPosition;
-   
-
     }
 
     // Update is called once per frame
@@ -80,8 +78,8 @@ public class Movement : MonoBehaviour
         isGrounded = Physics.CheckSphere(GroundCheck.position, GroundDistance, GroundMask);
 
         // Looking stuff \\
-        float Look_X = MousePosition.x * X_AimSensitivity *Time.deltaTime;
-        float Look_Y = MousePosition.y * Y_AimSensitivity *Time.deltaTime;
+        float Look_X = MousePosition.x * X_AimSensitivity;
+        float Look_Y = MousePosition.y * Y_AimSensitivity;
         X_Rotation -= Look_Y;
         X_Rotation = Mathf.Clamp(X_Rotation, -90f, 90f);
 
