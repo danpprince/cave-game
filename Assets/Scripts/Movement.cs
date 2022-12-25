@@ -23,7 +23,7 @@ public class Movement : MonoBehaviour
 
     // For Looking \\
     private InputAction Look;
-    public GameObject camera;  
+    public GameObject camera;
 
     public float X_AimSensitivity;
     public float Y_AimSensitivity;

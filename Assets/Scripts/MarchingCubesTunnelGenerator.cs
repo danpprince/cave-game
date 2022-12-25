@@ -8,6 +8,7 @@ using Common.Unity.Drawing;
 using PathCreation;
 
 using MarchingCubesProject;
+using ProceduralNoiseProject;
 
 public enum MARCHING_MODE { CUBES, TETRAHEDRON };
 
@@ -33,15 +34,23 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
 
     public float worldLimits;
     public float surfaceThreshold;
+    public float insideTunnelIntensity;
+    public float insideTunnelFallofDistance;
     public float insideColliderIntensity;
+    public float colliderFalloffDistance;
     public float floorDistance;  // Distance from point on curve to "floor" intensity calculation point
     public float noiseAmount;
+    public int numNoiseOctaves;
     public int offsetRadiusSteps;
+
+    public float noiseFrequency;
 
     private PathCreator[] pathCreators;
     private Collider[] colliders;
 
     private GameObject terrainObject;
+
+    private FractalNoise noiseGenerator;
 
     // Clear terrain before repopulating voxels to prevent previous colliders from being used in
     // voxel intensity calculation
@@ -59,6 +68,8 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
 
     public void PopulateVoxels()
     {
+        noiseGenerator = new FractalNoise(new SimplexNoise(seed, noiseFrequency), numNoiseOctaves, 1.0f);
+
         width = axisResolution;
         height = axisResolution;
         depth = axisResolution;
@@ -77,17 +88,23 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             }
         }
 
+        print("Populating voxels for paths");
         pathCreators = GetComponentsInChildren<PathCreator>();
         foreach (PathCreator pathCreator in pathCreators)
         {
             PopulateVoxelsForPath(pathCreator);
         }
 
+        print("Populating voxels for colliders");
         colliders = GetComponentsInChildren<Collider>();
         foreach (Collider collider in colliders)
         {
             PopulateVoxelsForCollider(collider);
         }
+
+        // PopulateVoxelsWithNoise();
+
+        print("Voxels populated");
     }
 
     void PopulateVoxelsForPath(PathCreator pathCreator)
@@ -101,7 +118,7 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             float t = ((float)stepIndex) / numSteps;
             Vector3 pointOnCurve = pathCreator.path.GetPointAtTime(t);
             Vector3 pointOnFloor = pointOnCurve + new Vector3(0, -floorDistance, 0);
-            List<int> curvePointVoxelIndices = WorldPointToVoxelIndices(pointOnCurve);
+            Vector3Int curvePointVoxelIndices = WorldPointToVoxelIndices(pointOnCurve);
 
             for (int xOffset = -offsetRadiusSteps; xOffset <= offsetRadiusSteps; xOffset++)
             {
@@ -111,19 +128,33 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
                     {
                         List<int> offsetVoxelIndices = new List<int>
                         {
-                            xOffset + curvePointVoxelIndices[0],
-                            yOffset + curvePointVoxelIndices[1],
-                            zOffset + curvePointVoxelIndices[2]
+                            xOffset + curvePointVoxelIndices.x,
+                            yOffset + curvePointVoxelIndices.y,
+                            zOffset + curvePointVoxelIndices.z
                         };
 
                         Vector3 offsetWorldPoint = VoxelIndicesToWorldPoint(offsetVoxelIndices);
 
+                        // Half the values so their sum is the inside tunnel intensity
                         // Use distance to center to make tunnel circular
-                        float distanceToCenterIntensity = 1 / Vector3.Distance(pointOnCurve, offsetWorldPoint);
+                        float distanceToCenterIntensity = 
+                            Remap(
+                                Vector3.Distance(pointOnCurve, offsetWorldPoint),
+                                0, insideTunnelFallofDistance, 0.5f * insideTunnelIntensity, 0
+                            );
+                        distanceToCenterIntensity = Mathf.Max(distanceToCenterIntensity, 0);
                         // Use distance to "floor" point to make bottom of tunnel flatter
-                        float distanceToFloorIntensity = 0.5f / Vector3.Distance(pointOnFloor, offsetWorldPoint);
+                        float distanceToFloorIntensity =
+                            Remap(
+                                Vector3.Distance(pointOnFloor, offsetWorldPoint),
+                                0, insideTunnelFallofDistance, 0.5f * insideTunnelIntensity, 0
+                            );
+                        distanceToFloorIntensity = Mathf.Max(distanceToFloorIntensity, 0);
                         // Use random intensity to make tunnel more jagged
-                        float noiseIntensity = Random.Range(-noiseAmount, noiseAmount);
+                        float noiseIntensity = 
+                            noiseAmount * noiseGenerator.Sample3D(
+                                offsetVoxelIndices[0], offsetVoxelIndices[1], offsetVoxelIndices[2]
+                            ); //  Random.Range(-noiseAmount, noiseAmount);
 
                         voxels[offsetVoxelIndices[0], offsetVoxelIndices[1], offsetVoxelIndices[2]]
                             += distanceToCenterIntensity + distanceToFloorIntensity + noiseIntensity;
@@ -136,23 +167,48 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
 
     void PopulateVoxelsForCollider(Collider collider)
     {
-        // TODO: Not every voxel needs to be visited here, optimize this
-        for (int x = 0; x < width; x++)
+        int margin = 1;
+        Vector3Int marginVector = Vector3Int.one * margin;
+        Vector3 minPoint = collider.bounds.min;
+        Vector3 maxPoint = collider.bounds.max;
+
+        Debug.Log($"Populating voxels for collider {collider.name} with min {minPoint}, max {maxPoint}");
+
+        Vector3Int minVoxelIndices = WorldPointToVoxelIndices(minPoint) - marginVector;
+        Vector3Int maxVoxelIndices = WorldPointToVoxelIndices(maxPoint) + marginVector;
+
+        for (int x = minVoxelIndices.x; x <= maxVoxelIndices.x; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = minVoxelIndices.y; y <= maxVoxelIndices.y; y++)
             {
-                for (int z = 0; z < depth; z++)
+                for (int z = minVoxelIndices.z; z <= maxVoxelIndices.z; z++)
                 {
+                    voxels[x, y, z] += noiseAmount * noiseGenerator.Sample3D(x, y, z);
                     Vector3 worldPoint = VoxelIndicesToWorldPoint(x, y, z);
                     float sphereRadius = 0.1f;
 
+                    bool pointIsInCollider = false;
                     Collider[] overlappingColliders = Physics.OverlapSphere(worldPoint, sphereRadius);
                     foreach (Collider overlapCollider in overlappingColliders)
                     {
                         if (overlapCollider == collider)
                         {
-                            voxels[x, y, z] = insideColliderIntensity;
+                            float noiseIntensity = 0; // Random.Range(-noiseAmount, noiseAmount);
+                            voxels[x, y, z] += insideColliderIntensity + noiseIntensity;
+                            pointIsInCollider = true;
+                            break;
                         }
+                    }
+
+                    if (!pointIsInCollider)
+                    {
+                        Vector3 closestPointOnCollider = collider.ClosestPoint(worldPoint);
+                        float distanceToCollider = Vector3.Distance(closestPointOnCollider, worldPoint);
+
+                        float voxelIntensity = 
+                            Remap(distanceToCollider, 0, colliderFalloffDistance, insideColliderIntensity, 0);
+                        voxelIntensity = Mathf.Max(voxelIntensity, 0);
+                        voxels[x, y, z] += voxelIntensity;
                     }
                 }
             }
@@ -246,13 +302,13 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         collider.sharedMesh = mesh;
     }
 
-    private List<int> WorldPointToVoxelIndices(Vector3 point)
+    private Vector3Int WorldPointToVoxelIndices(Vector3 point)
     {
-        return new List<int> {
+        return new Vector3Int (
             (int)Mathf.Round(Remap(point.x, -worldLimits, worldLimits, 0, axisResolution)),
             (int)Mathf.Round(Remap(point.y, -worldLimits, worldLimits, 0, axisResolution)),
             (int)Mathf.Round(Remap(point.z, -worldLimits, worldLimits, 0, axisResolution))
-        };
+        );
     }
 
     /// <summary>
@@ -309,7 +365,7 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             return;
         }
 
-        int step = 2;
+        int step = 3;
         float sphereRadius = 0.1f;
         for (int x = 0; x < width; x += step)
         {
