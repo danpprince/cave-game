@@ -12,6 +12,8 @@ public class TunnelPathGenerator : MonoBehaviour
 
     public string tunnelEndpointTag;
     public int maxRecursionDepth;
+    public float recursionProbability; // [0, 1]
+    public float tunnelLengthMin, tunnelLengthMax;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +51,10 @@ public class TunnelPathGenerator : MonoBehaviour
         //    sourceTunnelPosition.y + Random.Range(-5, 0),
         //    sourceTunnelPosition.z + zSign * Random.Range(10, 20)
         //);
-        Vector3 destinationRoomPosition = sourceTunnelTransform.position + baseDirection * Random.Range(10, 20);
+        Vector3 destinationRoomPosition = 
+            sourceTunnelTransform.position
+            + baseDirection * Random.Range(tunnelLengthMin, tunnelLengthMax);
+        destinationRoomPosition.y += Random.Range(-5f, 0f);
         Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
         room.transform.parent = sourceTunnelTransform;
@@ -101,6 +106,10 @@ public class TunnelPathGenerator : MonoBehaviour
 
         foreach (Transform childTransform in childTransformsToRecurseInto)
         {
+            if (Random.value > recursionProbability)
+            {
+                continue;
+            }
             Vector3 childBaseDirection = (childTransform.position - room.transform.position).normalized;
             GeneratePathsRecursive(childTransform, childBaseDirection, depth + 1);
         }
