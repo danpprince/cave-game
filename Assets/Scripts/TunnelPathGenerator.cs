@@ -6,6 +6,7 @@ using PathCreation;
 
 public class TunnelPathGenerator : MonoBehaviour
 {
+    public Transform startingRoomTransform;
     public Transform startingTunnelEndpoint;
     public GameObject roomPrefab;
 
@@ -26,11 +27,12 @@ public class TunnelPathGenerator : MonoBehaviour
 
     public void GeneratePaths()
     {
-        GeneratePathsRecursive(startingTunnelEndpoint, 0);
+        Vector3 baseDirection = (startingTunnelEndpoint.position - startingRoomTransform.position).normalized;
+        GeneratePathsRecursive(startingTunnelEndpoint, baseDirection, 0);
 
     }
 
-    private void GeneratePathsRecursive(Transform sourceTunnelTransform, int depth)
+    private void GeneratePathsRecursive(Transform sourceTunnelTransform, Vector3 baseDirection, int depth)
     {
         if (depth >= maxRecursionDepth)
         {
@@ -40,13 +42,14 @@ public class TunnelPathGenerator : MonoBehaviour
         Vector3 sourceTunnelPosition = sourceTunnelTransform.position;
 
         // Deeper rooms always go down in Y, but can be positive or negative in X and Z
-        float xSign = Random.value < 0.5f ? 1 : -1;
-        float zSign = Random.value < 0.5f ? 1 : -1;
-        Vector3 destinationRoomPosition = new Vector3(
-            sourceTunnelPosition.x + xSign * Random.Range(10, 20),
-            sourceTunnelPosition.y + Random.Range(-5, 0),
-            sourceTunnelPosition.z + zSign * Random.Range(10, 20)
-        );
+        //float xSign = Random.value < 0.5f ? 1 : -1;
+        //float zSign = Random.value < 0.5f ? 1 : -1;
+        //Vector3 destinationRoomPosition = new Vector3(
+        //    sourceTunnelPosition.x + xSign * Random.Range(10, 20),
+        //    sourceTunnelPosition.y + Random.Range(-5, 0),
+        //    sourceTunnelPosition.z + zSign * Random.Range(10, 20)
+        //);
+        Vector3 destinationRoomPosition = sourceTunnelTransform.position + baseDirection * Random.Range(10, 20);
         Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
         room.transform.parent = sourceTunnelTransform;
@@ -98,7 +101,8 @@ public class TunnelPathGenerator : MonoBehaviour
 
         foreach (Transform childTransform in childTransformsToRecurseInto)
         {
-            GeneratePathsRecursive(childTransform, depth + 1);
+            Vector3 childBaseDirection = (childTransform.position - room.transform.position).normalized;
+            GeneratePathsRecursive(childTransform, childBaseDirection, depth + 1);
         }
     }
 }
