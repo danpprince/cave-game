@@ -25,28 +25,44 @@ public class TunnelPathGenerator : MonoBehaviour
 
     public void GeneratePaths()
     {
-        Vector3 position = new Vector3(0, 20, 0);
-        Quaternion rotation = Quaternion.Euler(0, -150, 0);
-        GameObject room = Instantiate(roomPrefab, position, rotation, transform);
+        Transform sourceTunnelPoint = startingTunnelEndpoint;
 
-        Transform pathDestination = transform;
+        Vector3 destinationRoomPosition = new Vector3(0, 20, 0);
+        Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+        GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
+
+        // Set the path destination to the closest TunnelEndpoint child in the new room
+        Transform pathDestination = null;
+        float pathDistance = float.PositiveInfinity;
         for (int childIndex = 0; childIndex < room.transform.childCount; childIndex++)
         {
             GameObject childObject = room.transform.GetChild(childIndex).gameObject;
-            if (childObject.tag == tunnelEndpointTag)
+            if (childObject.tag != tunnelEndpointTag)
             {
-                print($"Found tunnel endpoint {childObject.name}, setting as destination");
+                continue;
+            }
+            if (pathDestination is null)
+            {
                 pathDestination = childObject.transform;
-                break;
+                pathDistance = Vector3.Distance(sourceTunnelPoint.position, pathDestination.position);
+                print($"Path destination was null, now {pathDestination} with distance {pathDistance}");
+                continue;
+            }
+
+            float newTunnelDistance = Vector3.Distance(sourceTunnelPoint.position, childObject.transform.position);
+            if (newTunnelDistance < pathDistance)
+            {
+                pathDestination = childObject.transform;
+                pathDistance = Vector3.Distance(sourceTunnelPoint.position, pathDestination.position);
+                print($"Shorter path found, now destination {pathDestination} with distance {pathDistance}");
+                continue;
             }
         }
 
         GameObject pathObject = new GameObject("Path");
         pathObject.transform.parent = gameObject.transform;
-        Vector3 midpoint = new Vector3(-15, 23, 15);
         List<Vector3> pathPoints = new List<Vector3> {
-            startingTunnelEndpoint.position, 
-            midpoint,
+            sourceTunnelPoint.position, 
             pathDestination.position
         };
         PathCreator tunnelPathCreator = pathObject.AddComponent<PathCreator>();
