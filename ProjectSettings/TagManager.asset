@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - whip
+  - TunnelEndpoint
   layers:
   - Default
   - TransparentFX
