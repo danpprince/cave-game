@@ -14,6 +14,8 @@ public class TunnelPathGenerator : MonoBehaviour
     public int maxRecursionDepth;
     public float recursionProbability; // [0, 1]
     public float tunnelLengthMin, tunnelLengthMax;
+    public float midpointOffset;
+    public float maxYChange;
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +56,7 @@ public class TunnelPathGenerator : MonoBehaviour
         Vector3 destinationRoomPosition = 
             sourceTunnelTransform.position
             + baseDirection * Random.Range(tunnelLengthMin, tunnelLengthMax);
-        destinationRoomPosition.y += Random.Range(-5f, 0f);
+        destinationRoomPosition.y += Random.Range(- maxYChange, 0f);
         Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
         room.transform.parent = gameObject.transform;
@@ -94,8 +96,14 @@ public class TunnelPathGenerator : MonoBehaviour
         // Create the bezier path to the selected destination
         GameObject pathObject = new GameObject("Path");
         pathObject.transform.parent = gameObject.transform;
+        Vector3 midpoint = Vector3.Lerp(sourceTunnelPosition, pathDestination.position, 0.5f);
+        midpoint += new Vector3(
+            Random.Range(-midpointOffset, midpointOffset), 
+            0,
+            Random.Range(-midpointOffset, midpointOffset)
+        );
         List<Vector3> pathPoints = new List<Vector3> {
-            sourceTunnelPosition, pathDestination.position
+            sourceTunnelPosition, midpoint, pathDestination.position
         };
         PathCreator tunnelPathCreator = pathObject.AddComponent<PathCreator>();
         tunnelPathCreator.bezierPath = new BezierPath(pathPoints);
