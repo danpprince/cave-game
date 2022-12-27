@@ -57,7 +57,7 @@ public class TunnelPathGenerator : MonoBehaviour
         destinationRoomPosition.y += Random.Range(-5f, 0f);
         Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
-        room.transform.parent = sourceTunnelTransform;
+        room.transform.parent = gameObject.transform;
 
         // Set the path destination to the closest TunnelEndpoint child in the new room
         Transform pathDestination = null;
@@ -93,7 +93,7 @@ public class TunnelPathGenerator : MonoBehaviour
 
         // Create the bezier path to the selected destination
         GameObject pathObject = new GameObject("Path");
-        pathObject.transform.parent = sourceTunnelTransform.transform;
+        pathObject.transform.parent = gameObject.transform;
         List<Vector3> pathPoints = new List<Vector3> {
             sourceTunnelPosition, pathDestination.position
         };
