@@ -15,7 +15,7 @@ public class TunnelPathGenerator : MonoBehaviour
     public float recursionProbability; // [0, 1]
     public float tunnelLengthMin, tunnelLengthMax;
     public float midpointOffset;
-    public float maxYChange;
+    public float tunnelDownwardAngleMaxDegrees;
 
     // Start is called before the first frame update
     void Start()
@@ -53,10 +53,12 @@ public class TunnelPathGenerator : MonoBehaviour
         //    sourceTunnelPosition.y + Random.Range(-5, 0),
         //    sourceTunnelPosition.z + zSign * Random.Range(10, 20)
         //);
+        float tunnelLength = Random.Range(tunnelLengthMin, tunnelLengthMax);
         Vector3 destinationRoomPosition = 
-            sourceTunnelTransform.position
-            + baseDirection * Random.Range(tunnelLengthMin, tunnelLengthMax);
-        destinationRoomPosition.y += Random.Range(- maxYChange, 0f);
+            sourceTunnelTransform.position + baseDirection * tunnelLength;
+        float downwardAngle = Random.Range(0, tunnelDownwardAngleMaxDegrees);
+        float yChange = tunnelLength * Mathf.Tan(downwardAngle * Mathf.Deg2Rad);
+        destinationRoomPosition.y += Random.Range(-yChange, 0f);
         Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
         room.transform.parent = gameObject.transform;
