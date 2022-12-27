@@ -17,6 +17,8 @@ public class TunnelPathGenerator : MonoBehaviour
     public float midpointOffset;
     public float tunnelDownwardAngleMaxDegrees;
 
+    private GameObject generatedParent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,9 +33,10 @@ public class TunnelPathGenerator : MonoBehaviour
 
     public void GeneratePaths()
     {
+        generatedParent = new GameObject("Generated");
+        generatedParent.transform.parent = gameObject.transform;
         Vector3 baseDirection = (startingTunnelEndpoint.position - startingRoomTransform.position).normalized;
         GeneratePathsRecursive(startingTunnelEndpoint, baseDirection, 0);
-
     }
 
     private void GeneratePathsRecursive(Transform sourceTunnelTransform, Vector3 baseDirection, int depth)
@@ -61,7 +64,7 @@ public class TunnelPathGenerator : MonoBehaviour
         destinationRoomPosition.y += Random.Range(-yChange, 0f);
         Quaternion destinationRoomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         GameObject room = Instantiate(roomPrefab, destinationRoomPosition, destinationRoomRotation, transform);
-        room.transform.parent = gameObject.transform;
+        room.transform.parent = generatedParent.transform;
 
         // Set the path destination to the closest TunnelEndpoint child in the new room
         Transform pathDestination = null;
@@ -97,7 +100,7 @@ public class TunnelPathGenerator : MonoBehaviour
 
         // Create the bezier path to the selected destination
         GameObject pathObject = new GameObject("Path");
-        pathObject.transform.parent = gameObject.transform;
+        pathObject.transform.parent = generatedParent.transform;
         Vector3 midpoint = Vector3.Lerp(sourceTunnelPosition, pathDestination.position, 0.5f);
         midpoint += new Vector3(
             Random.Range(-midpointOffset, midpointOffset), 
