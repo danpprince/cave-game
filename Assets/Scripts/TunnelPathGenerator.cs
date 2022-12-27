@@ -116,7 +116,8 @@ public class TunnelPathGenerator : MonoBehaviour
 
         foreach (Transform childTransform in childTransformsToRecurseInto)
         {
-            if (Random.value > recursionProbability)
+            // Skip recursion randomly or if the current child is the same as the completed tunnel destination
+            if (Random.value > recursionProbability || childTransform == pathDestination)
             {
                 continue;
             }
