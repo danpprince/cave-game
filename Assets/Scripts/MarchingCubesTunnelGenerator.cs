@@ -8,6 +8,7 @@ using Common.Unity.Drawing;
 using PathCreation;
 
 using MarchingCubesProject;
+using Unity.AI.Navigation;
 
 public enum MARCHING_MODE { CUBES, TETRAHEDRON };
 
@@ -249,9 +250,13 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.transform.parent = transform;
         terrainObject.AddComponent<MeshFilter>();
         terrainObject.AddComponent<MeshRenderer>();
+        terrainObject.AddComponent<NavMeshSurface>();
+        terrainObject.AddComponent<NavMeshBaker>();
         terrainObject.GetComponent<Renderer>().material = material;
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
+        int layer = LayerMask.NameToLayer("Terrain");
+        terrainObject.layer = layer;
 
         MeshCollider collider = terrainObject.AddComponent<MeshCollider>();
         collider.sharedMesh = mesh;
