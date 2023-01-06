@@ -60,7 +60,9 @@ public class TunnelPathGenerator : MonoBehaviour
     private GameObject generatedParent;
 
     public float occupancyCellResolution;
+    // public float pathOccupancyStepDistance = 5f; // 
     private HashSet<Vector3> occupiedCells;
+    public int numOccupancyRetries;
 
     /// <summary>
     /// Create tunnel paths with Bezier curves and colliders
@@ -95,7 +97,13 @@ public class TunnelPathGenerator : MonoBehaviour
         }
         (Transform pathDestination, List<Transform> childTransformsToRecurseInto) = 
             GetRoomEndpoints(destinationRoom, sourcePosition);
-        MakePathToDestination(sourcePosition, pathDestination.position);
+        VertexPath path = MakePathToDestination(sourcePosition, pathDestination.position);
+        if (path is null)
+        {
+            DestroyImmediate(destinationRoom); // TODO: Any other object cleanup here?
+            return;
+        }
+        MarkCellsAsOccupied(destinationRoom, path);
 
         foreach (Transform childTransform in childTransformsToRecurseInto)
         {
@@ -118,7 +126,6 @@ public class TunnelPathGenerator : MonoBehaviour
     /// <returns></returns>
     private GameObject MakeDestinationRoom(Vector3 sourcePosition, Vector3 baseDirection)
     {
-        int numOccupancyRetries = 3;
         for (int retryIndex = 0; retryIndex < numOccupancyRetries; retryIndex++)
         {
             float tunnelLength = Random.Range(tunnelLengthMin, tunnelLengthMax);
@@ -129,19 +136,12 @@ public class TunnelPathGenerator : MonoBehaviour
 
             Quaternion roomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
 
-            Vector3 roomPositionQuantized = new Vector3(
-                Mathf.Round(roomPosition.x / occupancyCellResolution) * occupancyCellResolution,
-                Mathf.Round(roomPosition.y / occupancyCellResolution) * occupancyCellResolution,
-                Mathf.Round(roomPosition.z / occupancyCellResolution) * occupancyCellResolution
-            );
-
+            Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(roomPosition);
             if (occupiedCells.Contains(roomPositionQuantized)) {
                 Debug.Log($"Room position {roomPositionQuantized} already occupied on retry {retryIndex}");
 
             }
             else {
-                occupiedCells.Add(roomPositionQuantized);
-                Debug.Log($"Adding room position {roomPositionQuantized} to occupied cells");
                 GameObject room = Instantiate(roomPrefab, roomPosition, roomRotation, generatedParent.transform);
                 return room;
             }
@@ -199,27 +199,114 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     /// <param name="sourcePosition"></param>
     /// <param name="destinationPosition"></param>
-    private void MakePathToDestination(Vector3 sourcePosition, Vector3 destinationPosition)
+    private VertexPath MakePathToDestination(Vector3 sourcePosition, Vector3 destinationPosition)
     {
-        // Create the bezier path to the selected destination
-        GameObject pathObject = new GameObject("Path");
-        pathObject.transform.parent = generatedParent.transform;
+        bool isPathOccupied = false;
+        VertexPath vertexPath = null;
+        for (int retryIndex = 0; retryIndex < numOccupancyRetries; retryIndex++)
+        {
+            // Create the bezier path to the selected destination
+            GameObject pathObject = new GameObject("Path");
+            pathObject.transform.parent = generatedParent.transform;
 
-        Vector3 midpoint = Vector3.Lerp(sourcePosition, destinationPosition, 0.5f);
-        midpoint += new Vector3(
-            Random.Range(-midpointOffsetRange, midpointOffsetRange),
-            0,
-            Random.Range(-midpointOffsetRange, midpointOffsetRange)
+            Vector3 midpoint = Vector3.Lerp(sourcePosition, destinationPosition, 0.5f);
+            midpoint += new Vector3(
+                Random.Range(-midpointOffsetRange, midpointOffsetRange),
+                0,
+                Random.Range(-midpointOffsetRange, midpointOffsetRange)
+            );
+            List<Vector3> pathPoints = new List<Vector3> {
+                sourcePosition, midpoint, destinationPosition
+            };
+
+            BezierPath bezierPath = new BezierPath(pathPoints);
+            vertexPath = new VertexPath(bezierPath, pathObject.transform);
+
+            // Check if the path is occupied
+            isPathOccupied = false;
+            float initialDistance = occupancyCellResolution; // Travel outside the room to check occupancy
+            float pathOccupancyStepDistance = occupancyCellResolution / 2;
+            for (float distance = initialDistance; distance < vertexPath.length; distance += pathOccupancyStepDistance)
+            {
+                Vector3 occupancyQueryPoint = vertexPath.GetPointAtDistance(distance, EndOfPathInstruction.Stop);
+                Vector3 quantizedQueryPoint = QuantizeToOccupancyGrid(occupancyQueryPoint);
+                if (occupiedCells.Contains(quantizedQueryPoint))
+                {
+                    Debug.Log($"Path in cell {quantizedQueryPoint} is occupied on retry {retryIndex}");
+                    isPathOccupied = true;
+                    break;
+                }
+            }
+
+            if (isPathOccupied)
+            {
+                DestroyImmediate(pathObject);
+                continue;
+            }
+
+            PathCreator tunnelPathCreator = pathObject.AddComponent<PathCreator>();
+            tunnelPathCreator.bezierPath = bezierPath;
+
+            // Toggle control mode so automatic tangent points are set correctly
+            tunnelPathCreator.bezierPath.ControlPointMode = BezierPath.ControlMode.Aligned;
+            tunnelPathCreator.bezierPath.ControlPointMode = BezierPath.ControlMode.Automatic;
+            break;
+        }
+
+        if (isPathOccupied)
+        {
+            Debug.Log($"Unable to create path in unoccupied cells");
+            return null;
+        }
+
+        return vertexPath;
+    }
+
+    private void MarkCellsAsOccupied(GameObject room, VertexPath path)
+    {
+        // Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(room.transform.position);
+        // occupiedCells.Add(roomPositionQuantized);
+        // Debug.Log($"Adding room with position position {room.transform.position} to occupied cells");
+
+        float margin = 1;
+        float step = occupancyCellResolution / 4;
+        Vector3 marginVector = Vector3.one * margin;
+        Collider collider = room.GetComponent<Collider>();
+        Vector3 minPoint = collider.bounds.min - marginVector;
+        Vector3 maxPoint = collider.bounds.max + marginVector;
+
+        Debug.Log($"Occupying cells for room with min {minPoint}, max {maxPoint}");
+
+        for (float x = minPoint.x; x <= maxPoint.x; x += occupancyCellResolution)
+        {
+            for (float y = minPoint.y; y <= maxPoint.y; y += occupancyCellResolution)
+            {
+                for (float z = minPoint.z; z <= maxPoint.z; z += occupancyCellResolution)
+                {
+                    Vector3 queryPoint = new Vector3(x, y, z);
+                    occupiedCells.Add(QuantizeToOccupancyGrid(queryPoint));
+                }
+            }
+        }
+
+        // Mark points along path as occupied
+        // TODO: Need to mark points along radius as occupied? 
+        float pathOccupancyStepDistance = occupancyCellResolution / 2;
+        for (float distance = 0; distance < path.length; distance += pathOccupancyStepDistance)
+        {
+            Vector3 occupancyQueryPoint = path.GetPointAtDistance(distance, EndOfPathInstruction.Stop);
+            Vector3 quantizedQueryPoint = QuantizeToOccupancyGrid(occupancyQueryPoint);
+            Debug.Log($"Path now occupying cell {quantizedQueryPoint}");
+            occupiedCells.Add(quantizedQueryPoint);
+        }
+    }
+
+    private Vector3 QuantizeToOccupancyGrid(Vector3 queryPosition)
+    {
+        return new Vector3(
+            Mathf.Round(queryPosition.x / occupancyCellResolution) * occupancyCellResolution,
+            Mathf.Round(queryPosition.y / occupancyCellResolution) * occupancyCellResolution,
+            Mathf.Round(queryPosition.z / occupancyCellResolution) * occupancyCellResolution
         );
-        List<Vector3> pathPoints = new List<Vector3> {
-            sourcePosition, midpoint, destinationPosition
-        };
-
-        PathCreator tunnelPathCreator = pathObject.AddComponent<PathCreator>();
-        tunnelPathCreator.bezierPath = new BezierPath(pathPoints);
-
-        // Toggle control mode so automatic tangent points are set correctly
-        tunnelPathCreator.bezierPath.ControlPointMode = BezierPath.ControlMode.Aligned;
-        tunnelPathCreator.bezierPath.ControlPointMode = BezierPath.ControlMode.Automatic;
     }
 }
