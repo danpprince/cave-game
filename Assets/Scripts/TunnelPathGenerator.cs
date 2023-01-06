@@ -59,11 +59,15 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     private GameObject generatedParent;
 
+    public float occupancyCellResolution;
+    private HashSet<Vector3> occupiedCells;
+
     /// <summary>
     /// Create tunnel paths with Bezier curves and colliders
     /// </summary>
     public void GeneratePaths()
     {
+        occupiedCells = new HashSet<Vector3>();
         generatedParent = new GameObject("Generated");
         generatedParent.transform.parent = gameObject.transform;
         Vector3 startingPosition = startingTunnelEndpoint.position;
@@ -85,6 +89,10 @@ public class TunnelPathGenerator : MonoBehaviour
         }
 
         GameObject destinationRoom = MakeDestinationRoom(sourcePosition, baseDirection);
+        if (destinationRoom is null)
+        {
+            return;
+        }
         (Transform pathDestination, List<Transform> childTransformsToRecurseInto) = 
             GetRoomEndpoints(destinationRoom, sourcePosition);
         MakePathToDestination(sourcePosition, pathDestination.position);
@@ -110,16 +118,36 @@ public class TunnelPathGenerator : MonoBehaviour
     /// <returns></returns>
     private GameObject MakeDestinationRoom(Vector3 sourcePosition, Vector3 baseDirection)
     {
-        float tunnelLength = Random.Range(tunnelLengthMin, tunnelLengthMax);
-        Vector3 roomPosition = sourcePosition + baseDirection * tunnelLength;
-        float downwardAngle = Random.Range(0, tunnelDownwardAngleMaxDegrees);
-        float yChange = tunnelLength * Mathf.Tan(downwardAngle * Mathf.Deg2Rad);
-        roomPosition.y += Random.Range(-yChange, 0f);
+        int numOccupancyRetries = 3;
+        for (int retryIndex = 0; retryIndex < numOccupancyRetries; retryIndex++)
+        {
+            float tunnelLength = Random.Range(tunnelLengthMin, tunnelLengthMax);
+            Vector3 roomPosition = sourcePosition + baseDirection * tunnelLength;
+            float downwardAngle = Random.Range(0, tunnelDownwardAngleMaxDegrees);
+            float yChange = tunnelLength * Mathf.Tan(downwardAngle * Mathf.Deg2Rad);
+            roomPosition.y += Random.Range(-yChange, 0f);
 
-        Quaternion roomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
-        GameObject room = Instantiate(roomPrefab, roomPosition, roomRotation, generatedParent.transform);
+            Quaternion roomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
 
-        return room;
+            Vector3 roomPositionQuantized = new Vector3(
+                Mathf.Round(roomPosition.x / occupancyCellResolution) * occupancyCellResolution,
+                Mathf.Round(roomPosition.y / occupancyCellResolution) * occupancyCellResolution,
+                Mathf.Round(roomPosition.z / occupancyCellResolution) * occupancyCellResolution
+            );
+
+            if (occupiedCells.Contains(roomPositionQuantized)) {
+                Debug.Log($"Room position {roomPositionQuantized} already occupied on retry {retryIndex}");
+
+            }
+            else {
+                occupiedCells.Add(roomPositionQuantized);
+                Debug.Log($"Adding room position {roomPositionQuantized} to occupied cells");
+                GameObject room = Instantiate(roomPrefab, roomPosition, roomRotation, generatedParent.transform);
+                return room;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -148,7 +176,7 @@ public class TunnelPathGenerator : MonoBehaviour
             if (closestTransform is null)
             {
                 closestTransform = childObject.transform;
-                pathDistance = Vector3.Distance(sourcePosition, sourcePosition);
+                pathDistance = Vector3.Distance(closestTransform.position, sourcePosition);
                 print($"Closest destination was null, now {closestTransform} with distance {pathDistance}");
                 continue;
             }
@@ -157,7 +185,7 @@ public class TunnelPathGenerator : MonoBehaviour
             if (newTunnelDistance < pathDistance)
             {
                 closestTransform = childObject.transform;
-                pathDistance = Vector3.Distance(sourcePosition, sourcePosition);
+                pathDistance = Vector3.Distance(closestTransform.position, sourcePosition);
                 print($"Shorter path found, now destination {closestTransform} with distance {pathDistance}");
                 continue;
             }
