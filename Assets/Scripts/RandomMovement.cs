@@ -19,7 +19,7 @@ public class RandomMovement : MonoBehaviour
         if (agent.remainingDistance < 0.1f )
         {
             // Move the agent to a new random position
-            agent.destination = RandomNavSphere(transform.position, 100, -1);
+            agent.destination = RandomNavSphere(transform.position, 100, NavMesh.AllAreas);
         }
         Debug.DrawLine(agent.transform.position, agent.destination, Color.magenta, 0.01f);
     }
