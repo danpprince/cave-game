@@ -268,7 +268,7 @@ public class TunnelPathGenerator : MonoBehaviour
         // occupiedCells.Add(roomPositionQuantized);
         // Debug.Log($"Adding room with position position {room.transform.position} to occupied cells");
 
-        float margin = 1;
+        float margin = occupancyCellResolution / 2;
         float step = occupancyCellResolution / 4;
         Vector3 marginVector = Vector3.one * margin;
         Collider collider = room.GetComponent<Collider>();
