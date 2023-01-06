@@ -252,11 +252,12 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.AddComponent<MeshRenderer>();
         terrainObject.AddComponent<NavMeshSurface>();
         terrainObject.AddComponent<NavMeshBaker>();
+        terrainObject.layer = LayerMask.NameToLayer("Terrain");
+        terrainObject.GetComponent<NavMeshSurface>().layerMask = LayerMask.GetMask("Terrain");
         terrainObject.GetComponent<Renderer>().material = material;
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
-        int layer = LayerMask.NameToLayer("Terrain");
-        terrainObject.layer = layer;
+        
 
         MeshCollider collider = terrainObject.AddComponent<MeshCollider>();
         collider.sharedMesh = mesh;
