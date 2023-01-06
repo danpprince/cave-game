@@ -23,7 +23,7 @@ public class Movement : MonoBehaviour
 
     // For Looking \\
     private InputAction Look;
-    public GameObject camera;  
+    public GameObject camera;
 
     public float X_AimSensitivity;
     public float Y_AimSensitivity;
@@ -102,7 +102,7 @@ public class Movement : MonoBehaviour
         Velocity.y += Gravity;
         cc.Move(Velocity * Time.deltaTime);
 
-        if(isGrounded && Velocity.y < 0)
+        if (isGrounded && Velocity.y < 0)
         {
             Velocity.y = -2f;
         }
@@ -116,10 +116,7 @@ public class Movement : MonoBehaviour
 
     private void ChargingTorch(InputAction.CallbackContext obj)
     {
-        
-        print("Holding");
         isTorchButtonHeldDown = true;
-       
     }
 
     private void WhileChargingTorchThrow()
@@ -128,7 +125,8 @@ public class Movement : MonoBehaviour
         {
             Vector3 CurrentTorchPosition = HeldTorch.transform.localPosition;
             HeldTorch.transform.localPosition = new Vector3(CurrentTorchPosition.x, CurrentTorchPosition.y - 0.1f, CurrentTorchPosition.z);
-        } else
+        }
+        else
         {
             HeldTorch.transform.localPosition = DefaultTorchPosition;
         }
@@ -136,27 +134,25 @@ public class Movement : MonoBehaviour
 
     private void TossTorch(InputAction.CallbackContext obj)
     {
-            print(obj.duration);
+        //Direction Correction
+        Vector3 forceDirection = camera.transform.forward;
+        RaycastHit hit;
 
-            //Direction Correction
-            Vector3 forceDirection = camera.transform.forward;
-            RaycastHit hit;
-
-            if(Physics.Raycast(camera.transform.position, forceDirection, out hit, 500f))
-            {
+        if (Physics.Raycast(camera.transform.position, forceDirection, out hit, 500f))
+        {
             forceDirection = (hit.point - TorchSpawnPoint.transform.position).normalized;
-            }
+        }
 
-            torchForwardForce += torchForwardForce * (float)obj.duration * TorchForceMultiplier;
-            GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
-            Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
-            torch_rb.velocity = this.Velocity;
-            Vector3 ForceToAdd = forceDirection * torchForwardForce + TorchSpawnPoint.transform.up * torchUpwardsForce;
-            torch_rb.AddForce(ForceToAdd, ForceMode.Impulse);
-            torch_rb.AddTorque(transform.up * Random.Range(0, 20));
-            print("Rock and Stone brother: " + torchForwardForce);
-            torchForwardForce = DefaultForwardsForce;
-            isTorchButtonHeldDown = false;
+        torchForwardForce += torchForwardForce * (float)obj.duration * TorchForceMultiplier;
+        GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
+        Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
+        torch_rb.velocity = this.Velocity;
+        Vector3 ForceToAdd = forceDirection * torchForwardForce + TorchSpawnPoint.transform.up * torchUpwardsForce;
+        torch_rb.AddForce(ForceToAdd, ForceMode.Impulse);
+        torch_rb.AddTorque(transform.right * Random.Range(5, 20));
+        torch_rb.AddTorque(transform.up * Random.Range(-5, 5));
+        torchForwardForce = DefaultForwardsForce;
+        isTorchButtonHeldDown = false;
     }
 
     IEnumerator WhipCoolDownTimer()
@@ -171,23 +167,24 @@ public class Movement : MonoBehaviour
         shouldAnimateWhip = false;
     }
 
-    private void findWhipPoint() 
+    private void findWhipPoint()
     {
 
-            Vector3 camForward = camera.transform.forward;
-            if(Physics.Raycast(camera.transform.position, camForward, out hit, whipRange))
-            {
-                Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
-                hitDistance = hit.distance;
-                whipHitPosition = hit.point;
-                didWhipHit = true;
-            } else
-            {
-                Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
-                //Debug.Log("Missed");
-                whipHitPosition = camera.transform.position + camera.transform.forward * whipRange;
-                didWhipHit = false;
-            }
+        Vector3 camForward = camera.transform.forward;
+        if (Physics.Raycast(camera.transform.position, camForward, out hit, whipRange))
+        {
+            Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.red);
+            hitDistance = hit.distance;
+            whipHitPosition = hit.point;
+            didWhipHit = true;
+        }
+        else
+        {
+            Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
+            //Debug.Log("Missed");
+            whipHitPosition = camera.transform.position + camera.transform.forward * whipRange;
+            didWhipHit = false;
+        }
     }
 
     private void useWhip(InputAction.CallbackContext obj)
@@ -215,22 +212,22 @@ public class Movement : MonoBehaviour
     }
 
     private void OnEnable()
-    { 
+    {
         playerControls.ActivateInput();
 
         MoveController = playerControls.actions["Move"];
         Look = playerControls.actions["Look"];
         TossInput = playerControls.actions["Toss"];
         WhipInput = playerControls.actions["Fire"];
-        
-        MoveController.Enable();   
+
+        MoveController.Enable();
         Look.Enable();
         TossInput.Enable();
 
         TossInput.started += ChargingTorch;
         TossInput.canceled += TossTorch;
         WhipInput.started += useWhip;
-        
+
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -245,7 +242,8 @@ public class Movement : MonoBehaviour
 
     private void animateWhip()
     {
-        if (lineRenderer == null) {
+        if (lineRenderer == null)
+        {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
             lineRenderer.startWidth = 0.05f;
             lineRenderer.endWidth = 0.05f;
