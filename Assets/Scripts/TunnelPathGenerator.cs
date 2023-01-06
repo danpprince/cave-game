@@ -64,17 +64,42 @@ public class TunnelPathGenerator : MonoBehaviour
     private HashSet<Vector3> occupiedCells;
     public int numOccupancyRetries;
 
+    public int minimumRoomCount;
+    private int currentRoomCount;
+
     /// <summary>
     /// Create tunnel paths with Bezier curves and colliders
     /// </summary>
     public void GeneratePaths()
     {
-        occupiedCells = new HashSet<Vector3>();
-        generatedParent = new GameObject("Generated");
-        generatedParent.transform.parent = gameObject.transform;
-        Vector3 startingPosition = startingTunnelEndpoint.position;
-        Vector3 baseDirection = (startingPosition - startingRoomTransform.position).normalized;
-        GeneratePathsRecursive(startingPosition, baseDirection, 0);
+        int generationAttempt = 0;
+        while (true)
+        {
+            occupiedCells = new HashSet<Vector3>();
+            generatedParent = new GameObject("Generated");
+            generatedParent.transform.parent = gameObject.transform;
+            Vector3 startingPosition = startingTunnelEndpoint.position;
+            Vector3 baseDirection = (startingPosition - startingRoomTransform.position).normalized;
+
+            currentRoomCount = 0;
+            GeneratePathsRecursive(startingPosition, baseDirection, 0);
+
+            if (currentRoomCount < minimumRoomCount)
+            {
+                Debug.Log(
+                    $"Current room count {currentRoomCount} less than required minimum {minimumRoomCount} "
+                    + $"on attempt {generationAttempt}"
+                );
+                DestroyImmediate(generatedParent);
+                generationAttempt++;
+            }
+            else
+            {
+                Debug.Log($"Successfully generated {currentRoomCount} rooms");
+                return;
+            }
+
+        }
     }
 
     /// <summary>
@@ -104,6 +129,7 @@ public class TunnelPathGenerator : MonoBehaviour
             return;
         }
         MarkCellsAsOccupied(destinationRoom, path);
+        currentRoomCount++;
 
         foreach (Transform childTransform in childTransformsToRecurseInto)
         {
