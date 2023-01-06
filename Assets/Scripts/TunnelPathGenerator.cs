@@ -72,8 +72,8 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePaths()
     {
-        int generationAttempt = 0;
-        while (true)
+        int maxAttempts = 10;
+        for (int generationAttempt = 0; generationAttempt < maxAttempts; generationAttempt++)
         {
             occupiedCells = new HashSet<Vector3>();
             generatedParent = new GameObject("Generated");
@@ -98,8 +98,8 @@ public class TunnelPathGenerator : MonoBehaviour
                 Debug.Log($"Successfully generated {currentRoomCount} rooms");
                 return;
             }
-
         }
+        Debug.LogError($"Failed to generate more than {minimumRoomCount} rooms after {maxAttempts} attempts");
     }
 
     /// <summary>
@@ -115,13 +115,12 @@ public class TunnelPathGenerator : MonoBehaviour
             return;
         }
 
-        GameObject destinationRoom = MakeDestinationRoom(sourcePosition, baseDirection);
+        (GameObject destinationRoom, Transform pathDestination, List<Transform> childTransformsToRecurseInto) =
+            MakeDestinationRoom(sourcePosition, baseDirection);
         if (destinationRoom is null)
         {
             return;
         }
-        (Transform pathDestination, List<Transform> childTransformsToRecurseInto) = 
-            GetRoomEndpoints(destinationRoom, sourcePosition);
         VertexPath path = MakePathToDestination(sourcePosition, pathDestination.position);
         if (path is null)
         {
@@ -139,7 +138,10 @@ public class TunnelPathGenerator : MonoBehaviour
                 continue;
             }
             Vector3 childPosition = childTransform.position;
-            Vector3 childBaseDirection =(childPosition - destinationRoom.transform.position).normalized;
+            // Make the direction coming out of the child always on the XZ plane
+            Vector3 childBaseDirection = childPosition - destinationRoom.transform.position;
+            childBaseDirection.y = 0;
+            childBaseDirection = childBaseDirection.normalized;
             GeneratePathsRecursive(childPosition, childBaseDirection, depth + 1);
         }
     }
@@ -150,30 +152,38 @@ public class TunnelPathGenerator : MonoBehaviour
     /// <param name="sourcePosition"></param>
     /// <param name="baseDirection"></param>
     /// <returns></returns>
-    private GameObject MakeDestinationRoom(Vector3 sourcePosition, Vector3 baseDirection)
+    private (GameObject, Transform, List<Transform>) MakeDestinationRoom(Vector3 sourcePosition, Vector3 baseDirection)
     {
         for (int retryIndex = 0; retryIndex < numOccupancyRetries; retryIndex++)
         {
             float tunnelLength = Random.Range(tunnelLengthMin, tunnelLengthMax);
-            Vector3 roomPosition = sourcePosition + baseDirection * tunnelLength;
+            Vector3 destinationPosition = sourcePosition + baseDirection * tunnelLength;
             float downwardAngle = Random.Range(0, tunnelDownwardAngleMaxDegrees);
             float yChange = tunnelLength * Mathf.Tan(downwardAngle * Mathf.Deg2Rad);
-            roomPosition.y += Random.Range(-yChange, 0f);
+            destinationPosition.y += Random.Range(-yChange, 0f);
 
+            // Put the destination tunnel endpoint at destinationPosition
             Quaternion roomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+            GameObject room = Instantiate(roomPrefab, destinationPosition, roomRotation, generatedParent.transform);
+            (Transform pathDestination, List<Transform> childTransformsToRecurseInto) =
+                GetRoomEndpoints(room, sourcePosition);
 
-            Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(roomPosition);
+            room.transform.Translate(-pathDestination.localPosition);
+
+            Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(room.transform.position);
             if (occupiedCells.Contains(roomPositionQuantized)) {
                 Debug.Log($"Room position {roomPositionQuantized} already occupied on retry {retryIndex}");
 
+                // TODO: Destroy room
+                DestroyImmediate(room); // TODO: Any other object cleanup here?
+
             }
             else {
-                GameObject room = Instantiate(roomPrefab, roomPosition, roomRotation, generatedParent.transform);
-                return room;
+                return (room, pathDestination, childTransformsToRecurseInto);
             }
         }
 
-        return null;
+        return (null, null, null);
     }
 
     /// <summary>
@@ -297,7 +307,7 @@ public class TunnelPathGenerator : MonoBehaviour
         float margin = occupancyCellResolution / 2;
         float step = occupancyCellResolution / 4;
         Vector3 marginVector = Vector3.one * margin;
-        Collider collider = room.GetComponent<Collider>();
+        Collider collider = room.GetComponentInChildren<Collider>(); // TODO: encapsulate all childrens' bounds
         Vector3 minPoint = collider.bounds.min - marginVector;
         Vector3 maxPoint = collider.bounds.max + marginVector;
 
