@@ -6,6 +6,7 @@ TagManager:
   tags:
   - whip
   - TunnelEndpoint
+  - Coin
   layers:
   - Default
   - TransparentFX

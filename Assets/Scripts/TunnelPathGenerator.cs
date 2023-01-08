@@ -64,6 +64,8 @@ public class TunnelPathGenerator : MonoBehaviour
     private HashSet<Vector3> occupiedCells;
     public int numOccupancyRetries;
 
+    public GameObject coinPrefab;
+
     public int minimumRoomCount;
     private int currentRoomCount;
 
@@ -75,6 +77,7 @@ public class TunnelPathGenerator : MonoBehaviour
         int generationAttempt = 0;
         while (true)
         {
+            GameManager.RestartState();
             occupiedCells = new HashSet<Vector3>();
             generatedParent = new GameObject("Generated");
             generatedParent.transform.parent = gameObject.transform;
@@ -108,29 +111,31 @@ public class TunnelPathGenerator : MonoBehaviour
     /// <param name="sourcePosition">Starting position where the new path should originate</param>
     /// <param name="baseDirection">General direction the new room should be created in relative to sourceTransform</param>
     /// <param name="depth">, should be 0 initially</param>
-    private void GeneratePathsRecursive(Vector3 sourcePosition, Vector3 baseDirection, int depth)
+    /// <returns>True if at least one child room is created</returns>
+    private bool GeneratePathsRecursive(Vector3 sourcePosition, Vector3 baseDirection, int depth)
     {
         if (depth >= maxRecursionDepth)
         {
-            return;
+            return false;
         }
 
         GameObject destinationRoom = MakeDestinationRoom(sourcePosition, baseDirection);
         if (destinationRoom is null)
         {
-            return;
+            return false;
         }
-        (Transform pathDestination, List<Transform> childTransformsToRecurseInto) = 
+        (Transform pathDestination, List<Transform> childTransformsToRecurseInto) =
             GetRoomEndpoints(destinationRoom, sourcePosition);
         VertexPath path = MakePathToDestination(sourcePosition, pathDestination.position);
         if (path is null)
         {
             DestroyImmediate(destinationRoom); // TODO: Any other object cleanup here?
-            return;
+            return false;
         }
         MarkCellsAsOccupied(destinationRoom, path);
         currentRoomCount++;
 
+        bool isTunnelDeadEnd = true;
         foreach (Transform childTransform in childTransformsToRecurseInto)
         {
             // Skip recursion randomly or if the current child is the same as the completed tunnel destination
@@ -139,9 +144,21 @@ public class TunnelPathGenerator : MonoBehaviour
                 continue;
             }
             Vector3 childPosition = childTransform.position;
-            Vector3 childBaseDirection =(childPosition - destinationRoom.transform.position).normalized;
-            GeneratePathsRecursive(childPosition, childBaseDirection, depth + 1);
+            Vector3 childBaseDirection = (childPosition - destinationRoom.transform.position).normalized;
+            isTunnelDeadEnd &= !GeneratePathsRecursive(childPosition, childBaseDirection, depth + 1);
         }
+
+        if (isTunnelDeadEnd)
+        {
+            InstantiateCoin(destinationRoom.transform.position);
+        }
+        return true;
+    }
+
+    private void InstantiateCoin(Vector3 position)
+    {
+        // TODO: Add generated parent?
+        Instantiate(coinPrefab, position, Quaternion.identity, generatedParent.transform);
     }
 
     /// <summary>
