@@ -27,4 +27,7 @@ public class GameManager : MonoBehaviour
         numCoinsCollected++;
         Debug.Log($"{numCoinsCollected} of {numTotalCoins} coins collected");
     }
+
+    public static int GetNumCoinsCollected() { return numCoinsCollected; }
+    public static int GetNumTotalCoins() { return numTotalCoins; }
 }
