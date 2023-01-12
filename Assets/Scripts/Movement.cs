@@ -61,6 +61,10 @@ public class Movement : MonoBehaviour
     public float whipHitColliderRadius = 0.5f;
     public GameObject whipHitCollider;
 
+    // For Jumping
+    private InputAction jumpInput;
+    private Rigidbody rb;
+    public float jumpHeight = 5f;
 
     void Start()
     {
@@ -204,6 +208,14 @@ public class Movement : MonoBehaviour
         }
     }
 
+    private void jump(InputAction.CallbackContext obj)
+    {
+        if(isGrounded)
+        {
+            Velocity.y = 35f;
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = didWhipHit ? Color.red : Color.green;
@@ -219,6 +231,7 @@ public class Movement : MonoBehaviour
         Look = playerControls.actions["Look"];
         TossInput = playerControls.actions["Toss"];
         WhipInput = playerControls.actions["Fire"];
+        jumpInput = playerControls.actions["Jump"];
 
         MoveController.Enable();
         Look.Enable();
@@ -227,7 +240,7 @@ public class Movement : MonoBehaviour
         TossInput.started += ChargingTorch;
         TossInput.canceled += TossTorch;
         WhipInput.started += useWhip;
-
+        jumpInput.started += jump;
 
         Cursor.lockState = CursorLockMode.Locked;
     }
