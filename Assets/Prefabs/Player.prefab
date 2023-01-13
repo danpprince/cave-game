@@ -154,7 +154,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2748747824147388358}
-  - component: {fileID: 9099575615877574134}
   m_Layer: 0
   m_Name: Whip
   m_TagString: Untagged
@@ -170,7 +169,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3595303810283265348}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.1155946, y: -1.0000019, z: 3.0027728}
+  m_LocalPosition: {x: 1.46, y: -1.0000019, z: 2.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -178,59 +177,6 @@ Transform:
   m_Father: {fileID: 8897005193119557359}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9099575615877574134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3595303810283265348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5ac92bc18f545cc84cd886ece82b4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  editorData:
-    _bezierPath:
-      points:
-      - {x: 0, y: 0, z: 0}
-      - {x: 0.9999999, y: 0.5, z: 0}
-      - {x: 4.69, y: -0.94, z: 0.49}
-      - {x: 5.69, y: -0.44, z: 0.49}
-      isClosed: 0
-      space: 0
-      controlMode: 0
-      autoControlLength: 0.3
-      boundsUpToDate: 0
-      bounds:
-        m_Center: {x: 0, y: 0, z: 0}
-        m_Extent: {x: 0, y: 0, z: 0}
-      perAnchorNormalsAngle:
-      - 0
-      - 0
-      globalNormalsAngle: 0
-      flipNormals: 0
-    vertexPathUpToDate: 1
-    vertexPathMaxAngleError: 0.3
-    vertexPathMinVertexSpacing: 0.01
-    showTransformTool: 0
-    showPathBounds: 0
-    showPerSegmentBounds: 0
-    displayAnchorPoints: 1
-    displayControlPoints: 1
-    bezierHandleScale: 1
-    globalDisplaySettingsFoldout: 0
-    keepConstantHandleSize: 0
-    showNormalsInVertexMode: 0
-    showBezierPathInVertexMode: 0
-    showDisplayOptions: 0
-    showPathOptions: 1
-    showVertexPathDisplayOptions: 0
-    showVertexPathOptions: 1
-    showNormals: 0
-    showNormalsHelpInfo: 0
-    tabIndex: 0
-  initialized: 1
 --- !u!1 &8897005193119557354
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,17 +313,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cc: {fileID: 8897005194122684529}
   playerControls: {fileID: 8897005194122684530}
-  MoveSpeed: 0.1
-  Gravity: -9.8
-  GroundCheck: {fileID: 472514917536187377}
+  GroundCheck: {fileID: 1505195843214093539}
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
     m_Bits: 2147483647
+  MoveSpeed: 0.1
+  MaxFallSpeed: 100
+  playerBody: {fileID: 1350576064378477091}
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
   Y_AimSensitivity: 0.5
-  playerBody: {fileID: 1350576064378477091}
   Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
   TorchSpawnPoint: {fileID: 9209023117751489498}
   torchUpwardsForce: 5.5
@@ -392,6 +338,10 @@ MonoBehaviour:
   whipArchHeight: 2
   whipHitColliderRadius: 0.5
   whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
+  jumpHeight: 8
+  Gravity: -9.8
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
 --- !u!114 &8897005194122684530
 MonoBehaviour:
   m_ObjectHideFlags: 0
