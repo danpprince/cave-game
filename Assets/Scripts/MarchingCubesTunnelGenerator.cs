@@ -231,6 +231,7 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
     private void CreateMeshGameObject(List<Vector3> verts, List<Vector3> normals, List<int> indices, Vector3 position)
     {
         Mesh mesh = new Mesh();
+        mesh.name = "GeneratedMesh";
         mesh.indexFormat = IndexFormat.UInt32;
         mesh.SetVertices(verts);
         mesh.SetTriangles(indices, 0);
@@ -260,27 +261,12 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
 
-        // TODO: Does this need to be disabled for built applications?
-        if (!Directory.Exists("Assets/Generated"))
-        {
-            AssetDatabase.CreateFolder("Assets", "Generated");
-        }
-        string prefabPath = Application.dataPath + "/Generated/GeneratedTerrain.prefab";
-        bool prefabSavingSuccess;
-        PrefabUtility.SaveAsPrefabAssetAndConnect(
-            terrainObject, prefabPath, InteractionMode.UserAction, out prefabSavingSuccess
-        );
-        if (prefabSavingSuccess == true)
-        {
-            Debug.Log("Prefab was saved successfully");
-        }
-        else
-        {
-            Debug.LogWarning("Prefab failed to save to " + prefabPath);
-        }
-
         MeshCollider collider = terrainObject.AddComponent<MeshCollider>();
         collider.sharedMesh = mesh;
+
+        // Save generated data to generated directory so it does not inflate scene files
+        Utils.SaveGameObjectAsPrefab(terrainObject, "GeneratedTerrain");
+        AssetDatabase.CreateAsset(mesh, "Assets/Generated/GeneratedMesh.asset");
     }
 
     private Vector3Int WorldPointToVoxelIndices(Vector3 point)

@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using UnityEditor;
 
 using PathCreation;
 
@@ -109,12 +107,12 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePaths()
     {
-        int generationAttempt = 0;
-        while (true)
+        int maxNumAttempts = 10;
+        for (int generationAttempt = 0; generationAttempt < maxNumAttempts; generationAttempt++)
         {
             GameManager.RestartState();
             occupiedCells = new HashSet<Vector3>();
-            generatedParent = new GameObject("Generated");
+            generatedParent = new GameObject("GeneratedPaths");
             generatedParent.transform.parent = gameObject.transform;
             Vector3 startingPosition = startingTunnelEndpoint.position;
             Vector3 baseDirection = (startingPosition - startingRoomTransform.position).normalized;
@@ -130,30 +128,17 @@ public class TunnelPathGenerator : MonoBehaviour
                 );
                 DestroyImmediate(generatedParent);
                 generationAttempt++;
+                continue;
             }
-            else
-            {
-                Debug.Log($"Successfully generated {currentRoomCount} rooms");
-                return;
-            }
-        }
 
-        // TODO: Does this need to be disabled for built applications?
-        if (!Directory.Exists("Assets/Generated"))
-        {
-            AssetDatabase.CreateFolder("Assets", "Generated");
+            // Save generated data to generated directory so it does not inflate scene files
+            Utils.SaveGameObjectAsPrefab(generatedParent, "GeneratedPaths");
+            return;
         }
-        string prefabPath = Application.dataPath + "/Generated/GeneratedPaths.prefab";
-        bool prefabSavingSuccess;
-        PrefabUtility.SaveAsPrefabAssetAndConnect(
-            generatedParent, prefabPath, InteractionMode.UserAction, out prefabSavingSuccess
+        Debug.LogError(
+            $"Unable to generate {minimumRoomCount} rooms after {maxNumAttempts} attempts, "
+            + "adjust generation parameters to create more rooms or decrease the minimum required rooms"
         );
-        if (prefabSavingSuccess == true)
-        {
-            Debug.Log("Prefab was saved successfully");
-        } else {
-            Debug.LogWarning("Prefab failed to save to " + prefabPath);
-        }
     }
 
     /// <summary>
