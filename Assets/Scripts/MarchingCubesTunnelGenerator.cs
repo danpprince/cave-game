@@ -3,6 +3,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
+using UnityEditor;
+
 using Common.Unity.Drawing;
 
 using PathCreation;
@@ -254,6 +256,8 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.AddComponent<NavMeshBaker>();
         terrainObject.layer = LayerMask.NameToLayer("Terrain");
         terrainObject.GetComponent<NavMeshSurface>().layerMask = LayerMask.GetMask("Terrain");
+        var flags = StaticEditorFlags.NavigationStatic | StaticEditorFlags.OffMeshLinkGeneration;
+        GameObjectUtility.SetStaticEditorFlags(terrainObject, flags);
         terrainObject.GetComponent<Renderer>().material = material;
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
