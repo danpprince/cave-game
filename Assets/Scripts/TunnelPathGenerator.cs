@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEditor;
 
 using PathCreation;
 
@@ -64,11 +66,28 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePaths()
     {
-        generatedParent = new GameObject("Generated");
+        generatedParent = new GameObject("GeneratedPaths");
         generatedParent.transform.parent = gameObject.transform;
         Vector3 startingPosition = startingTunnelEndpoint.position;
         Vector3 baseDirection = (startingPosition - startingRoomTransform.position).normalized;
         GeneratePathsRecursive(startingPosition, baseDirection, 0);
+
+        // TODO: Does this need to be disabled for built applications?
+        if (!Directory.Exists("Assets/Generated"))
+        {
+            AssetDatabase.CreateFolder("Assets", "Generated");
+        }
+        string prefabPath = Application.dataPath + "/Generated/GeneratedPaths.prefab";
+        bool prefabSavingSuccess;
+        PrefabUtility.SaveAsPrefabAssetAndConnect(
+            generatedParent, prefabPath, InteractionMode.UserAction, out prefabSavingSuccess
+        );
+        if (prefabSavingSuccess == true)
+        {
+            Debug.Log("Prefab was saved successfully");
+        } else {
+            Debug.LogWarning("Prefab failed to save to " + prefabPath);
+        }
     }
 
     /// <summary>

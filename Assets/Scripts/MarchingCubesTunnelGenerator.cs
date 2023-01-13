@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEditor;
 
 using Common.Unity.Drawing;
 
@@ -246,7 +248,7 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             Destroy(terrainObject);
         }
 
-        terrainObject = new GameObject("Terrain");
+        terrainObject = new GameObject("GeneratedTerrain");
         terrainObject.transform.parent = transform;
         terrainObject.AddComponent<MeshFilter>();
         terrainObject.AddComponent<MeshRenderer>();
@@ -257,7 +259,25 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.GetComponent<Renderer>().material = material;
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
-        
+
+        // TODO: Does this need to be disabled for built applications?
+        if (!Directory.Exists("Assets/Generated"))
+        {
+            AssetDatabase.CreateFolder("Assets", "Generated");
+        }
+        string prefabPath = Application.dataPath + "/Generated/GeneratedTerrain.prefab";
+        bool prefabSavingSuccess;
+        PrefabUtility.SaveAsPrefabAssetAndConnect(
+            terrainObject, prefabPath, InteractionMode.UserAction, out prefabSavingSuccess
+        );
+        if (prefabSavingSuccess == true)
+        {
+            Debug.Log("Prefab was saved successfully");
+        }
+        else
+        {
+            Debug.LogWarning("Prefab failed to save to " + prefabPath);
+        }
 
         MeshCollider collider = terrainObject.AddComponent<MeshCollider>();
         collider.sharedMesh = mesh;
