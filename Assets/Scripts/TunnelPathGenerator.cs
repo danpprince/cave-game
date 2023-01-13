@@ -9,6 +9,7 @@ using PathCreation;
 /// </summary>
 public class TunnelPathGenerator : MonoBehaviour
 {
+    [Header("Room references")]
     /// <summary>
     /// Center of starting room to use in first call for new room
     /// </summary>
@@ -29,6 +30,7 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public string tunnelEndpointTag;
 
+    [Header("Path generation")]
     /// <summary>
     /// Maximum number depth of recursive calls for creating new rooms
     /// </summary>
@@ -38,6 +40,12 @@ public class TunnelPathGenerator : MonoBehaviour
     /// Probability that each tunnel endpoint will be used for a recursive call (between 0.0 and 1.0)
     /// </summary>
     public float recursionProbability;
+
+    /// <summary>
+    /// If fewer rooms are generated than this value, all paths will be regenerated.
+    /// WARNING: Can cause an infinite loop if too large relative to other parameters
+    /// </summary>
+    public int minimumRoomCount;
 
     /// <summary>
     /// Upper or lower limit for how long paths between rooms may be
@@ -54,11 +62,7 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public float tunnelDownwardAngleMaxDegrees;
 
-    /// <summary>
-    /// Reference to new object that will parent all newly generated paths and rooms
-    /// </summary>
-    private GameObject generatedParent;
-
+    [Header("Occupancy")]
     /// <summary>
     /// If true, keeps rooms and paths from being generated on top of each other
     /// based on the occupancy parameters
@@ -82,21 +86,21 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public int numOccupancyRetries;
 
+    [Header("Etc")]
     /// <summary>
     /// Coin prefab to generate in "dead end" rooms at the end of paths.
     /// </summary>
     public GameObject coinPrefab;
 
     /// <summary>
-    /// If fewer rooms are generated than this value, all paths will be regenerated.
-    /// WARNING: Can cause an infinite loop if too large relative to other parameters
-    /// </summary>
-    public int minimumRoomCount;
-
-    /// <summary>
     /// Number of rooms that have been generated so far. Used to compare against minimumRoomCount.
     /// </summary>
     private int currentRoomCount;
+
+    /// <summary>
+    /// Reference to new object that will parent all newly generated paths and rooms
+    /// </summary>
+    private GameObject generatedParent;
 
     /// <summary>
     /// Create tunnel paths with Bezier curves and colliders
