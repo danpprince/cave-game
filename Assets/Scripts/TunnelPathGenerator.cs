@@ -59,14 +59,43 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     private GameObject generatedParent;
 
+    /// <summary>
+    /// If true, keeps rooms and paths from being generated on top of each other
+    /// based on the occupancy parameters
+    /// </summary>
+    public bool preventOverlappingPaths;
+
+    /// <summary>
+    /// The size of occupancy cells in world resolution. Larger values will reduce computation
+    /// and spread rooms out more. Requires preventOverlappingPaths to be true to have any effect.
+    /// </summary>
     public float occupancyCellResolution;
-    // public float pathOccupancyStepDistance = 5f; // 
+
+    /// <summary>
+    /// Keeps track of cells where paths have been generated. Only used if preventOverlappingPaths is true.
+    /// </summary>
     private HashSet<Vector3> occupiedCells;
+
+    /// <summary>
+    /// Number of times to try to generate a room in an unoccupied location before failing.
+    /// Only used if preventOverlappingPaths is true.
+    /// </summary>
     public int numOccupancyRetries;
 
+    /// <summary>
+    /// Coin prefab to generate in "dead end" rooms at the end of paths.
+    /// </summary>
     public GameObject coinPrefab;
 
+    /// <summary>
+    /// If fewer rooms are generated than this value, all paths will be regenerated.
+    /// WARNING: Can cause an infinite loop if too large relative to other parameters
+    /// </summary>
     public int minimumRoomCount;
+
+    /// <summary>
+    /// Number of rooms that have been generated so far. Used to compare against minimumRoomCount.
+    /// </summary>
     private int currentRoomCount;
 
     /// <summary>
@@ -132,7 +161,11 @@ public class TunnelPathGenerator : MonoBehaviour
             DestroyImmediate(destinationRoom); // TODO: Any other object cleanup here?
             return false;
         }
-        MarkCellsAsOccupied(destinationRoom, path);
+
+        if (preventOverlappingPaths)
+        {
+            MarkCellsAsOccupied(destinationRoom, path);
+        }
         currentRoomCount++;
 
         bool isTunnelDeadEnd = true;
@@ -180,9 +213,8 @@ public class TunnelPathGenerator : MonoBehaviour
             Quaternion roomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
 
             Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(roomPosition);
-            if (occupiedCells.Contains(roomPositionQuantized)) {
+            if (preventOverlappingPaths && occupiedCells.Contains(roomPositionQuantized)) {
                 Debug.Log($"Room position {roomPositionQuantized} already occupied on retry {retryIndex}");
-
             }
             else {
                 GameObject room = Instantiate(roomPrefab, roomPosition, roomRotation, generatedParent.transform);
@@ -194,7 +226,7 @@ public class TunnelPathGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Find the tunnel endpoints that are children of a room
     /// </summary>
     /// <param name="room"></param>
     /// <param name="sourcePosition"></param>
@@ -273,7 +305,7 @@ public class TunnelPathGenerator : MonoBehaviour
             {
                 Vector3 occupancyQueryPoint = vertexPath.GetPointAtDistance(distance, EndOfPathInstruction.Stop);
                 Vector3 quantizedQueryPoint = QuantizeToOccupancyGrid(occupancyQueryPoint);
-                if (occupiedCells.Contains(quantizedQueryPoint))
+                if (preventOverlappingPaths && occupiedCells.Contains(quantizedQueryPoint))
                 {
                     Debug.Log($"Path in cell {quantizedQueryPoint} is occupied on retry {retryIndex}");
                     isPathOccupied = true;
@@ -305,14 +337,14 @@ public class TunnelPathGenerator : MonoBehaviour
         return vertexPath;
     }
 
+    /// <summary>
+    /// Populated occupied cells for a room and a path
+    /// </summary>
+    /// <param name="room">Room containing a collider to occupy cells with</param>
+    /// <param name="path">Path to occupy cells along</param>
     private void MarkCellsAsOccupied(GameObject room, VertexPath path)
     {
-        // Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(room.transform.position);
-        // occupiedCells.Add(roomPositionQuantized);
-        // Debug.Log($"Adding room with position position {room.transform.position} to occupied cells");
-
         float margin = occupancyCellResolution / 2;
-        float step = occupancyCellResolution / 4;
         Vector3 marginVector = Vector3.one * margin;
         Collider collider = room.GetComponent<Collider>();
         Vector3 minPoint = collider.bounds.min - marginVector;
