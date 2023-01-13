@@ -170,7 +170,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3595303810283265348}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.996256, y: -0.9999998, z: 39.354187}
+  m_LocalPosition: {x: 1.1950116, y: -1.0000019, z: 3.2550223}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -367,12 +367,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cc: {fileID: 8897005194122684529}
   playerControls: {fileID: 8897005194122684530}
-  GroundCheck: {fileID: 472514917536187377}
+  GroundCheck: {fileID: 1505195843214093539}
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 8
   MoveSpeed: 0.1
+  MaxFallSpeed: 30
   playerBody: {fileID: 1350576064378477091}
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
@@ -392,9 +393,9 @@ MonoBehaviour:
   whipHitColliderRadius: 0.5
   whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
   jumpHieght: 1.5
-  Gravity: -9.8
-  fallMultiplier: 60
-  lowJumpMultiplier: 3.5
+  Gravity: -20
+  fallMultiplier: 0.1
+  lowJumpMultiplier: 0.75
 --- !u!114 &8897005194122684530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,10 +437,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0.25
+  m_Height: 1
   m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_SlopeLimit: 50
+  m_StepOffset: 0.4
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}

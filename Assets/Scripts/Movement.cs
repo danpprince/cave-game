@@ -16,9 +16,10 @@ public class Movement : MonoBehaviour
     public float GroundDistance = 0.4f;
     public LayerMask GroundMask;
     public float MoveSpeed = 5f;
+    public float MaxFallSpeed = 100f;
+
     private Vector2 MoveDirection = Vector2.zero;
     private Vector3 Velocity;
- 
     private bool isGrounded;
     private InputAction MoveController;
 
@@ -98,6 +99,7 @@ public class Movement : MonoBehaviour
         TossInput.canceled += TossTorch;
         WhipInput.started += useWhip;
         jumpInput.started += jumpButtonPressed;
+        jumpInput.canceled += jumpRelease;
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -123,12 +125,14 @@ public class Movement : MonoBehaviour
         // Gives the Player Gravity \\
         if (Velocity.y < 0 && !isGrounded)
         {
-            Velocity.y += Gravity * fallMultiplier;
-            print("falling");
+            Velocity.y -= fallMultiplier;
         }
         else if (Velocity.y < 0 && isGrounded)
         {
             Velocity.y = -2f;
+        } else if (Velocity.y >0 && !jumpButtonIsHeld)
+        {
+            Velocity.y -= lowJumpMultiplier;
         }
 
         if (shouldJump)
@@ -136,6 +140,7 @@ public class Movement : MonoBehaviour
             jump();
         }
         Velocity.y += Gravity * Time.deltaTime;
+        Velocity.y = Mathf.Clamp(Velocity.y,-MaxFallSpeed,+MaxFallSpeed);
         cc.Move(Velocity * Time.deltaTime);
 
 
@@ -216,7 +221,6 @@ public class Movement : MonoBehaviour
         else
         {
             Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
-            //Debug.Log("Missed");
             whipHitPosition = camera.transform.position + camera.transform.forward * whipRange;
             didWhipHit = false;
         }
@@ -248,6 +252,12 @@ public class Movement : MonoBehaviour
     {
         Velocity.y += Mathf.Sqrt(jumpHieght * -3f * Gravity);
         shouldJump = false;
+        jumpButtonIsHeld = true;
+    }
+
+    private void jumpRelease(InputAction.CallbackContext obj)
+    {
+        jumpButtonIsHeld = false;
     }
     private void OnDrawGizmos()
     {
