@@ -65,7 +65,7 @@ public class Movement : MonoBehaviour
     private Vector3 currentWhipTipPosition;
 
     [Header("Jumping")]
-    public float jumpHieght = 8f;
+    public float jumpHeight = 8f;
     public float Gravity = -9.8f;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
@@ -122,7 +122,7 @@ public class Movement : MonoBehaviour
         camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
         WhileChargingTorchThrow();
 
-        // Gives the Player Gravity \\
+        // Determining jump altering logic \\
         if (Velocity.y < 0 && !isGrounded)
         {
             Velocity.y -= fallMultiplier;
@@ -142,9 +142,6 @@ public class Movement : MonoBehaviour
         Velocity.y += Gravity * Time.deltaTime;
         Velocity.y = Mathf.Clamp(Velocity.y,-MaxFallSpeed,+MaxFallSpeed);
         cc.Move(Velocity * Time.deltaTime);
-
-
-
     }
     private void FixedUpdate()
     {
@@ -250,7 +247,7 @@ public class Movement : MonoBehaviour
     }
     private void jump()
     {
-        Velocity.y += Mathf.Sqrt(jumpHieght * -3f * Gravity);
+        Velocity.y += Mathf.Sqrt(jumpHeight * -3f * Gravity);
         shouldJump = false;
         jumpButtonIsHeld = true;
     }
