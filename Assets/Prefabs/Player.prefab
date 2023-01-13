@@ -170,7 +170,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3595303810283265348}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.1950116, y: -1.0000019, z: 3.2550223}
+  m_LocalPosition: {x: 1.1155946, y: -1.0000019, z: 3.0027728}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 8897005194122684529}
   m_Layer: 2
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -367,17 +367,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cc: {fileID: 8897005194122684529}
   playerControls: {fileID: 8897005194122684530}
-  GroundCheck: {fileID: 1505195843214093539}
+  MoveSpeed: 0.1
+  Gravity: -9.8
+  GroundCheck: {fileID: 472514917536187377}
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
-    m_Bits: 8
-  MoveSpeed: 0.1
-  MaxFallSpeed: 30
-  playerBody: {fileID: 1350576064378477091}
+    m_Bits: 2147483647
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
   Y_AimSensitivity: 0.5
+  playerBody: {fileID: 1350576064378477091}
   Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
   TorchSpawnPoint: {fileID: 9209023117751489498}
   torchUpwardsForce: 5.5
@@ -392,10 +392,6 @@ MonoBehaviour:
   whipArchHeight: 2
   whipHitColliderRadius: 0.5
   whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
-  jumpHieght: 1.5
-  Gravity: -20
-  fallMultiplier: 0.1
-  lowJumpMultiplier: 0.75
 --- !u!114 &8897005194122684530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,10 +433,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1
+  m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 50
-  m_StepOffset: 0.4
+  m_SlopeLimit: 55
+  m_StepOffset: 0.7
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
