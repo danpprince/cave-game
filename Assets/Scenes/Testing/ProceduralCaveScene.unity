@@ -395,18 +395,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 3.4266946
       objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684529, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684529, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_SlopeLimit
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684529, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_StepOffset
-      value: 0.4
-      objectReference: {fileID: 0}
     - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_Name
       value: Player
