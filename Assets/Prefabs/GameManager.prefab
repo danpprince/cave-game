@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8427257552259129817}
   - component: {fileID: 8427257552259129816}
+  - component: {fileID: 2073663470}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,3 +46,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinTag: Coin
+--- !u!114 &2073663470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8427257552259129799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519a6797173ecfd4e9aee6d179929ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnTargetGO: {fileID: 6156784804740083860, guid: 2b72504c5fd642e4f82800b2a12db874, type: 3}
+  monsterPrefab: {fileID: 0}
