@@ -1,5 +1,5 @@
-using UnityEngine.AI;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RandomMovement : MonoBehaviour
 {
@@ -9,14 +9,14 @@ public class RandomMovement : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-                
+
     }
 
     // Update is called once per frame
     void Update()
     {
         // Check if the agent has reached its destination
-        if (agent.remainingDistance < 0.1f )
+        if (agent.remainingDistance < 0.1f)
         {
             // Move the agent to a new random position
             agent.destination = RandomNavSphere(transform.position, 100, NavMesh.AllAreas);
@@ -33,7 +33,7 @@ public class RandomMovement : MonoBehaviour
         NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
         return navHit.position;
     }
-    
+
 
 
 
