@@ -341,6 +341,7 @@ GameObject:
   - component: {fileID: 1316322433059042890}
   - component: {fileID: 2085769283}
   - component: {fileID: 2085769284}
+  - component: {fileID: 2607905798848793724}
   m_Layer: 0
   m_Name: Minotaur
   m_TagString: Monster
@@ -392,7 +393,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4121725750726032219}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22b0ff78c3b566b42aa1caf81d587c12, type: 3}
   m_Name: 
@@ -420,6 +421,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2607905798848793724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4121725750726032219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70b75b4e2e3b07840a94bce06d3a5699, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4433669338933626464
 GameObject:
   m_ObjectHideFlags: 0
