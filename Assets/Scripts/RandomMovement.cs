@@ -3,12 +3,12 @@ using UnityEngine.AI;
 
 public class RandomMovement : MonoBehaviour
 {
-    public NavMeshAgent agent;
+    private NavMeshAgent agent;
 
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = gameObject.GetComponent<NavMeshAgent>();
 
     }
 
@@ -21,7 +21,7 @@ public class RandomMovement : MonoBehaviour
             // Move the agent to a new random position
             agent.destination = RandomNavSphere(transform.position, 100, NavMesh.AllAreas);
         }
-        Debug.DrawLine(agent.transform.position, agent.destination, Color.magenta, 0.01f);
+        // Debug.DrawLine(agent.transform.position, agent.destination, Color.magenta, 0.01f);
     }
 
     // Returns a random position within sphere on NavMesh

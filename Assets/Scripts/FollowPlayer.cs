@@ -22,7 +22,7 @@ public class FollowPlayer : MonoBehaviour
         // Find a point on the NavMesh near the target
         NavMeshHit hit;
         NavMesh.SamplePosition(player.transform.position, out hit, 2.0f, NavMesh.AllAreas);
-        Debug.Log("Current target " + player.name + " is at " + hit.position);
+        //Debug.Log("Current target " + player.name + " is at " + hit.position);
         
         // Set the agent's destination to the target
         agent.destination = hit.position;
@@ -30,11 +30,11 @@ public class FollowPlayer : MonoBehaviour
         // Check if the agent has reached its destination
         if (agent.remainingDistance < 0.1f)
         {
-            Debug.Log(transform.name + " has reached " + player.name);            
+            // Debug.Log(transform.name + " has reached " + player.name);            
         }
         else
         {
-            Debug.Log(transform.name + " is moving towards " + player.name);
+            // Debug.Log(transform.name + " is moving towards " + player.name);
         }
     }
 

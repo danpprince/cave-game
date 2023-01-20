@@ -76,3 +76,4 @@ crashlytics-build.properties
 # Ignore Blender backup files
 *.blend1
 *.blend1.meta
+Assets/Generated/

@@ -6,61 +6,74 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    //General Input Getting \\
+
+    [Header("Player Inputs and Controller")]
     public CharacterController cc;
     public PlayerInput playerControls;
 
-    // For Movement and Moving Acessories \\
-    private InputAction MoveController;
-    public float MoveSpeed = 5f;
-    private Vector2 MoveDirection = Vector2.zero;
-    private Vector3 Velocity;
-    public float Gravity = -9.8f;
-    public Transform GroundCheck;
+    [Header("Movement")]
+    public GameObject GroundCheck;
     public float GroundDistance = 0.4f;
     public LayerMask GroundMask;
+    public float MoveSpeed = 5f;
+    public float MaxFallSpeed = 100f;
+
+    private Vector2 MoveDirection = Vector2.zero;
+    private Vector3 Velocity;
     private bool isGrounded;
+    private InputAction MoveController;
 
-    // For Looking \\
-    private InputAction Look;
+    [Header("Camera Controls")]
+    public Transform playerBody;
     public GameObject camera;
-
     public float X_AimSensitivity;
     public float Y_AimSensitivity;
 
     private Vector2 MousePosition;
-    public Transform playerBody;
     private float X_Rotation = 0;
+    private InputAction Look;
 
-    // For Torch Tossing \\
-    private InputAction TossInput;
+    [Header("Torch Controls")]
     public GameObject Torch;
     public GameObject TorchSpawnPoint;
     public float torchUpwardsForce = 5.5f, torchForwardForce = 8f;
-    private float DefaultForwardsForce;
     public float TorchForceMultiplier = 2f;
     public GameObject HeldTorch;
+
     private bool isTorchButtonHeldDown = false;
     private Vector3 DefaultTorchPosition;
+    private InputAction TossInput;
+    private float DefaultForwardsForce;
 
-    //  For The WHIP \\
-    private bool canFireWhip = true;
+    [Header("Whip Controls")]
     public float whipCoolDownTime = 1f;
-    private InputAction WhipInput;
     public float whipRange = 5f;
-    private Vector3 whipHitPosition;
     public bool didWhipHit = false;
-    private RaycastHit hit;
-    private float hitDistance;
     public float whipAnimationSpeed = 1f;
     public GameObject whipBase;
-    LineRenderer lineRenderer;
-    private bool shouldAnimateWhip = false;
     public float whipArchHeight = 0.5f;
-    private Vector3 currentWhipTipPosition;
     public float whipHitColliderRadius = 0.5f;
     public GameObject whipHitCollider;
 
+    private bool canFireWhip = true;
+    private InputAction WhipInput;
+    private Vector3 whipHitPosition;
+    private RaycastHit hit;
+    private float hitDistance;
+    private LineRenderer lineRenderer;
+    private bool shouldAnimateWhip = false;
+    private Vector3 currentWhipTipPosition;
+
+    [Header("Jumping")]
+    public float jumpHeight = 8f;
+    public float Gravity = -9.8f;
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
+
+    private InputAction jumpInput;
+    private Rigidbody rb;
+    private bool shouldJump = false;
+    private bool jumpButtonIsHeld = false;
 
     void Start()
     {
@@ -68,15 +81,34 @@ public class Movement : MonoBehaviour
         DefaultForwardsForce = torchForwardForce;
         DefaultTorchPosition = HeldTorch.transform.localPosition;
     }
+    private void OnEnable()
+    {
+        playerControls.ActivateInput();
 
-    // Update is called once per frame
+        MoveController = playerControls.actions["Move"];
+        Look = playerControls.actions["Look"];
+        TossInput = playerControls.actions["Toss"];
+        WhipInput = playerControls.actions["Fire"];
+        jumpInput = playerControls.actions["Jump"];
+
+        MoveController.Enable();
+        Look.Enable();
+        TossInput.Enable();
+
+        TossInput.started += ChargingTorch;
+        TossInput.canceled += TossTorch;
+        WhipInput.started += useWhip;
+        jumpInput.started += jumpButtonPressed;
+        jumpInput.canceled += jumpRelease;
+
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     void Update()
     {
         //Movement setup
         MoveDirection = MoveController.ReadValue<Vector2>();
         MousePosition = Look.ReadValue<Vector2>();
-        isGrounded = Physics.CheckSphere(GroundCheck.position, GroundDistance, GroundMask);
-
+        isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask);
         // Looking stuff \\
         float Look_X = MousePosition.x * X_AimSensitivity;
         float Look_Y = MousePosition.y * Y_AimSensitivity;
@@ -90,22 +122,33 @@ public class Movement : MonoBehaviour
         camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
         WhileChargingTorchThrow();
 
-    }
+        // Determining jump altering logic \\
+        if (Velocity.y < 0 && !isGrounded)
+        {
+            Velocity.y -= fallMultiplier;
+        }
+        else if (Velocity.y < 0 && isGrounded)
+        {
+            Velocity.y = -2f;
+        } else if (Velocity.y >0 && !jumpButtonIsHeld)
+        {
+            Velocity.y -= lowJumpMultiplier;
+        }
 
+        if (shouldJump)
+        {
+            jump();
+        }
+        Velocity.y += Gravity * Time.deltaTime;
+        Velocity.y = Mathf.Clamp(Velocity.y,-MaxFallSpeed,+MaxFallSpeed);
+        cc.Move(Velocity * Time.deltaTime);
+    }
     private void FixedUpdate()
     {
         // Moves the Player around \\
         Vector3 Move = transform.right * MoveDirection.x + transform.forward * MoveDirection.y;
         cc.Move(Move * MoveSpeed);
 
-        // Gives the Player Gravity \\
-        Velocity.y += Gravity;
-        cc.Move(Velocity * Time.deltaTime);
-
-        if (isGrounded && Velocity.y < 0)
-        {
-            Velocity.y = -2f;
-        }
 
         findWhipPoint();
         if (shouldAnimateWhip)
@@ -113,12 +156,10 @@ public class Movement : MonoBehaviour
             animateWhip();
         }
     }
-
     private void ChargingTorch(InputAction.CallbackContext obj)
     {
         isTorchButtonHeldDown = true;
     }
-
     private void WhileChargingTorchThrow()
     {
         if (isTorchButtonHeldDown)
@@ -131,7 +172,6 @@ public class Movement : MonoBehaviour
             HeldTorch.transform.localPosition = DefaultTorchPosition;
         }
     }
-
     private void TossTorch(InputAction.CallbackContext obj)
     {
         //Direction Correction
@@ -154,19 +194,16 @@ public class Movement : MonoBehaviour
         torchForwardForce = DefaultForwardsForce;
         isTorchButtonHeldDown = false;
     }
-
     IEnumerator WhipCoolDownTimer()
     {
         yield return new WaitForSeconds(whipCoolDownTime);
         canFireWhip = true;
     }
-
     IEnumerator WhipAnimationTimer()
     {
         yield return new WaitForSeconds(1 / whipAnimationSpeed);
         shouldAnimateWhip = false;
     }
-
     private void findWhipPoint()
     {
 
@@ -181,12 +218,10 @@ public class Movement : MonoBehaviour
         else
         {
             Debug.DrawRay(camera.transform.position, transform.TransformDirection(Vector3.forward) * whipRange, Color.green);
-            //Debug.Log("Missed");
             whipHitPosition = camera.transform.position + camera.transform.forward * whipRange;
             didWhipHit = false;
         }
     }
-
     private void useWhip(InputAction.CallbackContext obj)
     {
         if (canFireWhip)
@@ -203,35 +238,30 @@ public class Movement : MonoBehaviour
             }
         }
     }
+    private void jumpButtonPressed(InputAction.CallbackContext obj)
+    {
+     if(isGrounded)
+        {
+            shouldJump = true;
+        }
+    }
+    private void jump()
+    {
+        Velocity.y += Mathf.Sqrt(jumpHeight * -3f * Gravity);
+        shouldJump = false;
+        jumpButtonIsHeld = true;
+    }
 
+    private void jumpRelease(InputAction.CallbackContext obj)
+    {
+        jumpButtonIsHeld = false;
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = didWhipHit ? Color.red : Color.green;
         Gizmos.DrawSphere(whipHitPosition, 0.1f);
         Gizmos.DrawSphere(currentWhipTipPosition, 0.1f);
     }
-
-    private void OnEnable()
-    {
-        playerControls.ActivateInput();
-
-        MoveController = playerControls.actions["Move"];
-        Look = playerControls.actions["Look"];
-        TossInput = playerControls.actions["Toss"];
-        WhipInput = playerControls.actions["Fire"];
-
-        MoveController.Enable();
-        Look.Enable();
-        TossInput.Enable();
-
-        TossInput.started += ChargingTorch;
-        TossInput.canceled += TossTorch;
-        WhipInput.started += useWhip;
-
-
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
     private void OnDisable()
     {
         playerControls.DeactivateInput();
@@ -239,7 +269,6 @@ public class Movement : MonoBehaviour
         Look.Disable();
         TossInput.Disable();
     }
-
     private void animateWhip()
     {
         if (lineRenderer == null)

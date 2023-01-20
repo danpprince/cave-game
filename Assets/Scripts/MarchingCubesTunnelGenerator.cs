@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEditor;
 
 using UnityEditor;
 
@@ -231,6 +233,7 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
     private void CreateMeshGameObject(List<Vector3> verts, List<Vector3> normals, List<int> indices, Vector3 position)
     {
         Mesh mesh = new Mesh();
+        mesh.name = "GeneratedMesh";
         mesh.indexFormat = IndexFormat.UInt32;
         mesh.SetVertices(verts);
         mesh.SetTriangles(indices, 0);
@@ -248,7 +251,7 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             Destroy(terrainObject);
         }
 
-        terrainObject = new GameObject("Terrain");
+        terrainObject = new GameObject("GeneratedTerrain");
         terrainObject.transform.parent = transform;
         terrainObject.AddComponent<MeshFilter>();
         terrainObject.AddComponent<MeshRenderer>();
@@ -261,10 +264,13 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.GetComponent<Renderer>().material = material;
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
-        
 
         MeshCollider collider = terrainObject.AddComponent<MeshCollider>();
         collider.sharedMesh = mesh;
+
+        // Save generated data to generated directory so it does not inflate scene files
+        Utils.SaveGameObjectAsPrefab(terrainObject, "GeneratedTerrain");
+        AssetDatabase.CreateAsset(mesh, "Assets/Generated/GeneratedMesh.asset");
     }
 
     private Vector3Int WorldPointToVoxelIndices(Vector3 point)
