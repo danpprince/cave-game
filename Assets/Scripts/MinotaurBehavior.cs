@@ -6,6 +6,8 @@ public class MinotaurBehavior : MonoBehaviour
     private NavMeshAgent agent;
     private GameObject player;
 
+    [SerializeField] private bool disableDestroy = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,10 +47,12 @@ public class MinotaurBehavior : MonoBehaviour
     // Destroys Player on collision
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
+        if (other.CompareTag("Player") && !disableDestroy)
+        {        
             Debug.Log("Player has been destroyed by " + gameObject.name);
             Destroy(other.gameObject);
         }
+        else
+            Debug.Log("Player has been caught by " + gameObject.name + " but not destroyed");
     }
 }
