@@ -26,13 +26,13 @@ public class SpawnMonster : MonoBehaviour
         { 
             // Instantiate monsterPrefab at spawnTargetGO transform
             Instantiate(monsterPrefab, gameObject.transform.position, Quaternion.identity);
-            Debug.Log(monsterPrefab.name + " spawned at " + gameObject.name + " : " + gameObject.transform.position);
+            //Debug.Log(monsterPrefab.name + " spawned at " + gameObject.name + " : " + gameObject.transform.position);
 
 
             // Self destruct
             parentName = gameObject.name;
             Destroy(gameObject);
-            Debug.Log(monsterPrefab.name + " created successfully. Destroyed " + parentName + " parent object.");
+            //Debug.Log(monsterPrefab.name + " created successfully. Destroyed " + parentName + " parent object.");
         }
 
     }

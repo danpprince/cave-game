@@ -30,7 +30,8 @@ public class FollowPlayer : MonoBehaviour
         // Check if the agent has reached its destination
         if (agent.remainingDistance < 0.1f)
         {
-            // Debug.Log(transform.name + " has reached " + player.name);            
+            //Debug.Log(transform.name + " has reached " + player.name);
+            
         }
         else
         {
