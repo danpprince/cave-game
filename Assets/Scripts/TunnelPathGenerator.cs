@@ -107,12 +107,12 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePaths()
     {
-        int generationAttempt = 0;
-        while (true)
+        int maxNumAttempts = 10;
+        for (int generationAttempt = 0; generationAttempt < maxNumAttempts; generationAttempt++)
         {
             GameManager.RestartState();
             occupiedCells = new HashSet<Vector3>();
-            generatedParent = new GameObject("Generated");
+            generatedParent = new GameObject("GeneratedPaths");
             generatedParent.transform.parent = gameObject.transform;
             Vector3 startingPosition = startingTunnelEndpoint.position;
             Vector3 baseDirection = (startingPosition - startingRoomTransform.position).normalized;
@@ -128,14 +128,17 @@ public class TunnelPathGenerator : MonoBehaviour
                 );
                 DestroyImmediate(generatedParent);
                 generationAttempt++;
-            }
-            else
-            {
-                Debug.Log($"Successfully generated {currentRoomCount} rooms");
-                return;
+                continue;
             }
 
+            // Save generated data to generated directory so it does not inflate scene files
+            Utils.SaveGameObjectAsPrefab(generatedParent, "GeneratedPaths");
+            return;
         }
+        Debug.LogError(
+            $"Unable to generate {minimumRoomCount} rooms after {maxNumAttempts} attempts, "
+            + "adjust generation parameters to create more rooms or decrease the minimum required rooms"
+        );
     }
 
     /// <summary>
