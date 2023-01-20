@@ -19,24 +19,12 @@ public class FollowPlayer : MonoBehaviour
         // Find the player by tag
         player = GameObject.FindGameObjectWithTag("Player");
 
-        // Find a point on the NavMesh near the target
-        NavMeshHit hit;
-        NavMesh.SamplePosition(player.transform.position, out hit, 2.0f, NavMesh.AllAreas);
-        //Debug.Log("Current target " + player.name + " is at " + hit.position);
-        
-        // Set the agent's destination to the target
-        agent.destination = hit.position;
-        
-        // Check if the agent has reached its destination
-        if (agent.remainingDistance < 0.1f)
+        // If the player is found, follow the player
+        if (player != null)
         {
-            //Debug.Log(transform.name + " has reached " + player.name);
-            
+            agent.SetDestination(player.transform.position);
         }
-        else
-        {
-            // Debug.Log(transform.name + " is moving towards " + player.name);
-        }
+
     }
 
 }

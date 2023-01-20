@@ -339,11 +339,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3636831620690518497}
   - component: {fileID: 1316322433059042890}
-  - component: {fileID: 2085769283}
   - component: {fileID: 2085769284}
-  - component: {fileID: 2607905798848793724}
-  - component: {fileID: -8290383508706289018}
   - component: {fileID: 8202841040251505294}
+  - component: {fileID: 798692506701773832}
   m_Layer: 0
   m_Name: Minotaur
   m_TagString: Monster
@@ -388,18 +386,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2085769283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4121725750726032219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22b0ff78c3b566b42aa1caf81d587c12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!195 &2085769284
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -422,30 +408,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2607905798848793724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4121725750726032219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b75b4e2e3b07840a94bce06d3a5699, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-8290383508706289018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4121725750726032219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e965c46c0c647c46b4f76d30175abe8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &8202841040251505294
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -460,6 +422,18 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &798692506701773832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4121725750726032219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e61f786c7084f994085b1db0aee6ca90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4433669338933626464
 GameObject:
   m_ObjectHideFlags: 0
