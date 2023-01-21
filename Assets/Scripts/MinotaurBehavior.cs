@@ -12,7 +12,7 @@ public class MinotaurBehavior : MonoBehaviour
     void Start()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
-
+        
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class MinotaurBehavior : MonoBehaviour
         // If the player is found, follow the player
         if (player != null)
         {
-            agent.SetDestination(player.transform.position);
+            agent.SetDestination(player.transform.position);            
         }
         else
         {
@@ -32,6 +32,10 @@ public class MinotaurBehavior : MonoBehaviour
             agent.destination = RandomNavSphere(transform.position, 100, NavMesh.AllAreas);
         }
 
+        for (int i = 0; i < agent.path.corners.Length - 1; i++)
+        {
+            Debug.DrawLine(agent.path.corners[i], agent.path.corners[i + 1], Color.magenta);
+        }
     }
 
     // Returns a random position within sphere on NavMesh
