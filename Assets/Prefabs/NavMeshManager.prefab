@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6707179444979247656}
   - component: {fileID: 4484465566843743623}
-  - component: {fileID: -749271216131763250}
+  - component: {fileID: 6411997019935567626}
   m_Layer: 0
   m_Name: NavMeshManager
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46cae96411943149a88caa2a97c88e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-749271216131763250
+--- !u!114 &6411997019935567626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,7 +54,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8124786150233684911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98333884b3ed7814487fd66096dbb99e, type: 3}
+  m_Script: {fileID: 11500000, guid: 693bc7ec12f036c4cba72395c5b2278b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 4121725750726032219, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
+  vertexPrefab: {fileID: 9056056162212683417, guid: 52aef64ac37bb0040a5554af37152b93, type: 3}
+  enableDrawTriangles: 0

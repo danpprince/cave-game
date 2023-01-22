@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BuildNonNavSurface : MonoBehaviour
+public class NavMeshManagerBehavior : MonoBehaviour
 {
     private Mesh mesh;
 
     [SerializeField]
     private GameObject agentPrefab;
+
+    [SerializeField]
+    private GameObject vertexPrefab;
+
+    [SerializeField]
+    private bool enableDrawTriangles = false;
 
     // declare list of Vector3 for navMeshEdgeCorners
     private List<Vector3> navMeshEdgeCorners = new List<Vector3>();
@@ -35,10 +41,19 @@ public class BuildNonNavSurface : MonoBehaviour
         // Count the triangles on the NavMesh
         int navMeshTriangleCount = navMeshTriangles.indices.Length / 3;
         Debug.Log("NavMesh triangles counted: " + navMeshTriangleCount);
+        
 
         // Go through each triangle on the NavMesh
         for (int i = 0; i < navMeshTriangles.indices.Length; i += 3)
         {
+            if (enableDrawTriangles)
+            {
+                // Draw the triangles on the NavMesh
+                Debug.DrawLine(navMeshTriangles.vertices[navMeshTriangles.indices[i]], navMeshTriangles.vertices[navMeshTriangles.indices[i + 1]], Color.red, 1000f);
+                Debug.DrawLine(navMeshTriangles.vertices[navMeshTriangles.indices[i + 1]], navMeshTriangles.vertices[navMeshTriangles.indices[i + 2]], Color.red, 1000f);
+                Debug.DrawLine(navMeshTriangles.vertices[navMeshTriangles.indices[i + 2]], navMeshTriangles.vertices[navMeshTriangles.indices[i]], Color.red, 1000f);
+            }
+
             // Array of Vector3 for the nearest NavMesh Edge hits to each vertex of the triangle
             NavMeshHit[] nearestEdgeHits = new NavMeshHit[3];
 
@@ -55,23 +70,14 @@ public class BuildNonNavSurface : MonoBehaviour
                 if (Vector3.Distance(navMeshTriangles.vertices[navMeshTriangles.indices[i + j]], nearestEdgeHits[j].position) < 0.1f)
                 {
                     // Add the corner of the triangle to the list of navMeshEdgeCorners
-                    navMeshEdgeCorners.Add(nearestEdgeHits[j].position);
+                    navMeshEdgeCorners.Add(navMeshTriangles.vertices[navMeshTriangles.indices[i + j]]);
 
-                    
+                    // Spawn a vertexPrefab at the corner of the triangle on the NavMesh edge as a child of this object
+                    GameObject vertex = Instantiate(vertexPrefab, navMeshTriangles.vertices[navMeshTriangles.indices[i + j]], Quaternion.identity, this.transform);
                 }
                 
-                // Draw all navMeshTriangle edges in red
-                Debug.DrawLine(navMeshTriangles.vertices[navMeshTriangles.indices[i]], navMeshTriangles.vertices[navMeshTriangles.indices[i + 1]], Color.red, 1000f);
-                Debug.DrawLine(navMeshTriangles.vertices[navMeshTriangles.indices[i + 1]], navMeshTriangles.vertices[navMeshTriangles.indices[i + 2]], Color.red, 1000f);
-                Debug.DrawLine(navMeshTriangles.vertices[navMeshTriangles.indices[i + 2]], navMeshTriangles.vertices[navMeshTriangles.indices[i]], Color.red, 1000f);
 
-                // Find all navMeshTriangle edges that are between navMeshEdgeCorners
-                
             }
-
-
-
-
 
 
         }
@@ -83,4 +89,5 @@ public class BuildNonNavSurface : MonoBehaviour
     {
         
     }
+    
 }

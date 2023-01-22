@@ -9,10 +9,11 @@ public class SpawnObject : MonoBehaviour
     /// </summary>
     [SerializeField] public GameObject objectPrefab;
 
-    
+    [SerializeField] private bool disableDestroy = true;
 
     private bool isSpawned = false;
-    //private string parentName;
+    
+    private string parentName;
     
     // Start is called before the first frame update
     void Start()
@@ -28,14 +29,16 @@ public class SpawnObject : MonoBehaviour
         { 
             // Instantiate monsterPrefab at spawnTargetGO transform
             Instantiate(objectPrefab, gameObject.transform.position, Quaternion.identity);
-            //Debug.Log(monsterPrefab.name + " spawned at " + gameObject.name + " : " + gameObject.transform.position);
+            //Debug.Log(objectPrefab.name + " spawned at " + gameObject.name + " : " + gameObject.transform.position);
             isSpawned = true;
-            
-            // Self destruct
-            //parentName = gameObject.name;
-            //Destroy(gameObject);
-            //Debug.Log(monsterPrefab.name + " created successfully. Destroyed " + parentName + " parent object.");
-            
+
+            if (!disableDestroy)
+            {
+                // Self destruct
+                parentName = gameObject.name;
+                Destroy(gameObject);
+                Debug.Log("Destroyed " + parentName + " parent object.");
+            }
         }
 
     }
