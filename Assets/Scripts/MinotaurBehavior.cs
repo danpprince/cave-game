@@ -32,6 +32,7 @@ public class MinotaurBehavior : MonoBehaviour
             agent.destination = RandomNavSphere(transform.position, 100, NavMesh.AllAreas);
         }
 
+        // Draw the path the agent is following
         for (int i = 0; i < agent.path.corners.Length - 1; i++)
         {
             Debug.DrawLine(agent.path.corners[i], agent.path.corners[i + 1], Color.magenta);

@@ -10,7 +10,7 @@ public class NavMeshBaker : MonoBehaviour
     }
     public void Bake()
     {
-        NavMeshSurface surface = GetComponent<NavMeshSurface>();
+        NavMeshSurface surface = GameObject.Find("Terrain").GetComponent<NavMeshSurface>();
         NavMesh.RemoveAllNavMeshData();
         surface.BuildNavMesh();
     }

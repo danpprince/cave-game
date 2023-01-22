@@ -11,7 +11,8 @@ public class SpawnMonster : MonoBehaviour
 
 
     private bool isSpawned = false;
-    private string parentName;
+    //private string parentName;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -28,11 +29,12 @@ public class SpawnMonster : MonoBehaviour
             Instantiate(monsterPrefab, gameObject.transform.position, Quaternion.identity);
             //Debug.Log(monsterPrefab.name + " spawned at " + gameObject.name + " : " + gameObject.transform.position);
 
-
+            
             // Self destruct
-            parentName = gameObject.name;
+            //parentName = gameObject.name;
             Destroy(gameObject);
             //Debug.Log(monsterPrefab.name + " created successfully. Destroyed " + parentName + " parent object.");
+            
         }
 
     }
