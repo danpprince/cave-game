@@ -8,6 +8,7 @@ TagManager:
   - TunnelEndpoint
   - Coin
   - Monster
+  - NavVert
   layers:
   - Default
   - TransparentFX
