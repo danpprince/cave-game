@@ -24,18 +24,24 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     private List<GameObject> navMeshVertices = new List<GameObject>();
 
+    private List<OffMeshLink> navMeshLinks = new List<OffMeshLink>();
+
     // Start is called before the first frame update
     void Start()
     {
         // Run the NavMeshTriangulation
         NavMesh2Triangles();
-        
-        
-        
+
+
+
         // Run the LinkBuilder
         LinkBuilder(linkSearchLength);
 
         Debug.Log("Count of NavMeshVertices: " + navMeshVertices.Count);
+
+        Debug.Log("Count of OffMeshLinks: " + navMeshLinks.Count);
+
+
     }
 
     // Update is called once per frame
@@ -54,6 +60,12 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
         navMeshVertices.AddRange(vertices);
 
+        float agentHeight = agentPrefab.GetComponent<CapsuleCollider>().height;
+        int agentType = agentPrefab.GetComponent<NavMeshAgent>().agentTypeID;
+
+        // find the NavMeshBuildSettings
+        NavMeshBuildSettings settings = NavMesh.GetSettingsByID(agentType);
+
         // Iterate through the vertices
         for (int i = 0; i < vertices.Length; i++)
         {
@@ -63,37 +75,82 @@ public class NavMeshManagerBehavior : MonoBehaviour
                 // If the first vertex and the second are not the same
                 if (vertices[i] != vertices[j])
                 {
+                    // direction of the possible link
+                    Vector3 dir = vertices[j].transform.position - vertices[i].transform.position;
+                    float yDiff = Mathf.Abs(dir.y);
+
                     // If the vertices are within a radius
-                    if (Vector3.Distance(vertices[i].transform.position, vertices[j].transform.position) <= searchRadius)
+                    if (dir.magnitude <= searchRadius)
                     {
-                        // If the midpoint of the vertices does not have a NavMesh hit
-                        if (!NavMesh.SamplePosition((vertices[i].transform.position + vertices[j].transform.position) / 2, out NavMeshHit hit, 1, NavMesh.AllAreas))
+                        // If the vertical difference between the vertices is less than 1.2 * agent height & greater than agent step height
+                        if (yDiff <= 1.2f * agentHeight && yDiff > settings.agentClimb)
                         {
-                            // create an OffMeshLink object between the vertices
-                            OffMeshLink offMeshLink = vertices[i].AddComponent<OffMeshLink>();
 
-                            // Set the start position of the offMeshLink to the vertexPrefab with the larger Y value
-                            if (vertices[i].transform.position.y > vertices[j].transform.position.y)
+                            // if there is not already a link between these two vertices
+                            if (!LinkExists(vertices[i], vertices[j]))
                             {
-                                offMeshLink.startTransform = vertices[i].transform;
-                                offMeshLink.endTransform = vertices[j].transform;
-                            }
-                            else
-                            {
-                                offMeshLink.startTransform = vertices[j].transform;
-                                offMeshLink.endTransform = vertices[i].transform;
-                            }
+                                
+                                // Create a link between the vertices
+                                OffMeshLink link = vertices[i].AddComponent<OffMeshLink>();
 
-                            // set the OffMeshLink biDirectional to true
-                            offMeshLink.biDirectional = true;
+                                // Set the start position of the offMeshLink to the vertexPrefab with the larger Y value
+                                if (vertices[i].transform.position.y > vertices[j].transform.position.y)
+                                {
+                                    link.startTransform = vertices[i].transform;
+                                    link.endTransform = vertices[j].transform;
+                                }
+                                else
+                                {
+                                    link.startTransform = vertices[j].transform;
+                                    link.endTransform = vertices[i].transform;
+                                }
+
+                                // Debug draw a cyan line between the vertices
+                                Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
+
+                                link.costOverride = 1.0f;
+                                link.activated = true;
+                                link.biDirectional = true;
+                                link.area = 2; // 2 is the area for jumping
+
+
+
+                                // Add the link to the list of links
+                                navMeshLinks.Add(link);
+                            }
 
                         }
                     }
                 }
             }
         }
-
     }
+
+    // Check if a link already exists between two vertices
+    public bool LinkExists(GameObject vertex1, GameObject vertex2)
+    {
+        // Iterate through the links
+        for (int i = 0; i < navMeshLinks.Count; i++)
+        {
+            // If the Link goes from vertex1 to vertex2
+            if (navMeshLinks[i].startTransform == vertex1.transform && navMeshLinks[i].endTransform == vertex2.transform)
+            {
+                // Return true
+                return true;
+            }
+            // If the Link goes from vertex2 to vertex1
+            else if (navMeshLinks[i].startTransform == vertex2.transform && navMeshLinks[i].endTransform == vertex1.transform)
+            {
+                // Return true
+                return true;
+            }
+        }
+
+        // Return false
+        return false;
+    }
+
+
     // A function to draw the triangles of the NavMesh
     public void NavMesh2Triangles()
     {
