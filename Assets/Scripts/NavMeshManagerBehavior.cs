@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.AI.Navigation;
+
 
 public class NavMeshManagerBehavior : MonoBehaviour
 {
-    //private Mesh mesh;
-
+    
     [SerializeField]
     private bool enableDrawTriangles = false;
 
@@ -29,19 +30,20 @@ public class NavMeshManagerBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Bake the terrain
+        Bake();
+        
+        
         // Run the NavMeshTriangulation
         NavMesh2Triangles();
-
-
+        
 
         // Run the LinkBuilder
         LinkBuilder(linkSearchLength);
 
-        Debug.Log("Count of NavMeshVertices: " + navMeshVertices.Count);
 
-        Debug.Log("Count of OffMeshLinks: " + navMeshLinks.Count);
-
-
+        // Cleanup unlinked vertices
+        //DestroyUnlinkedVertices();
     }
 
     // Update is called once per frame
@@ -50,15 +52,58 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     }
 
+    public void Bake()
+    {
+        // Find the gameObject with the name "Terrain"
+        GameObject terrain = GameObject.Find("Terrain");
 
-    // Check vertices near each other (within a radius)
-    // that do not have a NavMesh hit at the midpoint of their centers   
+        // Get the NavMeshSurface component
+        NavMeshSurface surface = terrain.GetComponent<NavMeshSurface>();
+
+        // Clear the old NavMesh
+        NavMesh.RemoveAllNavMeshData();
+
+        // Bake the new NavMesh
+        surface.BuildNavMesh();
+
+
+        //// Find the layer mask by name
+        //int layerMask = LayerMask.GetMask(layerName);
+
+        //// setup world bounds for the bake
+        //var worldBounds = new Bounds(Vector3.zero, Vector3.one * 1000);
+
+        //// Fetch the geometry mesh collider
+        //var geometry = NavMeshCollectGeometry.RenderMeshes;
+
+        //// Define the list of NavMeshBuildMarkup
+        //var markups = new List<NavMeshBuildMarkup>();
+
+        //// Define the list of NavMeshBuildSource in results
+        //var results = new List<NavMeshBuildSource>();
+
+        //// Get NavMeshBuildSettings from the agentTypeID
+        //var settings = NavMesh.GetSettingsByID(agentTypeID);
+
+        //// Collect Sources from the layer mask
+        //NavMeshBuilder.CollectSources(worldBounds, layerMask, geometry, 0, markups, results);
+
+        //// Remove old navMeshData
+        //NavMesh.RemoveAllNavMeshData();
+
+        //// Build the new NavMesh
+        //NavMeshBuilder.BuildNavMeshData(settings, results, worldBounds, Vector3.zero, Quaternion.identity);
+    }
+
+    // Place OffMeshLinks on the NavMesh
     public void LinkBuilder(float searchRadius)
     {
         // Find the instances of vertices in the scene
         GameObject[] vertices = GameObject.FindGameObjectsWithTag(vertexPrefab.tag);
 
         navMeshVertices.AddRange(vertices);
+
+        Debug.Log("NavMeshVertices: " + navMeshVertices.Count);
 
         float agentHeight = agentPrefab.GetComponent<CapsuleCollider>().height;
         int agentType = agentPrefab.GetComponent<NavMeshAgent>().agentTypeID;
@@ -124,6 +169,9 @@ public class NavMeshManagerBehavior : MonoBehaviour
                 }
             }
         }
+
+        Debug.Log("OffMeshLinks: " + navMeshLinks.Count);
+
     }
 
     // Check if a link already exists between two vertices
@@ -159,7 +207,8 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
         // Count the triangles on the NavMesh
         int navMeshTriangleCount = navMeshTriangles.indices.Length / 3;
-        Debug.Log("NavMesh triangles counted: " + navMeshTriangleCount);
+        
+        Debug.Log("NavMesh triangles: " + navMeshTriangleCount);
 
 
         // Go through each triangle on the NavMesh
@@ -198,6 +247,28 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
             }
         }
+
+
     }
 
+    // Destroy any vertices that do not have a link
+    public void DestroyUnlinkedVertices()
+    {
+        // Find the instances of vertices in the scene
+        GameObject[] vertices = GameObject.FindGameObjectsWithTag(vertexPrefab.tag);
+
+        // Update the list of vertices
+        navMeshVertices.AddRange(vertices);
+
+        // For each vertex in the list of vertices
+        foreach (GameObject vertex in navMeshVertices)
+        {
+            // If the vertex does not have a link
+            if (vertex.GetComponent<OffMeshLink>() == null)
+            {
+                // Destroy the vertex
+                Destroy(vertex);
+            }
+        }
+    }
 }
