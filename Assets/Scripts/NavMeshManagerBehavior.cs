@@ -54,8 +54,8 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     public void Bake()
     {
-        // Find the gameObject with the name "Terrain"
-        GameObject terrain = GameObject.Find("Terrain");
+        // Find the gameObject with the name "GeneratedTerrain"
+        GameObject terrain = GameObject.Find("GeneratedTerrain");
 
         // Get the NavMeshSurface component
         NavMeshSurface surface = terrain.GetComponent<NavMeshSurface>();
