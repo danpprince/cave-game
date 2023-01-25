@@ -147,7 +147,6 @@ public class NavMeshManagerBehavior : MonoBehaviour
                                 {
                                     linkData.startPosition = vertices[i].transform.position;
                                     linkData.endPosition = vertices[j].transform.position;
-
                                     
                                     
                                 }
