@@ -32,6 +32,15 @@ public class MinotaurBehavior : MonoBehaviour
             agent.destination = RandomNavSphere(transform.position, 100, NavMesh.AllAreas);
         }
 
+        // If the agent PathStatus is PathPartial, write a debug message to the console of the current NavMeshAgent pathStatus
+        if (agent.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            Debug.Log(agent.pathStatus);
+
+        }
+
+
+
         // Draw the path the agent is following
         for (int i = 0; i < agent.path.corners.Length - 1; i++)
         {

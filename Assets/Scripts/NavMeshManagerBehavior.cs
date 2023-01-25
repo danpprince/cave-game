@@ -12,7 +12,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     [SerializeField]
     private GameObject agentPrefab;
-
+    
     [SerializeField]
     private GameObject vertexPrefab;
 
@@ -25,7 +25,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     private List<GameObject> navMeshVertices = new List<GameObject>();
 
-    private List<OffMeshLink> navMeshLinks = new List<OffMeshLink>();
+    private List<NavMeshLinkData> navMeshLinks = new List<NavMeshLinkData>();
 
     // Start is called before the first frame update
     void Start()
@@ -41,9 +41,6 @@ public class NavMeshManagerBehavior : MonoBehaviour
         // Run the LinkBuilder
         LinkBuilder(linkSearchLength);
 
-
-        // Cleanup unlinked vertices
-        //DestroyUnlinkedVertices();
     }
 
     // Update is called once per frame
@@ -121,47 +118,69 @@ public class NavMeshManagerBehavior : MonoBehaviour
                 if (vertices[i] != vertices[j])
                 {
                     // direction of the possible link
-                    Vector3 dir = vertices[j].transform.position - vertices[i].transform.position;
-                    float yDiff = Mathf.Abs(dir.y);
+                    Vector3 dir = vertices[i].transform.position - vertices[j].transform.position;
+                    float yDiff = dir.y;
+                    
 
                     // If the vertices are within a radius
                     if (dir.magnitude <= searchRadius)
                     {
-                        // If the vertical difference between the vertices is less than 1.2 * agent height & greater than agent step height
-                        if (yDiff <= 1.2f * agentHeight && yDiff > settings.agentClimb)
+                        // If the vertical difference between the vertices is greater than agent step height
+                        if (Mathf.Abs(yDiff) > settings.agentClimb)
                         {
-
+                            
                             // if there is not already a link between these two vertices
                             if (!LinkExists(vertices[i], vertices[j]))
                             {
                                 
-                                // Create a link between the vertices
-                                OffMeshLink link = vertices[i].AddComponent<OffMeshLink>();
+                                // Create a NavMeshLinkData between the vertices
+                                NavMeshLinkData linkData = new NavMeshLinkData();
 
-                                // Set the start position of the offMeshLink to the vertexPrefab with the larger Y value
-                                if (vertices[i].transform.position.y > vertices[j].transform.position.y)
+                                // Decide what kind of agent type can use this link
+                                linkData.agentTypeID = agentType;
+                                
+                                // Set the width of the link to 1.5 * the agent radius
+                                linkData.width = settings.agentRadius * 1.5f;
+
+                                //  Set the start and end positions of the link by looking at the sign of the yDiff
+                                if (yDiff < 0)
                                 {
-                                    link.startTransform = vertices[i].transform;
-                                    link.endTransform = vertices[j].transform;
+                                    linkData.startPosition = vertices[i].transform.position;
+                                    linkData.endPosition = vertices[j].transform.position;
+
+                                    
+                                    
                                 }
                                 else
                                 {
-                                    link.startTransform = vertices[j].transform;
-                                    link.endTransform = vertices[i].transform;
+                                    linkData.startPosition = vertices[j].transform.position;
+                                    linkData.endPosition = vertices[i].transform.position;
                                 }
 
-                                // Debug draw a cyan line between the vertices
-                                Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
+                                //// Set the start position of the offMeshLink to the vertexPrefab with the larger Y value
+                                //if (vertices[i].transform.position.y > vertices[j].transform.position.y)
+                                //{
+                                //    linkData.startPosition = vertices[i].transform.position;
+                                //    linkData.endPosition = vertices[j].transform.position;
 
-                                link.costOverride = 1.0f;
-                                link.activated = true;
-                                link.biDirectional = true;
-                                link.area = 2; // 2 is the area for jumping
+                                //}
+                                //else
+                                //{
+                                //    linkData.startPosition = vertices[j].transform.position;
+                                //    linkData.endPosition = vertices[i].transform.position;
+                                //}
+
+                                //// Debug draw a cyan line between the vertices
+                                //Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
 
 
+                                // Add the linkData to the NavMesh
+                                NavMesh.AddLink(linkData);
 
-                                // Add the link to the list of links
-                                navMeshLinks.Add(link);
+                                // Add the linkData to the list of links
+                                navMeshLinks.Add(linkData);
+                                
+
                             }
 
                         }
@@ -174,6 +193,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     }
 
+
     // Check if a link already exists between two vertices
     public bool LinkExists(GameObject vertex1, GameObject vertex2)
     {
@@ -181,13 +201,13 @@ public class NavMeshManagerBehavior : MonoBehaviour
         for (int i = 0; i < navMeshLinks.Count; i++)
         {
             // If the Link goes from vertex1 to vertex2
-            if (navMeshLinks[i].startTransform == vertex1.transform && navMeshLinks[i].endTransform == vertex2.transform)
+            if (navMeshLinks[i].startPosition == vertex1.transform.position && navMeshLinks[i].endPosition == vertex2.transform.position)
             {
                 // Return true
                 return true;
             }
             // If the Link goes from vertex2 to vertex1
-            else if (navMeshLinks[i].startTransform == vertex2.transform && navMeshLinks[i].endTransform == vertex1.transform)
+            else if (navMeshLinks[i].startPosition == vertex2.transform.position && navMeshLinks[i].endPosition == vertex1.transform.position)
             {
                 // Return true
                 return true;
@@ -251,24 +271,4 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     }
 
-    // Destroy any vertices that do not have a link
-    public void DestroyUnlinkedVertices()
-    {
-        // Find the instances of vertices in the scene
-        GameObject[] vertices = GameObject.FindGameObjectsWithTag(vertexPrefab.tag);
-
-        // Update the list of vertices
-        navMeshVertices.AddRange(vertices);
-
-        // For each vertex in the list of vertices
-        foreach (GameObject vertex in navMeshVertices)
-        {
-            // If the vertex does not have a link
-            if (vertex.GetComponent<OffMeshLink>() == null)
-            {
-                // Destroy the vertex
-                Destroy(vertex);
-            }
-        }
-    }
 }
