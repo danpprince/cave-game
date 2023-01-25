@@ -357,6 +357,10 @@ PrefabInstance:
       value: Jump
       objectReference: {fileID: 0}
     - target: {fileID: 6411997019935567626, guid: 35f1be9a791c37a4aa98e82bd5d4a281, type: 3}
+      propertyPath: jumpRadius
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6411997019935567626, guid: 35f1be9a791c37a4aa98e82bd5d4a281, type: 3}
       propertyPath: bakeLayerName
       value: Terrain
       objectReference: {fileID: 0}

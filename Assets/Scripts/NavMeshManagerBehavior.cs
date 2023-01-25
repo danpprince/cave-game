@@ -17,7 +17,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
     private GameObject vertexPrefab;
 
     [SerializeField]
-    private float linkSearchLength;
+    private float jumpRadius;
 
     private List<Vector3> navMeshEdgeCorners = new List<Vector3>();
 
@@ -39,7 +39,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
         
 
         // Run the LinkBuilder
-        LinkBuilder(linkSearchLength);
+        LinkBuilder(jumpRadius);
 
     }
 
@@ -93,7 +93,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
     }
 
     // Place OffMeshLinks on the NavMesh
-    public void LinkBuilder(float searchRadius)
+    public void LinkBuilder(float jumpRadius)
     {
         // Find the instances of vertices in the scene
         GameObject[] vertices = GameObject.FindGameObjectsWithTag(vertexPrefab.tag);
@@ -123,7 +123,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
                     
 
                     // If the vertices are within a radius
-                    if (dir.magnitude <= searchRadius)
+                    if (dir.magnitude <= jumpRadius)
                     {
                         // If the vertical difference between the vertices is greater than agent step height
                         if (Mathf.Abs(yDiff) > settings.agentClimb)
@@ -155,26 +155,18 @@ public class NavMeshManagerBehavior : MonoBehaviour
                                     linkData.startPosition = vertices[j].transform.position;
                                     linkData.endPosition = vertices[i].transform.position;
                                 }
+                                
 
-                                //// Set the start position of the offMeshLink to the vertexPrefab with the larger Y value
-                                //if (vertices[i].transform.position.y > vertices[j].transform.position.y)
-                                //{
-                                //    linkData.startPosition = vertices[i].transform.position;
-                                //    linkData.endPosition = vertices[j].transform.position;
-
-                                //}
-                                //else
-                                //{
-                                //    linkData.startPosition = vertices[j].transform.position;
-                                //    linkData.endPosition = vertices[i].transform.position;
-                                //}
-
-                                //// Debug draw a cyan line between the vertices
-                                //Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
-
+                                // Debug draw a cyan line between the vertices
+                                Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
+                                
+                                // make the link bi-directional
+                                linkData.bidirectional = true;
+                                
 
                                 // Add the linkData to the NavMesh
                                 NavMesh.AddLink(linkData);
+
 
                                 // Add the linkData to the list of links
                                 navMeshLinks.Add(linkData);
