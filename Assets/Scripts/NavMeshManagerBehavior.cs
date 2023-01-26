@@ -129,8 +129,8 @@ public class NavMeshManagerBehavior : MonoBehaviour
                         if (Mathf.Abs(yDiff) > settings.agentClimb)
                         {
 
-                            // if there is not already a link between these two vertices
-                            if (!LinkExists(vertices[i], vertices[j]))
+                            // if there is not already a link between these two points
+                            if (!LinkPositionExists(vertices[i].transform.position, vertices[j].transform.position))
                             {
 
                                 // Create a NavMeshLinkData between the vertices
@@ -195,6 +195,26 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
     }
 
+    // Check if a link already exists between two positions
+    public bool LinkPositionExists(Vector3 pos1, Vector3 pos2)
+    {
+        // Iterate through the list of links
+        for (int i = 0; i < navMeshLinks.Count; i++)
+        {
+            // If the start and end positions of the link are the same as the positions passed in
+            if (navMeshLinks[i].startPosition == pos1 && navMeshLinks[i].endPosition == pos2)
+            {
+                return true;
+            }
+            // If the start and end positions of the link are the same as the positions passed in
+            else if (navMeshLinks[i].startPosition == pos2 && navMeshLinks[i].endPosition == pos1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     // Check if a link already exists between two vertices
     public bool LinkExists(GameObject vertex1, GameObject vertex2)
