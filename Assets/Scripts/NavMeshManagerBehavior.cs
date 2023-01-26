@@ -1,18 +1,18 @@
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using Unity.AI.Navigation;
 
 
 public class NavMeshManagerBehavior : MonoBehaviour
 {
-    
+
     [SerializeField]
     private bool enableDrawTriangles = false;
 
     [SerializeField]
     private GameObject agentPrefab;
-    
+
     [SerializeField]
     private GameObject vertexPrefab;
 
@@ -32,11 +32,11 @@ public class NavMeshManagerBehavior : MonoBehaviour
     {
         // Bake the terrain
         Bake();
-        
-        
+
+
         // Run the NavMeshTriangulation
         NavMesh2Triangles();
-        
+
 
         // Run the LinkBuilder
         LinkBuilder(jumpRadius);
@@ -120,7 +120,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
                     // direction of the possible link
                     Vector3 dir = vertices[i].transform.position - vertices[j].transform.position;
                     float yDiff = dir.y;
-                    
+
 
                     // If the vertices are within a radius
                     if (dir.magnitude <= jumpRadius)
@@ -128,41 +128,52 @@ public class NavMeshManagerBehavior : MonoBehaviour
                         // If the vertical difference between the vertices is greater than agent step height
                         if (Mathf.Abs(yDiff) > settings.agentClimb)
                         {
-                            
+
                             // if there is not already a link between these two vertices
                             if (!LinkExists(vertices[i], vertices[j]))
                             {
-                                
+
                                 // Create a NavMeshLinkData between the vertices
                                 NavMeshLinkData linkData = new NavMeshLinkData();
 
                                 // Decide what kind of agent type can use this link
                                 linkData.agentTypeID = agentType;
-                                
-                                // Set the width of the link to 1.5 * the agent radius
-                                linkData.width = settings.agentRadius * 1.5f;
 
-                                //  Set the start and end positions of the link by looking at the sign of the yDiff
-                                if (yDiff < 0)
+                                // Set the width of the link to 3 * the agent radius
+                                linkData.width = settings.agentRadius * 3f;
+
+                                //  Set the start and end positions of the link by finding the position with a larger y value
+                                if (vertices[i].transform.position.y > vertices[j].transform.position.y)
                                 {
                                     linkData.startPosition = vertices[i].transform.position;
                                     linkData.endPosition = vertices[j].transform.position;
-                                    
-                                    
+
+
                                 }
                                 else
                                 {
                                     linkData.startPosition = vertices[j].transform.position;
                                     linkData.endPosition = vertices[i].transform.position;
+
+
                                 }
-                                
+
+                                Vector3 midPoint = (linkData.startPosition + linkData.endPosition) / 2;
+
+                                // Debug draw a yellow line from the startPosition to the midpoint
+                                Debug.DrawLine(linkData.startPosition, midPoint, Color.yellow, 1000f);
+
+                                // Debug draw a white line from the endPosition to the midpoint
+                                Debug.DrawLine(linkData.endPosition, midPoint, Color.white, 1000f);
 
                                 // Debug draw a cyan line between the vertices
-                                Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
-                                
+                                //Debug.DrawLine(vertices[i].transform.position, vertices[j].transform.position, Color.cyan, 1000f);
+
                                 // make the link bi-directional
                                 linkData.bidirectional = true;
-                                
+
+                                // adjust the cost of the link for pathfinding
+                                linkData.costModifier = 2f;
 
                                 // Add the linkData to the NavMesh
                                 NavMesh.AddLink(linkData);
@@ -170,7 +181,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
                                 // Add the linkData to the list of links
                                 navMeshLinks.Add(linkData);
-                                
+
 
                             }
 
@@ -218,7 +229,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
         // Count the triangles on the NavMesh
         int navMeshTriangleCount = navMeshTriangles.indices.Length / 3;
-        
+
         Debug.Log("NavMesh triangles: " + navMeshTriangleCount);
 
 
