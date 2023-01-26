@@ -44,6 +44,7 @@ public class Movement : MonoBehaviour
     private Vector3 DefaultTorchPosition;
     private InputAction TossInput;
     private float DefaultForwardsForce;
+    private float torchDistanceMoved = 0;
 
     [Header("Whip Controls")]
     public float whipCoolDownTime = 1f;
@@ -162,14 +163,21 @@ public class Movement : MonoBehaviour
     }
     private void WhileChargingTorchThrow()
     {
+        float maxMoveDistance = 1f;
+        print($"distanceMoved {torchDistanceMoved}");
         if (isTorchButtonHeldDown)
         {
-            Vector3 CurrentTorchPosition = HeldTorch.transform.localPosition;
-            HeldTorch.transform.localPosition = new Vector3(CurrentTorchPosition.x, CurrentTorchPosition.y - 0.1f, CurrentTorchPosition.z);
+            if (torchDistanceMoved < maxMoveDistance)
+            {
+                float moveDelta = 1f * Time.deltaTime;
+                HeldTorch.transform.Translate(0, -moveDelta, 0, Space.World);
+                torchDistanceMoved += moveDelta;
+            }
         }
         else
         {
             HeldTorch.transform.localPosition = DefaultTorchPosition;
+            torchDistanceMoved = 0;
         }
     }
     private void TossTorch(InputAction.CallbackContext obj)
@@ -183,7 +191,9 @@ public class Movement : MonoBehaviour
             forceDirection = (hit.point - TorchSpawnPoint.transform.position).normalized;
         }
 
-        torchForwardForce += torchForwardForce * (float)obj.duration * TorchForceMultiplier;
+        float heldDuration = Mathf.Min((float)obj.duration, 2.0f);
+
+        torchForwardForce += torchForwardForce * heldDuration * TorchForceMultiplier;
         GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
         Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
         torch_rb.velocity = this.Velocity;

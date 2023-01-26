@@ -317,7 +317,7 @@ MonoBehaviour:
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 8
   MoveSpeed: 0.1
   MaxFallSpeed: 100
   playerBody: {fileID: 1350576064378477091}
@@ -338,7 +338,7 @@ MonoBehaviour:
   whipArchHeight: 2
   whipHitColliderRadius: 0.5
   whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
-  jumpHeight: 8
+  jumpHeight: 1.5
   Gravity: -9.8
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
