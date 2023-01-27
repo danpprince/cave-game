@@ -23,7 +23,6 @@ public class ApplyFogToCamera : MonoBehaviour
 
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        Debug.Log("Rendering");
         Graphics.Blit(source, destination, material);
     }
 }
