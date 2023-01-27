@@ -47,4 +47,4 @@ MonoBehaviour:
   enableDrawTriangles: 1
   agentPrefab: {fileID: 4121725750726032219, guid: 8888b7dd9da6e2b4883ebe368d69d36d, type: 3}
   vertexPrefab: {fileID: 9056056162212683417, guid: 52aef64ac37bb0040a5554af37152b93, type: 3}
-  linkSearchLength: 1.8
+  jumpRadius: 2.5

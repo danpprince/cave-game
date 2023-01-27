@@ -62,34 +62,6 @@ public class NavMeshManagerBehavior : MonoBehaviour
 
         // Bake the new NavMesh
         surface.BuildNavMesh();
-
-
-        //// Find the layer mask by name
-        //int layerMask = LayerMask.GetMask(layerName);
-
-        //// setup world bounds for the bake
-        //var worldBounds = new Bounds(Vector3.zero, Vector3.one * 1000);
-
-        //// Fetch the geometry mesh collider
-        //var geometry = NavMeshCollectGeometry.RenderMeshes;
-
-        //// Define the list of NavMeshBuildMarkup
-        //var markups = new List<NavMeshBuildMarkup>();
-
-        //// Define the list of NavMeshBuildSource in results
-        //var results = new List<NavMeshBuildSource>();
-
-        //// Get NavMeshBuildSettings from the agentTypeID
-        //var settings = NavMesh.GetSettingsByID(agentTypeID);
-
-        //// Collect Sources from the layer mask
-        //NavMeshBuilder.CollectSources(worldBounds, layerMask, geometry, 0, markups, results);
-
-        //// Remove old navMeshData
-        //NavMesh.RemoveAllNavMeshData();
-
-        //// Build the new NavMesh
-        //NavMeshBuilder.BuildNavMeshData(settings, results, worldBounds, Vector3.zero, Quaternion.identity);
     }
 
     // Place OffMeshLinks on the NavMesh
@@ -216,29 +188,6 @@ public class NavMeshManagerBehavior : MonoBehaviour
         return false;
     }
 
-    // Check if a link already exists between two vertices
-    public bool LinkExists(GameObject vertex1, GameObject vertex2)
-    {
-        // Iterate through the links
-        for (int i = 0; i < navMeshLinks.Count; i++)
-        {
-            // If the Link goes from vertex1 to vertex2
-            if (navMeshLinks[i].startPosition == vertex1.transform.position && navMeshLinks[i].endPosition == vertex2.transform.position)
-            {
-                // Return true
-                return true;
-            }
-            // If the Link goes from vertex2 to vertex1
-            else if (navMeshLinks[i].startPosition == vertex2.transform.position && navMeshLinks[i].endPosition == vertex1.transform.position)
-            {
-                // Return true
-                return true;
-            }
-        }
-
-        // Return false
-        return false;
-    }
 
 
     // A function to draw the triangles of the NavMesh
