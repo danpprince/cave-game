@@ -254,9 +254,10 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         terrainObject.AddComponent<MeshFilter>();
         terrainObject.AddComponent<MeshRenderer>();
         terrainObject.AddComponent<NavMeshSurface>();
-        terrainObject.AddComponent<NavMeshBaker>();
         terrainObject.layer = LayerMask.NameToLayer("Terrain");
         terrainObject.GetComponent<NavMeshSurface>().layerMask = LayerMask.GetMask("Terrain");
+        var flags = StaticEditorFlags.NavigationStatic | StaticEditorFlags.OffMeshLinkGeneration;
+        GameObjectUtility.SetStaticEditorFlags(terrainObject, flags);
         terrainObject.GetComponent<Renderer>().material = material;
         terrainObject.GetComponent<MeshFilter>().mesh = mesh;
         terrainObject.transform.localPosition = position;
