@@ -13,13 +13,13 @@ public class MinotaurBehavior : MonoBehaviour
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
         
+        // Find the player by tag
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Find the player by tag
-        player = GameObject.FindGameObjectWithTag("Player");
 
         // If the player is found, follow the player
         if (player != null)
