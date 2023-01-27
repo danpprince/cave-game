@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEditor;
 
-using UnityEditor;
-
 using Common.Unity.Drawing;
 
 using PathCreation;
