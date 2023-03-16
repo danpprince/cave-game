@@ -17,7 +17,7 @@ public class NavMeshManagerBehavior : MonoBehaviour
     private GameObject vertexPrefab;
 
     [SerializeField]
-    private float jumpRadius;
+    public float jumpRadius { get; private set; }
 
     private List<Vector3> navMeshEdgeCorners = new List<Vector3>();
 
