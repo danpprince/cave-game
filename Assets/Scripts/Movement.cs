@@ -46,6 +46,13 @@ public class Movement : MonoBehaviour
     private float DefaultForwardsForce;
     private float torchDistanceMoved = 0;
 
+    public Vector3 grappleGoalPoint;
+    public Vector3 grappleDirection;
+    public bool isGrappling = false;
+    public float grappleMovementSpeed = 1f;
+    public float grappleDistance = 0;
+    public float grappleCompleteDistance = 1f;
+
     [Header("Whip Controls")]
     public float whipCoolDownTime = 1f;
     public float whipRange = 5f;
@@ -142,12 +149,34 @@ public class Movement : MonoBehaviour
         }
         Velocity.y += Gravity * Time.deltaTime;
         Velocity.y = Mathf.Clamp(Velocity.y,-MaxFallSpeed,+MaxFallSpeed);
-        cc.Move(Velocity * Time.deltaTime);
+
+        if (!isGrappling)
+        {
+            cc.Move(Velocity * Time.deltaTime);
+        }
     }
     private void FixedUpdate()
     {
-        // Moves the Player around \\
         Vector3 Move = transform.right * MoveDirection.x + transform.forward * MoveDirection.y;
+
+        if (isGrappling)
+        {
+            grappleDirection = (whipHitPosition - transform.position).normalized;
+
+            grappleDistance = (transform.position - grappleGoalPoint).magnitude;
+            if (grappleDistance < grappleCompleteDistance)
+            {
+                isGrappling = false;
+            }
+
+            Vector3 grappleMovement = grappleDirection * grappleMovementSpeed;
+
+            print($"Adding {grappleMovement} grapple movement");
+
+            Move += grappleMovement;
+        }
+
+        // Moves the Player around \\
         cc.Move(Move * MoveSpeed);
 
 
@@ -245,6 +274,9 @@ public class Movement : MonoBehaviour
             if (didWhipHit)
             {
                 GameObject hitCollider = Instantiate(whipHitCollider, whipHitPosition, Quaternion.identity);
+                grappleDirection = (whipHitPosition - transform.position).normalized;
+                grappleGoalPoint = whipHitPosition;
+                isGrappling = true;
             }
         }
     }
