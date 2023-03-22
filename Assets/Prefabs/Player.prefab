@@ -289,6 +289,8 @@ GameObject:
   - component: {fileID: 8897005194122684540}
   - component: {fileID: 8897005194122684530}
   - component: {fileID: 8897005194122684529}
+  - component: {fileID: 3015840505446680835}
+  - component: {fileID: 7858620261495852812}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -334,24 +336,11 @@ MonoBehaviour:
     m_Bits: 8
   MoveSpeed: 0.1
   MaxFallSpeed: 100
+  Velocity: {x: 0, y: 0, z: 0}
   playerBody: {fileID: 1350576064378477091}
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
   Y_AimSensitivity: 0.5
-  Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
-  TorchSpawnPoint: {fileID: 9209023117751489498}
-  torchUpwardsForce: 5.5
-  torchForwardForce: 8
-  TorchForceMultiplier: 4.5
-  HeldTorch: {fileID: 8105151284831279878}
-  whipCoolDownTime: 1
-  whipRange: 5
-  didWhipHit: 0
-  whipAnimationSpeed: 1
-  whipBase: {fileID: 3595303810283265348}
-  whipArchHeight: 2
-  whipHitColliderRadius: 0.5
-  whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
   jumpHeight: 1.5
   Gravity: -9.8
   fallMultiplier: 1
@@ -404,6 +393,50 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3015840505446680835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a9dfd8673b52b9418c3c80eda67c7a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cc: {fileID: 8897005194122684529}
+  playerControls: {fileID: 8897005194122684530}
+  camera: {fileID: 8897005193119557354}
+  whipCoolDownTime: 1
+  whipRange: 5
+  didWhipHit: 0
+  whipAnimationSpeed: 1
+  whipBase: {fileID: 2497993397348577881}
+  whipArchHeight: 0.5
+  whipHitColliderRadius: 0.5
+  whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
+--- !u!114 &7858620261495852812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9efb4d2de50e884c937f54c5fc06628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cc: {fileID: 8897005194122684529}
+  playerControls: {fileID: 8897005194122684530}
+  camera: {fileID: 8897005193119557354}
+  Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+  TorchSpawnPoint: {fileID: 9209023117751489498}
+  torchUpwardsForce: 5.5
+  torchForwardForce: 8
+  TorchForceMultiplier: 2
+  HeldTorch: {fileID: 8105151284831279878}
 --- !u!1 &9209023117751489498
 GameObject:
   m_ObjectHideFlags: 0
