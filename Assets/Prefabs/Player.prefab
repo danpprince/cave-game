@@ -291,6 +291,7 @@ GameObject:
   - component: {fileID: 8897005194122684529}
   - component: {fileID: 3015840505446680835}
   - component: {fileID: 7858620261495852812}
+  - component: {fileID: 2968930296749102655}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -437,6 +438,22 @@ MonoBehaviour:
   torchForwardForce: 8
   TorchForceMultiplier: 2
   HeldTorch: {fileID: 8105151284831279878}
+--- !u!114 &2968930296749102655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0b6a6c43c68d14188fb86355622f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cc: {fileID: 8897005194122684529}
+  PlayerControls: {fileID: 8897005194122684530}
+  Camera: {fileID: 8897005193119557354}
+  GrappleRange: 100
 --- !u!1 &9209023117751489498
 GameObject:
   m_ObjectHideFlags: 0

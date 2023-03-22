@@ -51,7 +51,7 @@ public class TorchControls : MonoBehaviour
     private void WhileChargingTorchThrow()
     {
         float maxMoveDistance = 1f;
-        print($"distanceMoved {torchDistanceMoved}");
+        //print($"distanceMoved {torchDistanceMoved}");
         if (isTorchButtonHeldDown)
         {
             if (torchDistanceMoved < maxMoveDistance)
