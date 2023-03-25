@@ -17,11 +17,19 @@ public class Movement : MonoBehaviour
     public LayerMask GroundMask;
     public float MoveSpeed = 5f;
     public float MaxFallSpeed = 100f;
+    public bool ignoreGravity = false;
 
+
+    private Rigidbody rb;
     private Vector2 MoveDirection = Vector2.zero;
+    private Vector3 Move = Vector3.zero;
     public Vector3 Velocity;
     private bool isGrounded;
     private InputAction MoveController;
+    private RaycastHit slopeHit;
+    private float playerHeight;
+    private Vector3 slopeMoveDirection;
+
 
     [Header("Camera Controls")]
     public Transform playerBody;
@@ -40,15 +48,14 @@ public class Movement : MonoBehaviour
     public float lowJumpMultiplier = 2f;
 
     private InputAction jumpInput;
-    private Rigidbody rb;
     private bool shouldJump = false;
     private bool jumpButtonIsHeld = false;
 
-    void Start()
+    public void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
-    private void OnEnable()
+    public void OnEnable()
     {
         playerControls.ActivateInput();
 
@@ -58,71 +65,81 @@ public class Movement : MonoBehaviour
 
         MoveController.Enable();
         Look.Enable();
-      
+
         jumpInput.started += jumpButtonPressed;
         jumpInput.canceled += jumpRelease;
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        rb = gameObject.GetComponent<Rigidbody>();
+        playerHeight = gameObject.GetComponent<CapsuleCollider>().height;
     }
-    void Update()
+
+
+
+    // Fixed Update is called before Update
+    public void FixedUpdate()
     {
-        //Movement setup
-        MoveDirection = MoveController.ReadValue<Vector2>();
-        MousePosition = Look.ReadValue<Vector2>();
         isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask);
-        // Looking stuff \\
-        float Look_X = MousePosition.x * X_AimSensitivity;
-        float Look_Y = MousePosition.y * Y_AimSensitivity;
-        X_Rotation -= Look_Y;
-        X_Rotation = Mathf.Clamp(X_Rotation, -90f, 90f);
+        GatherInputs();
+        HandleCamera();
 
-        // Rotates entire Player object left and right \\
-        playerBody.Rotate(Vector3.up * Look_X);
-
-        // Allow the camera to look up and down \\
-        camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
-        
-
-        // Determining jump altering logic \\
-        if (Velocity.y < 0 && !isGrounded)
+        if (!ignoreGravity)
         {
-            Velocity.y -= fallMultiplier;
-        }
-        else if (Velocity.y < 0 && isGrounded)
-        {
-            Velocity.y = -2f;
-        } else if (Velocity.y >0 && !jumpButtonIsHeld)
-        {
-            Velocity.y -= lowJumpMultiplier;
+            rb.AddForce(new Vector3(0f, Gravity, 0f));
         }
 
-        if (shouldJump)
-        {
-            jump();
-        }
-        Velocity.y += Gravity * Time.deltaTime;
-        Velocity.y = Mathf.Clamp(Velocity.y,-MaxFallSpeed,+MaxFallSpeed);
-        cc.Move(Velocity * Time.deltaTime);
+        Jump();
+
+        slopeMoveDirection = Vector3.ProjectOnPlane(Move, slopeHit.normal);
+
+        MovePlayer();
     }
-    private void FixedUpdate()
+    public void Update()
     {
-        // Moves the Player around \\
-        Vector3 Move = transform.right * MoveDirection.x + transform.forward * MoveDirection.y;
-        cc.Move(Move * MoveSpeed);
+    }
+
+    private void ClampSpeed()
+    {
+        Move.y = Mathf.Clamp(Move.y, -MaxFallSpeed, +MaxFallSpeed);
+        Move.x = Mathf.Clamp(Move.x, -MoveSpeed, MoveSpeed);
+        Move.z = Mathf.Clamp(Move.z, -MoveSpeed, MoveSpeed);
     }
 
     private void jumpButtonPressed(InputAction.CallbackContext obj)
     {
-     if(isGrounded)
+        if (isGrounded)
         {
             shouldJump = true;
         }
     }
-    private void jump()
+    private void Jump()
     {
-        Velocity.y += Mathf.Sqrt(jumpHeight * -3f * Gravity);
-        shouldJump = false;
-        jumpButtonIsHeld = true;
+        if (Move.y < 0 && !isGrounded)
+        {
+            Move.y -= fallMultiplier;
+        }
+        else if (Move.y < 0 && isGrounded)
+        {
+            Move.y = -2f;
+        }
+        else if (Move.y > 0 && !jumpButtonIsHeld)
+        {
+            Move.y -= lowJumpMultiplier;
+        }
+
+        if (shouldJump)
+        {
+            shouldJump = false;
+            jumpButtonIsHeld = true;
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+            ClampSpeed();
+        }
+        else
+        {
+            rb.AddForce(new Vector3(0, Move.y, 0), ForceMode.Force);
+        }
     }
 
     private void jumpRelease(InputAction.CallbackContext obj)
@@ -136,5 +153,52 @@ public class Movement : MonoBehaviour
         MoveController.Disable();
         Look.Disable();
     }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
+        {
+            return slopeHit.normal != Vector3.up;
+        }
+        return false;
+    }
+
+    private void MovePlayer()
+    {
+        //Vector2 xMove = new Vector2(MoveDirection.x * transform.right.x, MoveDirection.x * transform.right.z);
+        //Vector2 yMove = new Vector2(MoveDirection.y * transform.forward.x, MoveDirection.y * transform.forward.z);
+        //Vector2 velocity = (xMove + yMove).normalized * MoveSpeed;
+        //Move = new Vector3(velocity.x, rb.velocity.y, velocity.y);
+
+        Move = (transform.forward * MoveDirection.y) + (transform.right * MoveDirection.x);
+
+        if (isGrounded && OnSlope())
+        {
+            rb.AddForce(slopeMoveDirection.normalized * MoveSpeed, ForceMode.Acceleration);
+            print($"On Slope: Normalized Directions : {slopeMoveDirection.normalized}");
+        }
+        else if (isGrounded && !OnSlope())
+        {
+            rb.AddForce(Move * MoveSpeed, ForceMode.Acceleration);
+            print($"Off Slope: Directions : {Move}");
+        }
+
+    }
+    private void HandleCamera()
+    {
+        float Look_X = MousePosition.x * X_AimSensitivity;
+        float Look_Y = MousePosition.y * Y_AimSensitivity;
+        X_Rotation -= Look_Y;
+        X_Rotation = Mathf.Clamp(X_Rotation, -90f, 90f);
+        playerBody.Rotate(Vector3.up * Look_X);
+        camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
+    }
+
+    private void GatherInputs()
+    {
+        MoveDirection = MoveController.ReadValue<Vector2>();
+        MousePosition = Look.ReadValue<Vector2>();
+    }
+
 
 }

@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 public class GrapplingHookControls : MonoBehaviour
 {
     [Header("Player Inputs and Controller")]
-    public CharacterController cc;
+    //public CharacterController cc;
     public PlayerInput PlayerControls;
     public GameObject Camera;
 
+    private Movement _Movement;
     private InputAction HookInput;
     private Vector3 GrapplePoint = Vector3.zero;
 
@@ -17,6 +18,8 @@ public class GrapplingHookControls : MonoBehaviour
     public float GrappleRange = 100f;
     public float GrappleSpeed = 5f;
     public float springConst = 1.2f;
+    public float MinimumGrappleLength = 2f;
+
 
     private bool shouldBeGrappling = false;
     private RaycastHit hit;
@@ -28,6 +31,7 @@ public class GrapplingHookControls : MonoBehaviour
         HookInput.started += HookStarted;
         HookInput.canceled += HookEnded;
         TerrainMask = LayerMask.GetMask("Terrain");
+        _Movement = gameObject.GetComponent<Movement>();
     }
 
     private void FixedUpdate()
@@ -64,16 +68,22 @@ public class GrapplingHookControls : MonoBehaviour
     {
         if (GrapplePoint != Vector3.zero)
         {
-            Vector3 diff = GrapplePoint - transform.position;
+            _Movement.ignoreGravity = true;
+            Vector3 diff = (GrapplePoint - transform.position).normalized;
             float distance = Vector3.Distance(GrapplePoint,transform.position);
-            cc.Move(diff * Time.deltaTime * (springConst * distance));
+            float displacement = distance - MinimumGrappleLength;
+            float springForce = displacement * springConst;
+            float acceleration =  (_Movement.Velocity.magnitude) * distance;
+            //cc.Move(diff * acceleration * Time.deltaTime * springForce);
+ 
         }
     }
-
+        
     private void EndHook()
     {
         GrapplePoint = Vector3.zero;
         shouldBeGrappling = false;
+        _Movement.ignoreGravity = false;
     }
 
 }

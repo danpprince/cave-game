@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class WhipControls : MonoBehaviour
 {
     [Header("Player Inputs and Controller")]
-    public CharacterController cc;
     public PlayerInput playerControls;
     public GameObject camera;
 

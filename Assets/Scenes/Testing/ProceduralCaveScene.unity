@@ -263,11 +263,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8897005193119557354, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
   m_PrefabInstance: {fileID: 8897005192467925915}
   m_PrefabAsset: {fileID: 0}
---- !u!143 &1858366113 stripped
-CharacterController:
-  m_CorrespondingSourceObject: {fileID: 8897005194122684529, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-  m_PrefabInstance: {fileID: 8897005192467925915}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1858366114 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8897005194122684530, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
@@ -606,7 +601,7 @@ PrefabInstance:
     - target: {fileID: 3015840505446680835, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: cc
       value: 
-      objectReference: {fileID: 1858366113}
+      objectReference: {fileID: 0}
     - target: {fileID: 3015840505446680835, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: camera
       value: 
@@ -615,6 +610,22 @@ PrefabInstance:
       propertyPath: playerControls
       value: 
       objectReference: {fileID: 1858366114}
+    - target: {fileID: 3469774139552251251, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3469774139552251251, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: MoveSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
+      propertyPath: jumpHeight
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_Name
       value: Player
