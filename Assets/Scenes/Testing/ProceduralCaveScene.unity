@@ -258,22 +258,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!1 &1341610228 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8897005193119557354, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-  m_PrefabInstance: {fileID: 8897005192467925915}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1858366114 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8897005194122684530, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-  m_PrefabInstance: {fileID: 8897005192467925915}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1858399579 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9086084381039874201, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
@@ -589,42 +573,6 @@ PrefabInstance:
     - target: {fileID: 1350576064378477091, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2968930296749102655, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: GrappleRange
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2968930296749102655, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: GrappleSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3015840505446680835, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: cc
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3015840505446680835, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: camera
-      value: 
-      objectReference: {fileID: 1341610228}
-    - target: {fileID: 3015840505446680835, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: playerControls
-      value: 
-      objectReference: {fileID: 1858366114}
-    - target: {fileID: 3469774139552251251, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469774139552251251, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: MoveSpeed
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8897005194122684540, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
-      propertyPath: jumpHeight
-      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 9004047637359721981, guid: 1c3399d160a579542b6c1e680224ab90, type: 3}
       propertyPath: m_Name

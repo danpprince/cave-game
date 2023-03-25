@@ -83,7 +83,7 @@ public class TorchControls : MonoBehaviour
         torchForwardForce += torchForwardForce * heldDuration * TorchForceMultiplier;
         GameObject TorchInstance = Instantiate(Torch, TorchSpawnPoint.transform.position, camera.transform.rotation);
         Rigidbody torch_rb = TorchInstance.GetComponent<Rigidbody>();
-        torch_rb.velocity = gameObject.GetComponent<Movement>().Velocity;
+        torch_rb.velocity = gameObject.GetComponent<Rigidbody>().velocity;
         Vector3 ForceToAdd = forceDirection * torchForwardForce + TorchSpawnPoint.transform.up * torchUpwardsForce;
         torch_rb.AddForce(ForceToAdd, ForceMode.Impulse);
         torch_rb.AddTorque(transform.right * Random.Range(5, 20));

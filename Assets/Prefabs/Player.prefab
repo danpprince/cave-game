@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1505195843214093539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.898, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -329,24 +329,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a95b0b14b1bcef145baee12477a7a5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cc: {fileID: 0}
   playerControls: {fileID: 8897005194122684530}
   GroundCheck: {fileID: 1505195843214093539}
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
     m_Bits: 8
-  MoveSpeed: 0.1
+  MoveSpeed: 50
   MaxFallSpeed: 100
   ignoreGravity: 0
-  Velocity: {x: 0, y: 0, z: 0}
+  GroundDrag: 6
+  AirDrag: 2
   playerBody: {fileID: 1350576064378477091}
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
   Y_AimSensitivity: 0.5
-  jumpHeight: 1.5
+  jumpHeight: 7.5
   Gravity: -9.8
-  fallMultiplier: 1
+  fallMultiplier: 10
   lowJumpMultiplier: 2
 --- !u!114 &8897005194122684530
 MonoBehaviour:
@@ -449,9 +449,9 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!136 &2840305221804658530

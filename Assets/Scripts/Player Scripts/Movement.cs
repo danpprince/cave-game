@@ -7,23 +7,24 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
 
-    [Header("Player Inputs and Controller")]
-    public CharacterController cc;
+    [Header("Player Inputs")]
     public PlayerInput playerControls;
 
     [Header("Movement")]
     public GameObject GroundCheck;
-    public float GroundDistance = 0.4f;
+    public float GroundDistance = 0.2f;
     public LayerMask GroundMask;
     public float MoveSpeed = 5f;
     public float MaxFallSpeed = 100f;
     public bool ignoreGravity = false;
+    public float GroundDrag = 6f;
+    public float AirDrag = 2f;
+    private float GroundGravity = 2f;
 
 
     private Rigidbody rb;
     private Vector2 MoveDirection = Vector2.zero;
     private Vector3 Move = Vector3.zero;
-    public Vector3 Velocity;
     private bool isGrounded;
     private InputAction MoveController;
     private RaycastHit slopeHit;
@@ -72,88 +73,75 @@ public class Movement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         rb = gameObject.GetComponent<Rigidbody>();
+        rb.drag = GroundDrag;
         playerHeight = gameObject.GetComponent<CapsuleCollider>().height;
     }
 
-
-
-    // Fixed Update is called before Update
     public void FixedUpdate()
     {
-        isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask);
+        CheckOnGround();
         GatherInputs();
         HandleCamera();
-
-        if (!ignoreGravity)
-        {
-            rb.AddForce(new Vector3(0f, Gravity, 0f));
-        }
-
         Jump();
-
-        slopeMoveDirection = Vector3.ProjectOnPlane(Move, slopeHit.normal);
-
+        ApplyGravity();
         MovePlayer();
+        ClampSpeed();
     }
-    public void Update()
-    {
-    }
-
-    private void ClampSpeed()
-    {
-        Move.y = Mathf.Clamp(Move.y, -MaxFallSpeed, +MaxFallSpeed);
-        Move.x = Mathf.Clamp(Move.x, -MoveSpeed, MoveSpeed);
-        Move.z = Mathf.Clamp(Move.z, -MoveSpeed, MoveSpeed);
-    }
-
-    private void jumpButtonPressed(InputAction.CallbackContext obj)
-    {
-        if (isGrounded)
-        {
-            shouldJump = true;
-        }
-    }
-    private void Jump()
-    {
-        if (Move.y < 0 && !isGrounded)
-        {
-            Move.y -= fallMultiplier;
-        }
-        else if (Move.y < 0 && isGrounded)
-        {
-            Move.y = -2f;
-        }
-        else if (Move.y > 0 && !jumpButtonIsHeld)
-        {
-            Move.y -= lowJumpMultiplier;
-        }
-
-        if (shouldJump)
-        {
-            shouldJump = false;
-            jumpButtonIsHeld = true;
-            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
-            ClampSpeed();
-        }
-        else
-        {
-            rb.AddForce(new Vector3(0, Move.y, 0), ForceMode.Force);
-        }
-    }
-
-    private void jumpRelease(InputAction.CallbackContext obj)
-    {
-        jumpButtonIsHeld = false;
-    }
-
     private void OnDisable()
     {
         playerControls.DeactivateInput();
         MoveController.Disable();
         Look.Disable();
     }
+    public void CheckOnGround()
+    {
+        isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask);
+    }
+    private void ClampSpeed()
+    {
+        
+        float x = Mathf.Clamp(rb.velocity.x, -MoveSpeed, MoveSpeed);
+        float z = Mathf.Clamp(rb.velocity.z, -MoveSpeed, MoveSpeed);
+        float y = Mathf.Clamp(rb.velocity.y, -MaxFallSpeed, MaxFallSpeed);
 
+        if (!isGrounded)
+        {
+            x = rb.velocity.x;
+            z = rb.velocity.z;
+        }
+
+        rb.velocity = new Vector3(x, y, z);
+    }
+    private void ApplyGravity()
+    {
+        if (ignoreGravity)
+        {
+            return;
+        }
+
+        float gravityApplied = Gravity;
+
+        if (rb.velocity.y < 0 && !isGrounded)
+        {
+            gravityApplied *= fallMultiplier;
+        }
+        else if (rb.velocity.y > 0 && !jumpButtonIsHeld)
+        {
+            gravityApplied *= lowJumpMultiplier;
+        }
+
+        rb.AddForce(transform.up * gravityApplied, ForceMode.Acceleration);
+    }
+    private void Jump()
+    {
+        if (shouldJump)
+        {
+            shouldJump = false;
+            jumpButtonIsHeld = true;
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+        }
+    }
     private bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
@@ -162,27 +150,22 @@ public class Movement : MonoBehaviour
         }
         return false;
     }
-
     private void MovePlayer()
     {
-        //Vector2 xMove = new Vector2(MoveDirection.x * transform.right.x, MoveDirection.x * transform.right.z);
-        //Vector2 yMove = new Vector2(MoveDirection.y * transform.forward.x, MoveDirection.y * transform.forward.z);
-        //Vector2 velocity = (xMove + yMove).normalized * MoveSpeed;
-        //Move = new Vector3(velocity.x, rb.velocity.y, velocity.y);
-
         Move = (transform.forward * MoveDirection.y) + (transform.right * MoveDirection.x);
+        slopeMoveDirection = Vector3.ProjectOnPlane(Move, slopeHit.normal);
 
-        if (isGrounded && OnSlope())
+        if ( OnSlope())
         {
-            rb.AddForce(slopeMoveDirection.normalized * MoveSpeed, ForceMode.Acceleration);
-            print($"On Slope: Normalized Directions : {slopeMoveDirection.normalized}");
+            Vector3 slopeForce = slopeMoveDirection.normalized;
+            slopeForce.y *= 1.2f;
+            rb.AddForce(slopeForce * MoveSpeed, ForceMode.Acceleration);
         }
-        else if (isGrounded && !OnSlope())
+        else 
         {
-            rb.AddForce(Move * MoveSpeed, ForceMode.Acceleration);
-            print($"Off Slope: Directions : {Move}");
+            Vector3 normalWalkForce = new Vector3(Move.x, 0 , Move.z);
+            rb.AddForce(normalWalkForce * MoveSpeed, ForceMode.Acceleration);
         }
-
     }
     private void HandleCamera()
     {
@@ -193,12 +176,20 @@ public class Movement : MonoBehaviour
         playerBody.Rotate(Vector3.up * Look_X);
         camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
     }
-
     private void GatherInputs()
     {
         MoveDirection = MoveController.ReadValue<Vector2>();
         MousePosition = Look.ReadValue<Vector2>();
     }
-
-
+    private void jumpButtonPressed(InputAction.CallbackContext obj)
+    {
+        if (isGrounded)
+        {
+            shouldJump = true;
+        }
+    }
+    private void jumpRelease(InputAction.CallbackContext obj)
+    {
+        jumpButtonIsHeld = false;
+    }
 }

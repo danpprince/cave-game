@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class GrapplingHookControls : MonoBehaviour
 {
     [Header("Player Inputs and Controller")]
-    //public CharacterController cc;
+    private Rigidbody rb;
     public PlayerInput PlayerControls;
     public GameObject Camera;
 
@@ -32,6 +32,11 @@ public class GrapplingHookControls : MonoBehaviour
         HookInput.canceled += HookEnded;
         TerrainMask = LayerMask.GetMask("Terrain");
         _Movement = gameObject.GetComponent<Movement>();
+    }
+
+    public void Start()
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
@@ -73,7 +78,7 @@ public class GrapplingHookControls : MonoBehaviour
             float distance = Vector3.Distance(GrapplePoint,transform.position);
             float displacement = distance - MinimumGrappleLength;
             float springForce = displacement * springConst;
-            float acceleration =  (_Movement.Velocity.magnitude) * distance;
+            float acceleration =  (rb.velocity.magnitude) * distance;
             //cc.Move(diff * acceleration * Time.deltaTime * springForce);
  
         }
