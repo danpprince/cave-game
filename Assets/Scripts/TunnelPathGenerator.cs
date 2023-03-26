@@ -117,7 +117,7 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePaths()
     {
-        tunnelDeadEndPositions.Clear();
+        tunnelDeadEndPositions = new List<Vector3>();
 
         int maxNumAttempts = 10;
         for (int generationAttempt = 0; generationAttempt < maxNumAttempts; generationAttempt++)
