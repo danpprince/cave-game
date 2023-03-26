@@ -35,7 +35,7 @@ Shader "Kaima/Depth/Fog"
 			sampler2D _MainTex;
 			float4 _MainTex_TexelSize;
 			sampler2D _CameraDepthTexture;
-			fixed4 _FogColor;
+			float4 _FogColor;
 			float _FogDensity;
 
 			v2f vert (appdata v)
@@ -50,13 +50,18 @@ Shader "Kaima/Depth/Fog"
 				return o;
 			}
 			
-			fixed4 frag (v2f i) : SV_Target
+			float4 frag (v2f i) : SV_Target
 			{
-				fixed4 col = tex2D(_MainTex, i.uv.xy);
+				float4 imageColor = tex2D(_MainTex, i.uv.xy);
+				// Avoid overwriting torch particles, minotaur eyes, coin reflections, etc
+				if (imageColor.r > 0.8) {
+					return imageColor;
+				}
+
 				float depth = UNITY_SAMPLE_DEPTH(tex2D(_CameraDepthTexture, i.uv.zw));
 				float linearDepth = Linear01Depth(depth);
 				float fogDensity = saturate(linearDepth * _FogDensity);
-				fixed4 finalColor = lerp(col, _FogColor, fogDensity);
+				float4 finalColor = lerp(imageColor, _FogColor, fogDensity);
 				return finalColor;
 			}
 			ENDCG
