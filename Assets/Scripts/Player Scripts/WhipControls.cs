@@ -58,6 +58,7 @@ public class WhipControls : MonoBehaviour
     IEnumerator WhipAnimationTimer()
     {
         yield return new WaitForSeconds(1 / whipAnimationSpeed);
+        Destroy(lineRenderer);
         shouldAnimateWhip = false;
     }
 
@@ -99,17 +100,17 @@ public class WhipControls : MonoBehaviour
 
     private void animateWhip()
     {
-        if (lineRenderer == null)
-        {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.05f;
-            lineRenderer.endWidth = 0.05f;
-        }
+        //if (lineRenderer == null)
+        //{
+        //    lineRenderer = gameObject.AddComponent<LineRenderer>();
+        //    lineRenderer.startWidth = 0.05f;
+        //    lineRenderer.endWidth = 0.05f;
+        //}
         Vector3[] whipPoints = new Vector3[3];
         Vector3 basePosition = whipBase.transform.position;
         Vector3 whipHitPositionLocal = transform.InverseTransformPoint(whipHitPosition);
 
-        Vector3 peak = (whipBase.transform.position); /// 2f;
+        Vector3 peak = (whipBase.transform.position); 
         peak = new Vector3(peak.x, peak.y + whipArchHeight, peak.z);
 
         whipPoints[0] = whipBase.transform.position;

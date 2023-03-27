@@ -346,7 +346,7 @@ MonoBehaviour:
   Y_AimSensitivity: 0.5
   jumpHeight: 7.5
   Gravity: -9.8
-  fallMultiplier: 10
+  fallMultiplier: 5
   lowJumpMultiplier: 2
 --- !u!114 &8897005194122684530
 MonoBehaviour:
@@ -436,10 +436,11 @@ MonoBehaviour:
   Camera: {fileID: 8897005193119557354}
   GrappleRange: 100
   GrappleSpeed: 5
-  springConst: 1.2
-  MinimumGrappleLength: 2
-  SpringTension: 1
-  Damper: 0.25
+  MinimumGrappleLength: 1
+  SpringTension: 12
+  Damper: 5
+  ropeMat: {fileID: 2100000, guid: 4ca115140fe0a3b4ca2a3c56e1fd60a3, type: 2}
+  GrappleSpawn: {fileID: 2497993397348577881}
 --- !u!54 &3469774139552251251
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -520,6 +521,14 @@ PrefabInstance:
     - target: {fileID: 4126106871094012610, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413008185491074102, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4799198055350952722, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5165743664070125389, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer

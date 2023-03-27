@@ -18,16 +18,21 @@ public class GrapplingHookControls : MonoBehaviour
     [Header("Grapple Settings")]
     public float GrappleRange = 100f;
     public float GrappleSpeed = 5f;
-    public float springConst = 1.2f;
     public float MinimumGrappleLength = 2f;
     public float SpringTension = 1f;
     public float Damper = 0.25f;
+    public float EndJumpForce = 4.5f;
 
 
     private bool shouldBeGrappling = false;
     private RaycastHit hit;
     private LayerMask TerrainMask;
     private SpringJoint GrappleRope;
+    private LineRenderer lineRenderer;
+
+    [Header("Rope Visuals")]
+    public Material ropeMat;
+    public GameObject GrappleSpawn;
 
     private void OnEnable()
     {
@@ -69,22 +74,21 @@ public class GrapplingHookControls : MonoBehaviour
             GrappleRope.autoConfigureConnectedAnchor = false;
             GrappleRope.connectedAnchor = hit.point;
             GrappleRope.spring = SpringTension;
-            GrappleRope.damper = Damper;
-            
+            GrappleRope.damper = Damper;         
         }
     }
 
     private void Grapple()
     {
-        //if (GrapplePoint != Vector3.zero)
-        //{
-        //    _Movement.ignoreGravity = true;
-        //    Vector3 diff = (GrapplePoint - transform.position).normalized;
-        //    float distance = Vector3.Distance(GrapplePoint,transform.position);
-        //    float displacement = distance - MinimumGrappleLength;
-        //    float springForce = displacement * springConst;
-        //    float acceleration =  (rb.velocity.magnitude) * distance;
-        //}
+        if (lineRenderer == null)
+        {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+            lineRenderer.material = ropeMat;
+        }
+        Vector3[] endPoints = { GrapplePoint, GrappleSpawn.transform.position};
+        lineRenderer.SetPositions(endPoints);
     }
         
     private void EndHook()
@@ -92,6 +96,11 @@ public class GrapplingHookControls : MonoBehaviour
         GrapplePoint = Vector3.zero;
         shouldBeGrappling = false;
         Destroy(GrappleRope);
+        Destroy(lineRenderer);
+        if (!_Movement.isGrounded)
+        {
+            rb.AddForce(transform.up * EndJumpForce, ForceMode.Impulse);
+        }
     }
 
     private void HookEnded(InputAction.CallbackContext obj)

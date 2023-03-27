@@ -25,7 +25,7 @@ public class Movement : MonoBehaviour
     private Rigidbody rb;
     private Vector2 MoveDirection = Vector2.zero;
     private Vector3 Move = Vector3.zero;
-    private bool isGrounded;
+    public bool isGrounded { get; private set; }
     private InputAction MoveController;
     private RaycastHit slopeHit;
     private float playerHeight;
@@ -84,6 +84,7 @@ public class Movement : MonoBehaviour
         HandleCamera();
         Jump();
         ApplyGravity();
+        ApplyDrag();
         MovePlayer();
         ClampSpeed();
     }
@@ -93,6 +94,12 @@ public class Movement : MonoBehaviour
         MoveController.Disable();
         Look.Disable();
     }
+
+    private void ApplyDrag()
+    {
+        rb.drag = isGrounded ? GroundDrag : AirDrag; 
+    }
+
     public void CheckOnGround()
     {
         isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask);
@@ -175,6 +182,7 @@ public class Movement : MonoBehaviour
         X_Rotation = Mathf.Clamp(X_Rotation, -90f, 90f);
         playerBody.Rotate(Vector3.up * Look_X);
         camera.transform.localRotation = Quaternion.Euler(X_Rotation, 0f, 0f);
+
     }
     private void GatherInputs()
     {
