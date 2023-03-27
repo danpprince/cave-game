@@ -117,11 +117,11 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePaths()
     {
-        tunnelDeadEndPositions = new List<Vector3>();
-
         int maxNumAttempts = 10;
         for (int generationAttempt = 0; generationAttempt < maxNumAttempts; generationAttempt++)
         {
+            tunnelDeadEndPositions = new List<Vector3>();
+
             GameManager.RestartState();
             occupiedCells = new HashSet<Vector3>();
             generatedParent = new GameObject("GeneratedPaths");
