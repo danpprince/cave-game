@@ -6,7 +6,7 @@ public class WhipColliderDecay : MonoBehaviour
 {
     private void OnEnable()
     {
-        print("Creating whip collider");
+        //print("Creating whip collider");
         StartCoroutine(KillTime());
     }
 

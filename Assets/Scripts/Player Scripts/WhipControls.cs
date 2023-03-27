@@ -127,8 +127,8 @@ public class WhipControls : MonoBehaviour
         //   curveSegments[i] = curve.GetPoint(i); 
         //}
 
-        lineRenderer.positionCount = curveSegments.Length;
-        lineRenderer.SetPositions(curveSegments);
+        //lineRenderer.positionCount = curveSegments.Length;
+        //lineRenderer.SetPositions(curveSegments);
     }
 
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.InputSystem;
 
 public class GrapplingHookControls : MonoBehaviour
@@ -19,11 +20,14 @@ public class GrapplingHookControls : MonoBehaviour
     public float GrappleSpeed = 5f;
     public float springConst = 1.2f;
     public float MinimumGrappleLength = 2f;
+    public float SpringTension = 1f;
+    public float Damper = 0.25f;
 
 
     private bool shouldBeGrappling = false;
     private RaycastHit hit;
     private LayerMask TerrainMask;
+    private SpringJoint GrappleRope;
 
     private void OnEnable()
     {
@@ -56,39 +60,42 @@ public class GrapplingHookControls : MonoBehaviour
 
     private void HookStarted(InputAction.CallbackContext obj)
     {
-        //print("Started Hookin");
         Vector3 camForward = Camera.transform.forward;
         if (Physics.Raycast(Camera.transform.position, camForward, out hit, GrappleRange, TerrainMask))
         {
             GrapplePoint = hit.point;
             shouldBeGrappling = true;
+            GrappleRope = gameObject.AddComponent<SpringJoint>() as SpringJoint;
+            GrappleRope.autoConfigureConnectedAnchor = false;
+            GrappleRope.connectedAnchor = hit.point;
+            GrappleRope.spring = SpringTension;
+            GrappleRope.damper = Damper;
+            
         }
-    }
-    private void HookEnded(InputAction.CallbackContext obj)
-    {
-        EndHook();
     }
 
     private void Grapple()
     {
-        if (GrapplePoint != Vector3.zero)
-        {
-            _Movement.ignoreGravity = true;
-            Vector3 diff = (GrapplePoint - transform.position).normalized;
-            float distance = Vector3.Distance(GrapplePoint,transform.position);
-            float displacement = distance - MinimumGrappleLength;
-            float springForce = displacement * springConst;
-            float acceleration =  (rb.velocity.magnitude) * distance;
-            //cc.Move(diff * acceleration * Time.deltaTime * springForce);
- 
-        }
+        //if (GrapplePoint != Vector3.zero)
+        //{
+        //    _Movement.ignoreGravity = true;
+        //    Vector3 diff = (GrapplePoint - transform.position).normalized;
+        //    float distance = Vector3.Distance(GrapplePoint,transform.position);
+        //    float displacement = distance - MinimumGrappleLength;
+        //    float springForce = displacement * springConst;
+        //    float acceleration =  (rb.velocity.magnitude) * distance;
+        //}
     }
         
     private void EndHook()
     {
         GrapplePoint = Vector3.zero;
         shouldBeGrappling = false;
-        _Movement.ignoreGravity = false;
+        Destroy(GrappleRope);
     }
 
+    private void HookEnded(InputAction.CallbackContext obj)
+    {
+        EndHook();
+    }
 }

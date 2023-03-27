@@ -339,7 +339,7 @@ MonoBehaviour:
   MaxFallSpeed: 100
   ignoreGravity: 0
   GroundDrag: 6
-  AirDrag: 2
+  AirDrag: 1
   playerBody: {fileID: 1350576064378477091}
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
@@ -438,6 +438,8 @@ MonoBehaviour:
   GrappleSpeed: 5
   springConst: 1.2
   MinimumGrappleLength: 2
+  SpringTension: 1
+  Damper: 0.25
 --- !u!54 &3469774139552251251
 Rigidbody:
   m_ObjectHideFlags: 0
