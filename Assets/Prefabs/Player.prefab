@@ -439,6 +439,7 @@ MonoBehaviour:
   MinimumGrappleLength: 1
   SpringTension: 12
   Damper: 5
+  EndJumpForce: 4.5
   ropeMat: {fileID: 2100000, guid: 4ca115140fe0a3b4ca2a3c56e1fd60a3, type: 2}
   GrappleSpawn: {fileID: 2497993397348577881}
 --- !u!54 &3469774139552251251

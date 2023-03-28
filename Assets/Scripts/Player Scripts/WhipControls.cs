@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,7 +42,7 @@ public class WhipControls : MonoBehaviour
         if (shouldAnimateWhip)
         {
             animateWhip();
-        }
+        } 
     }
     private void OnDrawGizmos()
     {
@@ -100,12 +101,6 @@ public class WhipControls : MonoBehaviour
 
     private void animateWhip()
     {
-        //if (lineRenderer == null)
-        //{
-        //    lineRenderer = gameObject.AddComponent<LineRenderer>();
-        //    lineRenderer.startWidth = 0.05f;
-        //    lineRenderer.endWidth = 0.05f;
-        //}
         Vector3[] whipPoints = new Vector3[3];
         Vector3 basePosition = whipBase.transform.position;
         Vector3 whipHitPositionLocal = transform.InverseTransformPoint(whipHitPosition);
@@ -119,17 +114,7 @@ public class WhipControls : MonoBehaviour
 
         BezierCurve curve = new BezierCurve(whipPoints);
         Vector3[] curveSegments = curve.GetSegments(10);
-
-        //----------------------------For Eventural use with PathCreator-----------------------
-        //BezierPath curve = new BezierPath(whipPoints, false, PathSpace.xyz);
-        //int numOfSegments = curve.NumPoints;
-        //for (int i = 0; i < numOfSegments; i++)
-        //{
-        //   curveSegments[i] = curve.GetPoint(i); 
-        //}
-
-        //lineRenderer.positionCount = curveSegments.Length;
-        //lineRenderer.SetPositions(curveSegments);
+        //Vector3[] currentSegments = 
     }
 
 }

@@ -74,19 +74,20 @@ public class GrapplingHookControls : MonoBehaviour
             GrappleRope.autoConfigureConnectedAnchor = false;
             GrappleRope.connectedAnchor = hit.point;
             GrappleRope.spring = SpringTension;
-            GrappleRope.damper = Damper;         
+            GrappleRope.damper = Damper;
+            if (lineRenderer == null)
+            {
+                lineRenderer = gameObject.AddComponent<LineRenderer>();
+                lineRenderer.material = ropeMat;
+                lineRenderer.startWidth = 0.1f;
+                lineRenderer.endWidth = 0.05f;
+
+            }
         }
     }
 
     private void Grapple()
     {
-        if (lineRenderer == null)
-        {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.startWidth = 0.05f;
-            lineRenderer.endWidth = 0.05f;
-            lineRenderer.material = ropeMat;
-        }
         Vector3[] endPoints = { GrapplePoint, GrappleSpawn.transform.position};
         lineRenderer.SetPositions(endPoints);
     }
