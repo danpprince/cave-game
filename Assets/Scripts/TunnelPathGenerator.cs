@@ -93,6 +93,11 @@ public class TunnelPathGenerator : MonoBehaviour
     public GameObject coinPrefab;
 
     /// <summary>
+    /// TODO
+    /// </summary>
+    public GameObject goalPrefab;
+
+    /// <summary>
     /// Number of rooms that have been generated so far. Used to compare against minimumRoomCount.
     /// </summary>
     private int currentRoomCount;
@@ -103,6 +108,11 @@ public class TunnelPathGenerator : MonoBehaviour
     private GameObject generatedParent;
 
     /// <summary>
+    /// TODO
+    /// </summary>
+    private List<Vector3> tunnelDeadEndPositions;
+
+    /// <summary>
     /// Create tunnel paths with Bezier curves and colliders
     /// </summary>
     public void GeneratePaths()
@@ -110,6 +120,8 @@ public class TunnelPathGenerator : MonoBehaviour
         int maxNumAttempts = 10;
         for (int generationAttempt = 0; generationAttempt < maxNumAttempts; generationAttempt++)
         {
+            tunnelDeadEndPositions = new List<Vector3>();
+
             GameManager.RestartState();
             occupiedCells = new HashSet<Vector3>();
             generatedParent = new GameObject("GeneratedPaths");
@@ -130,6 +142,8 @@ public class TunnelPathGenerator : MonoBehaviour
                 generationAttempt++;
                 continue;
             }
+
+            PopulateDeadEnds();
 
             // Save generated data to generated directory so it does not inflate scene files
             Utils.SaveGameObjectAsPrefab(generatedParent, "GeneratedPaths");
@@ -190,14 +204,36 @@ public class TunnelPathGenerator : MonoBehaviour
 
         if (isTunnelDeadEnd)
         {
-            InstantiateCoin(destinationRoom.transform.position);
+            tunnelDeadEndPositions.Add(destinationRoom.transform.position);
         }
         return true;
     }
 
+    /// <summary>
+    /// TODO
+    /// </summary>
+    void PopulateDeadEnds()
+    {
+        // Make a goal object in a random dead end position
+        int goalPositionIndex = Random.Range(0, tunnelDeadEndPositions.Count);
+        Vector3 goalPosition = tunnelDeadEndPositions[goalPositionIndex];
+        InstantiateGoal(goalPosition);
+        tunnelDeadEndPositions.RemoveAt(goalPositionIndex);
+
+        // Put coins in the rest
+        foreach (Vector3 position in tunnelDeadEndPositions)
+        {
+            InstantiateCoin(position);
+        }
+    }
+
+    private void InstantiateGoal(Vector3 position)
+    {
+        Instantiate(goalPrefab, position, Quaternion.identity, generatedParent.transform);
+    }
+
     private void InstantiateCoin(Vector3 position)
     {
-        // TODO: Add generated parent?
         Instantiate(coinPrefab, position, Quaternion.identity, generatedParent.transform);
     }
 
