@@ -162,6 +162,7 @@ public class Movement : MonoBehaviour
         Move = (transform.forward * MoveDirection.y) + (transform.right * MoveDirection.x);
         slopeMoveDirection = Vector3.ProjectOnPlane(Move, slopeHit.normal);
 
+
         if ( OnSlope())
         {
             Vector3 slopeForce = slopeMoveDirection.normalized;
