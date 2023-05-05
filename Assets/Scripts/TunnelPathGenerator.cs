@@ -234,7 +234,7 @@ public class TunnelPathGenerator : MonoBehaviour
 
     private void InstantiateCoin(Vector3 position)
     {
-        Instantiate(coinPrefab, position, Quaternion.identity, generatedParent.transform);
+        Instantiate(coinPrefab, position, Quaternion.identity); // , generatedParent.transform);
     }
 
     /// <summary>
