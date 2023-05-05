@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SceneManager : MonoBehaviour
+public class MyOwnSpecialSceneManager : MonoBehaviour
 
 {
     // Start is called before the first frame update

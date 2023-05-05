@@ -185,11 +185,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
       propertyPath: minimumRoomCount
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
       propertyPath: maxRecursionDepth
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9086084381039874214, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
+      propertyPath: worldLimits
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 9086084381039874214, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
+      propertyPath: axisResolution
+      value: 175
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
@@ -397,7 +405,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1386538355, guid: efc3f67583143b046a7e3926c369fa3c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8427257552259129799, guid: efc3f67583143b046a7e3926c369fa3c, type: 3}
       propertyPath: m_Name
