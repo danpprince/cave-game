@@ -61,6 +61,7 @@ MonoBehaviour:
   occupancyCellResolution: 10
   numOccupancyRetries: 3
   coinPrefab: {fileID: 6156784804740083860, guid: 2b72504c5fd642e4f82800b2a12db874, type: 3}
+  goalPrefab: {fileID: 648621334486044445, guid: f29f55507fd0c2c49b94b1e07a8e393f, type: 3}
 --- !u!114 &9086084381039874214
 MonoBehaviour:
   m_ObjectHideFlags: 0
