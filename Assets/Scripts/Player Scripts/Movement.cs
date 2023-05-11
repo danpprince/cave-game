@@ -12,6 +12,9 @@ public class Movement : MonoBehaviour
 
     [Header("Movement")]
     public GameObject GroundCheck;
+    public GameObject StepCheck;
+    public float stepHieght = 0.3f;
+    public float smoothStep = 0.1f;
     public float GroundDistance = 0.2f;
     public LayerMask GroundMask;
     public float MoveSpeed = 5f;
@@ -19,7 +22,6 @@ public class Movement : MonoBehaviour
     public bool ignoreGravity = false;
     public float GroundDrag = 6f;
     public float AirDrag = 2f;
-    private float GroundGravity = 2f;
 
 
     private Rigidbody rb;
@@ -75,6 +77,7 @@ public class Movement : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         rb.drag = GroundDrag;
         playerHeight = gameObject.GetComponent<CapsuleCollider>().height;
+        StepCheck.transform.position = new Vector3(StepCheck.transform.position.x, stepHieght, StepCheck.transform.position.z);
     }
 
     public void FixedUpdate()
@@ -85,6 +88,7 @@ public class Movement : MonoBehaviour
         Jump();
         ApplyGravity();
         ApplyDrag();
+        StepClimb();
         MovePlayer();
         ClampSpeed();
     }
@@ -121,7 +125,7 @@ public class Movement : MonoBehaviour
     }
     private void ApplyGravity()
     {
-        if (ignoreGravity)
+        if (ignoreGravity || isGrounded)
         {
             return;
         }
@@ -201,4 +205,42 @@ public class Movement : MonoBehaviour
     {
         jumpButtonIsHeld = false;
     }
+
+    private void StepClimb()
+    {
+        RaycastHit groundHit;
+        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(Vector3.forward), out groundHit, 0.1f )) {
+
+            RaycastHit stepHit;
+            if(!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(Vector3.forward), out stepHit, 0.2f))
+            {
+                MoveDirection.y += smoothStep;
+            }
+        }
+
+        RaycastHit groundHit45;
+        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(1.5f,0.0f,1.0f), out groundHit45, 0.1f))
+        {
+
+            RaycastHit stepHit45;
+            if (!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(1.5f, 0.0f, 1.0f), out stepHit45, 0.2f))
+            {
+                MoveDirection.y += smoothStep;
+            }
+        }
+
+        RaycastHit groundHitMinus45;
+        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(-1.5f, 0.0f, 1.0f), out groundHitMinus45, 0.1f))
+        {
+
+            RaycastHit stepHitMinus45;
+            if (!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(-1.5f, 0.0f, 1.0f), out stepHitMinus45, 0.2f))
+            {
+                MoveDirection.y += smoothStep;
+            }
+        }
+
+
+    }
+
 }
