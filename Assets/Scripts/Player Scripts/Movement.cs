@@ -52,6 +52,8 @@ public class Movement : MonoBehaviour
     private bool shouldJump = false;
     private bool jumpButtonIsHeld = false;
 
+    private Vector3 newrayCastPosition;
+
     public void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -81,6 +83,7 @@ public class Movement : MonoBehaviour
     {
         CheckOnGround();
         GatherInputs();
+        newrayCastPosition = transform.position + (Move * 0.5f);
         HandleCamera();
         Jump();
         ApplyGravity();
@@ -97,16 +100,19 @@ public class Movement : MonoBehaviour
 
     private void ApplyDrag()
     {
-        rb.drag = isGrounded ? GroundDrag : AirDrag; 
+        rb.drag = isGrounded ? GroundDrag : AirDrag;
     }
 
     public void CheckOnGround()
     {
-        isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask);
+        Vector3 slopeNormal = getSlope();
+        float slopeyNess = Vector3.Dot(slopeNormal, transform.up);
+        print($"slopeNormal: {slopeNormal} and slopeyNess: {slopeyNess}");
+        isGrounded = Physics.CheckSphere(GroundCheck.transform.position, GroundDistance, GroundMask) && slopeyNess > 0.5;
     }
     private void ClampSpeed()
     {
-        
+
         float x = Mathf.Clamp(rb.velocity.x, -MoveSpeed, MoveSpeed);
         float z = Mathf.Clamp(rb.velocity.z, -MoveSpeed, MoveSpeed);
         float y = Mathf.Clamp(rb.velocity.y, -MaxFallSpeed, MaxFallSpeed);
@@ -151,25 +157,32 @@ public class Movement : MonoBehaviour
     }
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
+        if (Physics.Raycast(newrayCastPosition, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
         {
             return slopeHit.normal != Vector3.up;
         }
         return false;
     }
+
+    private Vector3 getSlope()
+    {
+        Physics.Raycast(newrayCastPosition, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f);
+        return slopeHit.normal;
+    }
+
     private void MovePlayer()
     {
         Move = (transform.forward * MoveDirection.y) + (transform.right * MoveDirection.x);
         slopeMoveDirection = Vector3.ProjectOnPlane(Move, slopeHit.normal);
 
 
-        if ( OnSlope())
+        if (OnSlope())
         {
             Vector3 slopeForce = slopeMoveDirection.normalized;
             slopeForce.y *= 1.2f;
             rb.AddForce(slopeForce * MoveSpeed, ForceMode.Acceleration);
         }
-        else 
+        else
         {
             Vector3 normalWalkForce = new Vector3(Move.x, 0 , Move.z);
             rb.AddForce(normalWalkForce * MoveSpeed, ForceMode.Acceleration);
@@ -201,4 +214,13 @@ public class Movement : MonoBehaviour
     {
         jumpButtonIsHeld = false;
     }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(newrayCastPosition, 0.1f);
+    }
+
 }
+
+
