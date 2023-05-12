@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4799198055350952722}
   - component: {fileID: 2595591947170100472}
   - component: {fileID: 3103082806251901916}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4823,7 +4823,7 @@ GameObject:
   - component: {fileID: 4202530241520825587}
   - component: {fileID: 6888286830341598545}
   - component: {fileID: 5520809503851909245}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4931,7 +4931,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5924212482623828687}
   - component: {fileID: 2684949020586956478}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ThrownTorch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4984,7 +4984,7 @@ GameObject:
   - component: {fileID: 8717562309871619960}
   - component: {fileID: 7199460511834708196}
   - component: {fileID: 5657122894068315499}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TorchBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

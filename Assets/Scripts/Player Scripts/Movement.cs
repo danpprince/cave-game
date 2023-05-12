@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
+using static UnityEngine.UI.Image;
 
 
 public class Movement : MonoBehaviour
@@ -15,6 +17,7 @@ public class Movement : MonoBehaviour
     public GameObject StepCheck;
     public float stepHieght = 0.3f;
     public float smoothStep = 0.1f;
+    public float maxSlopeAngle = 45;
     public float GroundDistance = 0.2f;
     public LayerMask GroundMask;
     public float MoveSpeed = 5f;
@@ -77,7 +80,7 @@ public class Movement : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         rb.drag = GroundDrag;
         playerHeight = gameObject.GetComponent<CapsuleCollider>().height;
-        StepCheck.transform.position = new Vector3(StepCheck.transform.position.x, stepHieght, StepCheck.transform.position.z);
+        StepCheck.transform.localPosition = new Vector3(0.0f, stepHieght - gameObject.GetComponentInParent<CapsuleCollider>().height, 0.0f);
     }
 
     public void FixedUpdate()
@@ -101,7 +104,7 @@ public class Movement : MonoBehaviour
 
     private void ApplyDrag()
     {
-        rb.drag = isGrounded ? GroundDrag : AirDrag; 
+        rb.drag = isGrounded ? GroundDrag : AirDrag;
     }
 
     public void CheckOnGround()
@@ -110,7 +113,7 @@ public class Movement : MonoBehaviour
     }
     private void ClampSpeed()
     {
-        
+
         float x = Mathf.Clamp(rb.velocity.x, -MoveSpeed, MoveSpeed);
         float z = Mathf.Clamp(rb.velocity.z, -MoveSpeed, MoveSpeed);
         float y = Mathf.Clamp(rb.velocity.y, -MaxFallSpeed, MaxFallSpeed);
@@ -167,15 +170,15 @@ public class Movement : MonoBehaviour
         slopeMoveDirection = Vector3.ProjectOnPlane(Move, slopeHit.normal);
 
 
-        if ( OnSlope())
+        if (OnSlope())
         {
             Vector3 slopeForce = slopeMoveDirection.normalized;
             slopeForce.y *= 1.2f;
             rb.AddForce(slopeForce * MoveSpeed, ForceMode.Acceleration);
         }
-        else 
+        else
         {
-            Vector3 normalWalkForce = new Vector3(Move.x, 0 , Move.z);
+            Vector3 normalWalkForce = new Vector3(Move.x, 0, Move.z);
             rb.AddForce(normalWalkForce * MoveSpeed, ForceMode.Acceleration);
         }
     }
@@ -209,19 +212,19 @@ public class Movement : MonoBehaviour
     private void StepClimb()
     {
         RaycastHit groundHit;
-        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(Vector3.forward), out groundHit, 0.1f )) {
-
+        RaycastHit groundHit45;
+        RaycastHit groundHitMinus45;
+        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(Vector3.forward), out groundHit, 0.1f))
+        {
             RaycastHit stepHit;
-            if(!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(Vector3.forward), out stepHit, 0.2f))
+            if (!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(Vector3.forward), out stepHit, 0.2f))
             {
                 MoveDirection.y += smoothStep;
             }
         }
 
-        RaycastHit groundHit45;
-        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(1.5f,0.0f,1.0f), out groundHit45, 0.1f))
+        if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(1.5f, 0.0f, 1.0f), out groundHit45, 0.1f))
         {
-
             RaycastHit stepHit45;
             if (!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(1.5f, 0.0f, 1.0f), out stepHit45, 0.2f))
             {
@@ -229,10 +232,9 @@ public class Movement : MonoBehaviour
             }
         }
 
-        RaycastHit groundHitMinus45;
+
         if (isGrounded && Physics.Raycast(GroundCheck.transform.position, transform.TransformDirection(-1.5f, 0.0f, 1.0f), out groundHitMinus45, 0.1f))
         {
-
             RaycastHit stepHitMinus45;
             if (!Physics.Raycast(StepCheck.transform.position, transform.TransformDirection(-1.5f, 0.0f, 1.0f), out stepHitMinus45, 0.2f))
             {
@@ -240,6 +242,7 @@ public class Movement : MonoBehaviour
             }
         }
 
+      
 
     }
 

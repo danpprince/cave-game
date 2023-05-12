@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3143305034496084161}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: StepCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2286299296144159248}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.053, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 7670626708824762231}
   - component: {fileID: 290263421738080623}
   - component: {fileID: 8231475908667325824}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WhipSphere
   m_TagString: whip
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2748747824147388358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Whip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 8897005193119557352}
   - component: {fileID: 8897005193119557353}
   - component: {fileID: 406442812}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3940224941243708688}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: TorchSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -546,6 +546,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3940224941243708688}
     m_Modifications:
+    - target: {fileID: 1086088361993565387, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1482125011004139637, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer
       value: 2
@@ -568,7 +572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5165743664070125389, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5924212482623828687, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_RootOrder
@@ -632,11 +636,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6888286830341598545, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Intensity
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8561360186736108295, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8999771965885539098, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_RootOrder
