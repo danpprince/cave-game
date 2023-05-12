@@ -16,7 +16,5 @@ public class GenerateLevelOnStart : MonoBehaviour
         marchingCubesTunnelGenerator.ClearTerrainObject();
         marchingCubesTunnelGenerator.PopulateVoxels();
         marchingCubesTunnelGenerator.GenerateMesh();
-
-        GameManager.CountCoinsInLevel();
     }
 }
