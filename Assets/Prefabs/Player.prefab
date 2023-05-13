@@ -24,12 +24,43 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1505195843214093539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.898, z: 0}
+  m_LocalPosition: {x: 0, y: -1.339, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1350576064378477091}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2286299296144159248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3143305034496084161}
+  m_Layer: 2
+  m_Name: StepCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3143305034496084161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2286299296144159248}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.053, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1350576064378477091}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2497993397348577881
 GameObject:
@@ -44,7 +75,7 @@ GameObject:
   - component: {fileID: 7670626708824762231}
   - component: {fileID: 290263421738080623}
   - component: {fileID: 8231475908667325824}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WhipSphere
   m_TagString: whip
   m_Icon: {fileID: 0}
@@ -154,7 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2748747824147388358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Whip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +220,7 @@ GameObject:
   - component: {fileID: 8897005193119557352}
   - component: {fileID: 8897005193119557353}
   - component: {fileID: 406442812}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -288,7 +319,11 @@ GameObject:
   - component: {fileID: 1350576064378477091}
   - component: {fileID: 8897005194122684540}
   - component: {fileID: 8897005194122684530}
-  - component: {fileID: 8897005194122684529}
+  - component: {fileID: 3015840505446680835}
+  - component: {fileID: 7858620261495852812}
+  - component: {fileID: 2968930296749102655}
+  - component: {fileID: 3469774139552251251}
+  - component: {fileID: 2840305221804658530}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -310,6 +345,7 @@ Transform:
   m_Children:
   - {fileID: 8897005193119557359}
   - {fileID: 472514917536187377}
+  - {fileID: 3143305034496084161}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -325,36 +361,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a95b0b14b1bcef145baee12477a7a5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cc: {fileID: 8897005194122684529}
   playerControls: {fileID: 8897005194122684530}
   GroundCheck: {fileID: 1505195843214093539}
+  StepCheck: {fileID: 2286299296144159248}
+  stepHieght: 0.3
+  smoothStep: 0.1
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
     m_Bits: 8
-  MoveSpeed: 0.1
+  MoveSpeed: 50
   MaxFallSpeed: 100
+  ignoreGravity: 0
+  GroundDrag: 6
+  AirDrag: 3
   playerBody: {fileID: 1350576064378477091}
   camera: {fileID: 8897005193119557354}
   X_AimSensitivity: 0.5
   Y_AimSensitivity: 0.5
-  Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
-  TorchSpawnPoint: {fileID: 9209023117751489498}
-  torchUpwardsForce: 5.5
-  torchForwardForce: 8
-  TorchForceMultiplier: 4.5
-  HeldTorch: {fileID: 8105151284831279878}
-  whipCoolDownTime: 1
-  whipRange: 5
-  didWhipHit: 0
-  whipAnimationSpeed: 1
-  whipBase: {fileID: 3595303810283265348}
-  whipArchHeight: 2
-  whipHitColliderRadius: 0.5
-  whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
-  jumpHeight: 1.5
+  jumpHeight: 7.5
   Gravity: -9.8
-  fallMultiplier: 1
+  fallMultiplier: 5
   lowJumpMultiplier: 2
 --- !u!114 &8897005194122684530
 MonoBehaviour:
@@ -386,8 +413,88 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 8897005193119557352}
---- !u!143 &8897005194122684529
-CharacterController:
+--- !u!114 &3015840505446680835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a9dfd8673b52b9418c3c80eda67c7a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerControls: {fileID: 8897005194122684530}
+  camera: {fileID: 8897005193119557354}
+  whipCoolDownTime: 1
+  whipRange: 5
+  didWhipHit: 0
+  whipAnimationSpeed: 1
+  whipBase: {fileID: 2497993397348577881}
+  whipArchHeight: 0.5
+  whipHitColliderRadius: 0.5
+  whipHitCollider: {fileID: 1242813958963917037, guid: 03930512abd2cab4885a5a37f671ded5, type: 3}
+--- !u!114 &7858620261495852812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9efb4d2de50e884c937f54c5fc06628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerControls: {fileID: 8897005194122684530}
+  camera: {fileID: 8897005193119557354}
+  Torch: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+  TorchSpawnPoint: {fileID: 9209023117751489498}
+  torchUpwardsForce: 5.5
+  torchForwardForce: 8
+  TorchForceMultiplier: 2
+  HeldTorch: {fileID: 8105151284831279878}
+--- !u!114 &2968930296749102655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0b6a6c43c68d14188fb86355622f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerControls: {fileID: 8897005194122684530}
+  Camera: {fileID: 8897005193119557354}
+  GrappleRange: 100
+  GrappleSpeed: 5
+  MinimumGrappleLength: 1
+  SpringTension: 12
+  Damper: 5
+  EndJumpForce: 4.5
+  ropeMat: {fileID: 2100000, guid: 4ca115140fe0a3b4ca2a3c56e1fd60a3, type: 2}
+  GrappleSpawn: {fileID: 2497993397348577881}
+--- !u!54 &3469774139552251251
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9004047637359721981}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 1
+--- !u!136 &2840305221804658530
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -396,13 +503,9 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 55
-  m_StepOffset: 0.7
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9209023117751489498
 GameObject:
@@ -413,7 +516,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3940224941243708688}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: TorchSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,6 +546,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3940224941243708688}
     m_Modifications:
+    - target: {fileID: 1086088361993565387, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1482125011004139637, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer
       value: 2
@@ -451,9 +558,21 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 32
       objectReference: {fileID: 0}
+    - target: {fileID: 4126106871094012610, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413008185491074102, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4799198055350952722, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5165743664070125389, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5924212482623828687, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_RootOrder
@@ -517,11 +636,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6473340193932276091, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6888286830341598545, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
       propertyPath: m_Intensity
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8561360186736108295, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8999771965885539098, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2684949020586956478, guid: 1a31b9a168262d8409feefdaa88f269b, type: 3}

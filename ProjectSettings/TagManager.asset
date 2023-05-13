@@ -16,8 +16,8 @@ TagManager:
   - Terrain
   - Water
   - UI
-  - 
-  - 
+  - IgnorePlayer
+  - Player
   - 
   - 
   - 
