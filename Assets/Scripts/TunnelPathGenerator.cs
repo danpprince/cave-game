@@ -93,7 +93,7 @@ public class TunnelPathGenerator : MonoBehaviour
     public GameObject coinPrefab;
 
     /// <summary>
-    /// TODO
+    /// Prefab to use as endpoint of level.
     /// </summary>
     public GameObject goalPrefab;
 
@@ -103,12 +103,12 @@ public class TunnelPathGenerator : MonoBehaviour
     private int currentRoomCount;
 
     /// <summary>
-    /// Reference to new object that will parent all newly generated paths and rooms
+    /// Reference to new object that will parent all newly generated paths and rooms.
     /// </summary>
     private GameObject generatedParent;
 
     /// <summary>
-    /// TODO
+    /// Candidate points for either coins or the goal.
     /// </summary>
     private List<Vector3> tunnelDeadEndPositions;
 
@@ -210,7 +210,7 @@ public class TunnelPathGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// TODO
+    /// Populate dead end positions with one goal and the rest with coins
     /// </summary>
     void PopulateDeadEnds()
     {
@@ -234,7 +234,8 @@ public class TunnelPathGenerator : MonoBehaviour
 
     private void InstantiateCoin(Vector3 position)
     {
-        Instantiate(coinPrefab, position, Quaternion.identity, generatedParent.transform);
+        Instantiate(coinPrefab, position, Quaternion.identity);
+        GameManager.IncrementNumCoinsInLevel();
     }
 
     /// <summary>
