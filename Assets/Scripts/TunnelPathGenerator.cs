@@ -138,6 +138,7 @@ public class TunnelPathGenerator : MonoBehaviour
 
             GameManager.RestartState();
             occupiedCells = new Dictionary<Vector3, OccupancyState>();
+            DestroyImmediate(generatedParent);  // TODO: Does this cause an error on initial generation? Want to clear out existing generation
             generatedParent = new GameObject("GeneratedPaths");
             generatedParent.transform.parent = gameObject.transform;
             Vector3 startingPosition = startingTunnelEndpoint.position;
@@ -248,7 +249,7 @@ public class TunnelPathGenerator : MonoBehaviour
 
     private void InstantiateCoin(Vector3 position)
     {
-        Instantiate(coinPrefab, position, Quaternion.identity);
+        Instantiate(coinPrefab, position, Quaternion.identity, generatedParent.transform);
         GameManager.IncrementNumCoinsInLevel();
     }
 
@@ -482,19 +483,22 @@ public class TunnelPathGenerator : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Draw cubes for occupied cells
+        // Draw cubes for occupied cells, exclusively occupied ones on top
         foreach (KeyValuePair<Vector3, OccupancyState> entry in occupiedCells)
         {
             if (entry.Value == OccupancyState.Occupied)
             {
                 Gizmos.color = new Color(1, 1, 0);
-            } else if (entry.Value == OccupancyState.ExclusivelyOccupied)
+                Gizmos.DrawCube(entry.Key, 0.9f * occupancyCellResolution * Vector3.one);
+            }
+        }
+        foreach (KeyValuePair<Vector3, OccupancyState> entry in occupiedCells)
+        {
+            if (entry.Value == OccupancyState.ExclusivelyOccupied)
             {
                 Gizmos.color = new Color(1, 0, 0);
-
+                Gizmos.DrawCube(entry.Key, 0.9f * occupancyCellResolution * Vector3.one);
             }
-            Gizmos.DrawCube(entry.Key, 0.9f * occupancyCellResolution * Vector3.one);
-
         }
     }
 }
