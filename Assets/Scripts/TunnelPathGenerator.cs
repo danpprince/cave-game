@@ -14,6 +14,12 @@ public class ProceduralRoomCandidate
 
 }
 
+enum OccupancyState
+{
+    Occupied,
+    ExclusivelyOccupied
+}
+
 /// <summary>
 /// Generates tunnels recursively consisting of paths and room triggers (not meshes)
 /// </summary>
@@ -74,27 +80,23 @@ public class TunnelPathGenerator : MonoBehaviour
 
     [Header("Occupancy")]
     /// <summary>
-    /// If true, keeps rooms and paths from being generated on top of each other
-    /// based on the occupancy parameters
-    /// </summary>
-    public bool preventAllOverlappingPaths;
-
-    /// <summary>
     /// The size of occupancy cells in world resolution. Larger values will reduce computation
-    /// and spread rooms out more. Requires rooms set to prevent overlapping or preventAllOverlappingPaths
-    /// to be true to have any effect.
+    /// and spread rooms out more. Requires rooms set to prevent overlapping to have any effect.
     /// </summary>
     public float occupancyCellResolution;
 
     /// <summary>
     /// Keeps track of cells where paths have been generated. Requires rooms set to prevent overlapping or
-    /// preventAllOverlappingPaths to be true to have any effect.
+    /// to have any effect.
     /// </summary>
-    private HashSet<Vector3> occupiedCells;
+    private Dictionary<Vector3, OccupancyState> occupiedCells;
+
+    /// TODO
+    // private HashSet<Vector3> exclusiveOccupiedCells;
 
     /// <summary>
     /// Number of times to try to generate a room in an unoccupied location before failing.
-    /// Requires rooms set to prevent overlapping or preventAllOverlappingPaths to be true to have any effect.
+    /// Requires rooms set to prevent overlapping to have any effect.
     /// </summary>
     public int numOccupancyRetries;
 
@@ -135,7 +137,7 @@ public class TunnelPathGenerator : MonoBehaviour
             tunnelDeadEndPositions = new List<Vector3>();
 
             GameManager.RestartState();
-            occupiedCells = new HashSet<Vector3>();
+            occupiedCells = new Dictionary<Vector3, OccupancyState>();
             generatedParent = new GameObject("GeneratedPaths");
             generatedParent.transform.parent = gameObject.transform;
             Vector3 startingPosition = startingTunnelEndpoint.position;
@@ -195,12 +197,18 @@ public class TunnelPathGenerator : MonoBehaviour
             return false;
         }
 
-        RoomProperties destinationRoomProperties = destinationRoom.GetComponent<RoomProperties>();
-        if (preventAllOverlappingPaths || !destinationRoomProperties.allowOverlappingRooms)
+        bool destinationAllowsOverlappingRooms =
+            destinationRoom.GetComponent<RoomProperties>().allowOverlappingRooms;
+        OccupancyState occupancy;
+        if (destinationAllowsOverlappingRooms)
         {
-            Debug.Log($"Preventing overlapping paths for room {destinationRoom.name}");
-            MarkCellsAsOccupied(destinationRoom, path);
+            occupancy = OccupancyState.Occupied;
+        } else
+        {
+            occupancy = OccupancyState.ExclusivelyOccupied;
         }
+        MarkCellsAsOccupied(destinationRoom, path, occupancy);
+
         currentRoomCount++;
 
         bool isTunnelDeadEnd = true;
@@ -260,6 +268,31 @@ public class TunnelPathGenerator : MonoBehaviour
     /// <returns></returns>
     private GameObject MakeDestinationRoom(Vector3 sourcePosition, Vector3 baseDirection)
     {
+        // Select an element randomly from a weighted list
+        // https://stackoverflow.com/q/56692
+        // Room has to be selected first before finding its position since its overlapping
+        // policy must be known 
+        float totalWeight = 0;
+        foreach (ProceduralRoomCandidate rc in roomCandidates)
+        {
+            totalWeight += rc.weight;
+        }
+
+        float randomSelection = Random.Range(0, totalWeight);
+        GameObject selectedRoomPrefab = null;
+        foreach (ProceduralRoomCandidate rc in roomCandidates)
+        {
+            if (randomSelection < rc.weight)
+            {
+                selectedRoomPrefab = rc.room;
+                break;
+            }
+            randomSelection -= rc.weight;
+        }
+
+        bool roomAllowsOverlaps =
+            selectedRoomPrefab.GetComponent<RoomProperties>().allowOverlappingRooms;
+
         for (int retryIndex = 0; retryIndex < numOccupancyRetries; retryIndex++)
         {
             float tunnelLength = Random.Range(tunnelLengthMin, tunnelLengthMax);
@@ -270,34 +303,40 @@ public class TunnelPathGenerator : MonoBehaviour
 
             Quaternion roomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
 
+            // TODO: Search the size of the room for occupancy, not just the center
             Vector3 roomPositionQuantized = QuantizeToOccupancyGrid(roomPosition);
-            if (preventAllOverlappingPaths && occupiedCells.Contains(roomPositionQuantized)) {
-                Debug.Log($"Room position {roomPositionQuantized} already occupied on retry {retryIndex}");
-            }
-            else
+            OccupancyState occupancy;
+            bool isOccupied = occupiedCells.TryGetValue(roomPositionQuantized, out occupancy);
+            if (!isOccupied)
             {
-                // Select an element randomly from a weighted list
-                // https://stackoverflow.com/q/56692
-                float totalWeight = 0;
-                foreach (ProceduralRoomCandidate rc in roomCandidates)
-                {
-                    totalWeight += rc.weight;
-                }
+                return Instantiate(
+                    selectedRoomPrefab, roomPosition, roomRotation, generatedParent.transform
+                );
+            }
 
-                float randomSelection = Random.Range(0, totalWeight);
-                GameObject selectedRoom = null;
-                foreach (ProceduralRoomCandidate rc in roomCandidates)
-                {
-                    if (randomSelection < rc.weight)
-                    {
-                        selectedRoom = rc.room;
-                        break;
-                    }
-                    randomSelection -= rc.weight;
-                }
-
-                GameObject room = Instantiate(selectedRoom, roomPosition, roomRotation, generatedParent.transform);
-                return room;
+            if (roomAllowsOverlaps && occupancy == OccupancyState.Occupied)
+            {
+                Debug.Log(
+                    $"Instantiating room that allows overlaps in already occupied position "
+                    + $"{roomPositionQuantized} on retry {retryIndex}"
+                );
+                return Instantiate(
+                    selectedRoomPrefab, roomPosition, roomRotation, generatedParent.transform
+                );
+            }
+            else if (roomAllowsOverlaps && occupancy == OccupancyState.ExclusivelyOccupied)
+            {
+                Debug.Log(
+                    $"Room that allows overlaps in position {roomPositionQuantized} exclusively "
+                    + $"occupied on retry {retryIndex}"
+                );
+            }
+            else if (!roomAllowsOverlaps)
+            {
+                Debug.Log(
+                    $"Room that prevents overlaps in position {roomPositionQuantized} already occupied "
+                    + $"on retry {retryIndex}"
+                );
             }
         }
 
@@ -384,7 +423,8 @@ public class TunnelPathGenerator : MonoBehaviour
             {
                 Vector3 occupancyQueryPoint = vertexPath.GetPointAtDistance(distance, EndOfPathInstruction.Stop);
                 Vector3 quantizedQueryPoint = QuantizeToOccupancyGrid(occupancyQueryPoint);
-                if (preventAllOverlappingPaths && occupiedCells.Contains(quantizedQueryPoint))
+                // TODO: Check occupancy
+                if (occupiedCells.ContainsKey(quantizedQueryPoint))
                 {
                     Debug.Log($"Path in cell {quantizedQueryPoint} is occupied on retry {retryIndex}");
                     isPathOccupied = true;
@@ -421,15 +461,15 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     /// <param name="room">Room containing a collider to occupy cells with</param>
     /// <param name="path">Path to occupy cells along</param>
-    private void MarkCellsAsOccupied(GameObject room, VertexPath path)
+    /// TODO
+    private void MarkCellsAsOccupied(GameObject room, VertexPath path, OccupancyState occupancy)
     {
-        float margin = occupancyCellResolution / 2;
-        Vector3 marginVector = Vector3.one * margin;
+        Vector3 marginVector = Vector3.one * occupancyCellResolution;
         Collider collider = room.GetComponentInChildren<Collider>();
         Vector3 minPoint = collider.bounds.min - marginVector;
         Vector3 maxPoint = collider.bounds.max + marginVector;
 
-        Debug.Log($"Occupying cells for room with min {minPoint}, max {maxPoint}");
+        Debug.Log($"Occupying cells for room {room.name} with min {minPoint}, max {maxPoint}");
 
         for (float x = minPoint.x; x <= maxPoint.x; x += occupancyCellResolution)
         {
@@ -438,7 +478,8 @@ public class TunnelPathGenerator : MonoBehaviour
                 for (float z = minPoint.z; z <= maxPoint.z; z += occupancyCellResolution)
                 {
                     Vector3 queryPoint = new Vector3(x, y, z);
-                    occupiedCells.Add(QuantizeToOccupancyGrid(queryPoint));
+                    Vector3 quantizedPoint = QuantizeToOccupancyGrid(queryPoint);
+                    AddCellOccupation(quantizedPoint, occupancy);
                 }
             }
         }
@@ -450,8 +491,33 @@ public class TunnelPathGenerator : MonoBehaviour
         {
             Vector3 occupancyQueryPoint = path.GetPointAtDistance(distance, EndOfPathInstruction.Stop);
             Vector3 quantizedQueryPoint = QuantizeToOccupancyGrid(occupancyQueryPoint);
-            Debug.Log($"Path now occupying cell {quantizedQueryPoint}");
-            occupiedCells.Add(quantizedQueryPoint);
+            // Paths are never exclusively occupied
+            AddCellOccupation(quantizedQueryPoint, OccupancyState.Occupied);
+        }
+    }
+
+    /// TODO
+    private void AddCellOccupation(Vector3 cell, OccupancyState occupancy)
+    {
+        OccupancyState existingOccupancy;
+        bool isOccupied = occupiedCells.TryGetValue(cell, out existingOccupancy);
+        if (!isOccupied)
+        {
+            occupiedCells.Add(cell, occupancy);
+        }
+        else if (
+            existingOccupancy == OccupancyState.ExclusivelyOccupied
+            || occupancy == OccupancyState.ExclusivelyOccupied
+        ) {
+            // TODO: Handle this case, we should not overwrite exclusively occupied areas
+            Debug.LogWarning(
+                $"New cell with occupancy {occupancy} in cell with existing occupancy "
+                + $"{existingOccupancy}"
+            );
+        }
+        else
+        {
+            // Nothing required for existing non-exclusive occupation
         }
     }
 
@@ -462,5 +528,23 @@ public class TunnelPathGenerator : MonoBehaviour
             Mathf.Round(queryPosition.y / occupancyCellResolution) * occupancyCellResolution,
             Mathf.Round(queryPosition.z / occupancyCellResolution) * occupancyCellResolution
         );
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Draw cubes for occupied cells
+        foreach (KeyValuePair<Vector3, OccupancyState> entry in occupiedCells)
+        {
+            if (entry.Value == OccupancyState.Occupied)
+            {
+                Gizmos.color = new Color(1, 1, 0);
+            } else if (entry.Value == OccupancyState.ExclusivelyOccupied)
+            {
+                Gizmos.color = new Color(1, 0, 0);
+
+            }
+            Gizmos.DrawCube(entry.Key, 0.9f * occupancyCellResolution * Vector3.one);
+
+        }
     }
 }
