@@ -75,10 +75,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.46855342, g: 0.8411071, b: 1, a: 1}
-  m_Intensity: 25
+  m_Intensity: 50
   m_Range: 13.95
-  m_SpotAngle: 49.7
-  m_InnerSpotAngle: 7.2564836
+  m_SpotAngle: 60
+  m_InnerSpotAngle: 6
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -106,7 +106,7 @@ Light:
       e32: 0
       e33: 1
     m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
+  m_Cookie: {fileID: 2800000, guid: 0cbfd6ff47d02fd47a7f9655d9c20489, type: 3}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
   m_RenderMode: 0
