@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 461765125682b7e48a89a752474542f7, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -204,7 +204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
       propertyPath: roomCandidates.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
       propertyPath: roomCandidates.Array.data[0].room
@@ -215,12 +215,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8851779049756266442, guid: 8687347f041073c4296ea3efb2df7497, type: 3}
     - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
+      propertyPath: roomCandidates.Array.data[2].room
+      value: 
+      objectReference: {fileID: 8851779049756266442, guid: e93de7d3dd64c54429a45a8ac7b714d8, type: 3}
+    - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
       propertyPath: roomCandidates.Array.data[0].weight
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
       propertyPath: roomCandidates.Array.data[1].weight
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9086084381039874203, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
+      propertyPath: roomCandidates.Array.data[2].weight
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0baa6dcae19d2f42abbda3ee6e636c4, type: 3}
