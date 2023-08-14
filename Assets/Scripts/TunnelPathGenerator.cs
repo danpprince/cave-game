@@ -210,7 +210,11 @@ public class TunnelPathGenerator : MonoBehaviour
                         continue;
                     }
                     Vector3 childPosition = childTransform.position;
-                    Vector3 childBaseDirection = (childPosition - destinationRoom.transform.position).normalized;
+                    // Set the initial direction to be away from the center of the room in the XZ plane
+                    // (no downward slope)
+                    Vector3 childBaseDirection = childPosition - destinationRoom.transform.position;
+                    childBaseDirection.y = 0;
+                    childBaseDirection = childBaseDirection.normalized;
                     isTunnelDeadEnd &= !GeneratePathsRecursive(childPosition, childBaseDirection, depth + 1);
                 }
 
