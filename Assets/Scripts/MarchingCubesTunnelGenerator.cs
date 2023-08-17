@@ -36,13 +36,11 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
 
     public float worldLimits;
     public float surfaceThreshold;
-    public float insideColliderIntensity;
+    public float insideColliderPositiveIntensity;
+    public float insideColliderNegativeIntensity;
     public float floorDistance;  // Distance from point on curve to "floor" intensity calculation point
     public float noiseAmount;
     public int offsetRadiusSteps;
-
-    private PathCreator[] pathCreators;
-    private Collider[] colliders;
 
     private GameObject terrainObject;
 
@@ -80,16 +78,21 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
             }
         }
 
-        pathCreators = GetComponentsInChildren<PathCreator>();
+        PathCreator[] pathCreators = GetComponentsInChildren<PathCreator>();
         foreach (PathCreator pathCreator in pathCreators)
         {
             PopulateVoxelsForPath(pathCreator);
         }
 
-        colliders = GetComponentsInChildren<Collider>();
-        foreach (Collider collider in colliders)
+        VoxelColliderProperties[] voxelColliderProperties =
+            GetComponentsInChildren<VoxelColliderProperties>();
+        // First populate all positive intensity, then negative so they can subtract from the former
+        foreach (bool populatePositiveIntensity in new []{true, false})
         {
-            PopulateVoxelsForCollider(collider);
+            foreach (VoxelColliderProperties vcp in voxelColliderProperties)
+            {
+                PopulateVoxelsForCollider(vcp, populatePositiveIntensity);
+            }
         }
     }
 
@@ -137,8 +140,11 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
         }
     }
 
-    void PopulateVoxelsForCollider(Collider collider)
+    void PopulateVoxelsForCollider(VoxelColliderProperties vcp, bool populatePositiveIntensity)
     {
+        GameObject attachedObject = vcp.gameObject;
+        Collider collider = attachedObject.GetComponent<Collider>();
+
         int margin = 1;
         Vector3Int marginVector = Vector3Int.one * margin;
         Vector3 minPoint = collider.bounds.min;
@@ -163,8 +169,15 @@ public class MarchingCubesTunnelGenerator : MonoBehaviour
                     {
                         if (overlapCollider == collider)
                         {
-                            float noiseIntensity = 0; // Random.Range(-noiseAmount, noiseAmount);
-                            voxels[x, y, z] += insideColliderIntensity + noiseIntensity;
+                            float noiseIntensity = Random.Range(-noiseAmount, noiseAmount);
+                            if (populatePositiveIntensity && vcp.isPositiveIntensity)
+                            {
+                                voxels[x, y, z] += insideColliderPositiveIntensity + noiseIntensity;
+                            }
+                            if (!populatePositiveIntensity && !vcp.isPositiveIntensity)
+                            {
+                                voxels[x, y, z] = insideColliderNegativeIntensity + noiseIntensity;
+                            }
                             break;
                         }
                     }

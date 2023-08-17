@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
+        // TODO: How to make this work in editor procedural generation and scene start generation?
+        numTotalCoins = GameObject.FindGameObjectsWithTag("Coin").Length;
     }
 
     public static void RestartState()
