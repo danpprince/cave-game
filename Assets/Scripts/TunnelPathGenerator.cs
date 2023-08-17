@@ -100,6 +100,8 @@ public class TunnelPathGenerator : MonoBehaviour
     /// </summary>
     public int numOccupancyRetries;
 
+    public bool visualizeOccupancyInEditor = false;
+
     [Header("Etc")]
     /// <summary>
     /// Coin prefab to generate in "dead end" rooms at the end of paths.
@@ -487,6 +489,11 @@ public class TunnelPathGenerator : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+        if (!visualizeOccupancyInEditor)
+        {
+            return;
+        }
+
         // Draw cubes for occupied cells, exclusively occupied ones on top
         foreach (KeyValuePair<Vector3, OccupancyState> entry in occupiedCells)
         {
